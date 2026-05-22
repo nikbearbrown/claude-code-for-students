@@ -4,197 +4,163 @@
 
 ---
 
-**Learning outcomes**
-
-1. **(Apply)** Run a structured verification pass on a completed build using explicit criteria from the SDD.
-2. **(Analyze)** Distinguish build failures from test quality gaps.
-3. **(Evaluate)** Produce a post-build assessment that accounts for every decision in the build.
-
----
-
-## Opening: One More Check
-
-It is late Saturday afternoon. Phase 1 of the task tracker is done. Five rows on the Boondoggle Score, all green. `npm test` reports nine of nine passing. The page loads. I can add a task, toggle it, delete it, refresh the browser, and the tasks come back. The handoff conditions I wrote in Chapter 11 — *three tests pass on a `Task[]` of length 0, 1, 3*; *refresh preserves state across 10 toggles*; *parse failure triggers the confirmation dialog* — all run, all pass. I am about to type the commit message and call Phase 1 finished.
+It is late Saturday afternoon. Phase 1 of the task tracker is done. Five rows on the score, all green. `npm test` reports nine of nine passing. The page loads. I can add a task, toggle it, delete it, refresh the browser, and the tasks come back. The handoff conditions I wrote in Chapter 11 — *three tests pass on a `Task[]` of length 0, 1, 3*; *refresh preserves state across 10 toggles*; *parse failure triggers the confirmation dialog* — all run, all pass. I am about to type the commit message and call Phase 1 finished.
 
 I do one more thing first. I open the SDD I wrote at the beginning of the build and read it out loud. Not the bullet points I extracted into the score — the full prose. Section 2.3, *User Needs*, has a sentence I had stopped looking at by row 3: *The user should be able to see at a glance which tasks remain and which are done, without scrolling.*
 
 I look at the running build. Six tasks visible, three done with strikethrough, list in insertion order — newest at the bottom. If I use the app for a week, the things I still have to do will be scattered through the list, mixed with the things I finished on Tuesday. *At a glance* fails. Not because the code is wrong. Because the spec said *what the user needs* and I built *what the score asked for*, and the score asked for `addTask`, `toggleTask`, `deleteTask` — not *display order that surfaces what remains*.
 
-The failure is not a bug in the code. It is a gap in the original SDD — or rather, a gap between the SDD's prose and the score's rows. The handoff conditions I wrote down are all satisfied. The need the SDD named is not.
+The failure is not a bug in the code. It is a gap between the SDD's prose and the score's rows. The handoff conditions I wrote are all satisfied. The need the SDD named is not.
 
-This is the chapter. The build passes its tests; the build does not pass its needs. Tests are a proxy for needs; sometimes the proxy is wrong. Verification — *real* verification — is the discipline of checking the build against the needs, not against the proxy. From here on, the chapter speaks to you. Your build. Your verification. Your document.
+This is the chapter. The build passes its tests; the build does not pass its needs. Tests are a proxy for needs; sometimes the proxy is wrong. Verification — real verification — is the discipline of checking the build against the needs, not against the proxy.
 
 <!-- → [DIAGRAM: The verification sequence — three passes in order. Pass 1: functional verification (does it run?). Pass 2: edge case verification (does it handle what the SDD defines as out of bounds?). Pass 3: SDD needs verification (does it do what the user needs?). Each pass has a binary result and a path to resolution. Pass 1 and Pass 2 carry gear icons (automatable). Pass 3 carries a human-eye icon (not automatable). Failures on Pass 1 and 2 loop back to "fix code." Failures on Pass 3 loop back to either "fix code" or "amend SDD" — and amending the SDD invalidates the earlier passes, sending the diagram back to Pass 1. Editorial style.] -->
 
-## Verification Against SDD Needs, Not Just "Does It Run"
+---
 
 The most common verification mistake — the one fluent Claude Code users make by reflex, me included — is to treat *the test suite passes* as a synonym for *the build is done*. It is not. Tests verify code against tests. A build is done when it verifies against *the needs the SDD named*, which is a strictly larger claim.
 
-Tony Hoare made the formal version of the argument in 1969.[^hoare] A program is correct *with respect to a specification*, never in the abstract. Correctness is a relation between code and spec, not a property of code alone. Five years later, Barbara Liskov and Stephen Zilles operationalized Hoare: an abstract data type is defined by the operations it admits and the relations those operations preserve, not by its representation.[^liskov74] The post-conditions are the spec. The tests are evidence about the post-conditions. The code is correct only when, for every input the spec defines, the post-conditions hold.
+Tony Hoare made the formal version of this argument in 1969.[^hoare] A program is correct *with respect to a specification*, never in the abstract. Correctness is a relation between code and spec, not a property of code alone. Five years later, Barbara Liskov and Stephen Zilles operationalized Hoare: an abstract data type is defined by the operations it admits and the relations those operations preserve, not by its representation.[^liskov74] The post-conditions are the spec. The tests are evidence about the post-conditions. The code is correct only when, for every input the spec defines, the post-conditions hold.
 
-[^hoare]: C. A. R. Hoare, "An Axiomatic Basis for Computer Programming," *Communications of the ACM* 12, no. 10 (October 1969): 576–580. The Hoare triple {P} C {Q} is the formal statement of "code is correct only with respect to a specification" — pre-condition P, command C, post-condition Q.
+[^hoare]: C. A. R. Hoare, "An Axiomatic Basis for Computer Programming," *Communications of the ACM* 12, no. 10 (October 1969): 576–580. The Hoare triple {P} C {Q} is the formal statement of "code is correct only with respect to a specification."
 
-[^liskov74]: Barbara H. Liskov and Stephen N. Zilles, "Programming with Abstract Data Types," *ACM SIGPLAN Notices* 9, no. 4 (March 1974): 50–59. The argument that the type is defined by its post-conditions, not its representation, is the foundation of behavioral verification — and the formal answer to "what does *correct* mean?"
+[^liskov74]: Barbara H. Liskov and Stephen N. Zilles, "Programming with Abstract Data Types," *ACM SIGPLAN Notices* 9, no. 4 (March 1974): 50–59. The argument that the type is defined by its post-conditions, not its representation, is the foundation of behavioral verification.
 
-The 2026 version of the problem is sharper because Claude can write the tests too. If the LLM that read the spec also writes the tests, both sides may share the same misreading. The tests pass because the code matches the tests — *and the tests match the wrong reading of the spec*. The loop is self-consistent and wrong. The 2024–2025 LLM-coding literature documents this as the dominant agentic-coding failure mode: code passes its self-generated tests at high rates while failing held-out, human-written tests at much lower rates.[^llmcode] The gap between those two numbers is the gap between *tests pass* and *needs met*.
+The 2026 version of the problem is sharper because Claude can write the tests too. If the model that read the spec also writes the tests, both sides may share the same misreading. The tests pass because the code matches the tests — and the tests match the wrong reading of the spec. The loop is self-consistent and wrong. The 2024–2025 LLM-coding literature documents this as the dominant agentic-coding failure mode: code passes its self-generated tests at high rates while failing held-out, human-written tests at much lower rates.[^llmcode] The gap between those two numbers is the gap between *tests pass* and *needs met*.
 
-[^llmcode]: Recent empirical work on agentic code evaluation finds pass@k rates inflate 10–61% when tests are drawn from the same generation event as the code; the phenomenon is sometimes called *evaluation contamination*. See for example the SWE-bench-Live and LiveCodeBench efforts (2024–2025), which use post-cutoff problems specifically to break this loop. The pattern is the LLM analogue of the older problem Just et al. (2014) documented for human-written tests: line coverage and assertion count are not adequate proxies for fault detection.
+[^llmcode]: Recent empirical work on agentic code evaluation finds pass@k rates inflate 10–61% when tests are drawn from the same generation event as the code — sometimes called *evaluation contamination*. See SWE-bench-Live and LiveCodeBench (2024–2025), which use post-cutoff problems specifically to break this loop. The pattern is the LLM analogue of the older problem Just et al. (2014) documented for human-written tests: line coverage and assertion count are not adequate proxies for fault detection.
 
-Two real-world failures make the abstract argument concrete. Both happened because verification ran against tests, not needs.
+Two real failures make the abstract argument concrete. Both happened because verification ran against tests, not needs.
 
-The **Mars Climate Orbiter** burned up in the Martian atmosphere on September 23, 1999.[^mco] Lockheed Martin's ground-side software produced thruster impulse data in pound-seconds; JPL's trajectory model consumed it as newton-seconds. Every unit test on each side passed. Each module was correct against its local spec. The system was wrong against the mission's actual need — *deliver a spacecraft to Mars orbit* — because no test in either codebase tested *the units agree across the interface*. The test that would have caught it required reading both specs and noticing the units differed. That is a Pass 3 question. No proxy could have caught it.
+The **Mars Climate Orbiter** burned up in the Martian atmosphere on September 23, 1999.[^mco] Lockheed Martin's ground-side software produced thruster impulse data in pound-seconds; JPL's trajectory model consumed it as newton-seconds. Every unit test on each side passed. Each module was correct against its local spec. The system was wrong against the mission's actual need — deliver a spacecraft to Mars orbit — because no test in either codebase tested *the units agree across the interface*. The test that would have caught it required reading both specs and noticing the units differed. That is a Pass 3 question. No proxy could have caught it.
 
-[^mco]: Mars Climate Orbiter Mishap Investigation Board, *Phase I Report* (November 10, 1999), NASA. SM_FORCES output thruster impulse in pound-seconds; the trajectory model expected newton-seconds. Each subsystem passed its own tests. No verification step in either organization checked the unit contract across the interface.
+[^mco]: Mars Climate Orbiter Mishap Investigation Board, *Phase I Report* (November 10, 1999), NASA. SM_FORCES output thruster impulse in pound-seconds; the trajectory model expected newton-seconds. Each subsystem passed its own tests. No verification step checked the unit contract across the interface.
 
-The **Therac-25** medical linear accelerator delivered massive radiation overdoses to six patients between 1985 and 1987; at least three died.[^therac] The cause, as Nancy Leveson and Clark Turner documented in 1993, was a race condition on shared variables — a fault that survived unit testing because *each unit behaved as designed*. The catastrophe lived in the integration. Leveson's verdict has been the dominant teaching example in safety-critical CS education for thirty years: the software's unit behavior was correct; the system's behavior in use was lethal. Verification against the SDD's safety needs — not against the unit suite — was the missing pass.
+The **Therac-25** medical linear accelerator delivered massive radiation overdoses to six patients between 1985 and 1987; at least three died.[^therac] The cause, as Nancy Leveson and Clark Turner documented in 1993, was a race condition on shared variables — a fault that survived unit testing because each unit behaved as designed. The catastrophe lived in the integration. Leveson's verdict has been the dominant teaching example in safety-critical CS education for thirty years: the software's unit behavior was correct; the system's behavior in use was lethal. Verification against the SDD's safety needs — not against the unit suite — was the missing pass.
 
-[^therac]: Nancy G. Leveson and Clark S. Turner, "An Investigation of the Therac-25 Accidents," *IEEE Computer* 26, no. 7 (July 1993): 18–41. Six radiation overdoses, at least three deaths, 1985–1987. Unit tests on each concurrent process passed because each did what it was supposed to do; the accident lived in the integration the unit suite never tested.
+[^therac]: Nancy G. Leveson and Clark S. Turner, "An Investigation of the Therac-25 Accidents," *IEEE Computer* 26, no. 7 (July 1993): 18–41. Six radiation overdoses, at least three deaths, 1985–1987.
 
-You will not build a Mars probe in high school. You will build something where *the units agree across the interface* and *the system behaves in use* are still real questions. Pass 3 answers them.
+You will not build a Mars probe in high school. You will build something where *the units agree across the interface* and *the system behaves in use* are still real questions. Both passes answer them.
 
-## The Verification Sequence
+---
 
-The diagram above names three passes. You run them in order because each is strictly more expensive than the last, and each catches what the earlier passes are blind to. Out of order — checking SDD needs before the code runs — wastes the expensive pass on questions the cheap pass would have answered.
+The diagram above names three passes. You run them in order because each is strictly more expensive than the last, and each catches what the earlier passes are blind to.
 
-**Pass 1 — Functional verification.** *Does it run end-to-end on the happy path?* You take the canonical input the SDD names, run the build, compare the output to what the SDD says it should produce. Pass means the program executes and the happy path returns the expected output. Fail means the build crashes, throws, or returns the wrong value on the SDD's central input. Resolution: fix code, re-run Pass 1.
+**Pass 1 — Functional verification.** Does it run end-to-end on the happy path? You take the canonical input the SDD names, run the build, compare the output to what the SDD says it should produce. Pass means the program executes and the happy path returns the expected output. Fail means the build crashes, throws, or returns the wrong value on the SDD's central input. Resolution: fix code, re-run Pass 1.
 
 Pass 1 is the pass `npm test` or `pytest` is built to run. It is the pass Claude can both write tests for and execute. It gives you the green check. It is also the pass that — by itself — fooled Mars Climate Orbiter, Therac-25, and approximately every LLM-coding benchmark before 2024.
 
-**Pass 2 — Edge-case verification.** *Does it behave correctly on inputs the SDD defines as out of bounds — empty, oversized, malformed, adversarial?* You run the build against each boundary input the SDD names: *what if the array is empty; what if the text is 10,000 characters; what if localStorage is unavailable; what if the file is malformed*. Pass means the build handles each boundary as the SDD specifies. Fail has *two* resolutions and you choose between them deliberately. If the SDD specified a handling and the code didn't implement it, fix the code. If the SDD did not anticipate the edge case, amend the SDD — and *amending the SDD invalidates Pass 1*, so you loop back.
+**Pass 2 — Edge-case verification.** Does it behave correctly on inputs the SDD defines as out of bounds — empty, oversized, malformed, adversarial? You run the build against each boundary input the SDD names. Pass means the build handles each boundary as the SDD specifies. Fail has *two* resolutions and you choose between them deliberately. If the SDD specified a handling and the code didn't implement it, fix the code. If the SDD did not anticipate the edge case, amend the SDD — and amending the SDD invalidates Pass 1, so you loop back.
 
 Pass 2 is partially automatable: the boundary inputs can sit in a test file. What is not automatable is *what counts as an edge case*. That comes from the SDD, which comes from you.
 
-**Pass 3 — SDD-needs verification.** *Read aloud, does the build satisfy what the user needs, not just what the code claims?* This is the pass you cannot automate, the pass Claude cannot run, the pass that takes longest. You open the SDD to the *User Needs* section. You read each sentence out loud. After each sentence, you check the running build against it — not by running a test. By *using the build*. By looking at it. By playing it. By asking whether a person who had not just built it would experience the sentence as true.
+**Pass 3 — SDD-needs verification.** Read aloud, does the build satisfy what the user needs, not just what the code claims? This is the pass you cannot automate, the pass Claude cannot run, the pass that takes longest. You open the SDD to the *User Needs* section. You read each sentence aloud. After each sentence, you check the running build against it — not by running a test, by *using the build*. By looking at it. By asking whether a person who had not just built it would experience the sentence as true.
 
-Pass 3 fails when the build is functionally correct and *needfully wrong*. The opening of this chapter is a Pass 3 failure: every test passed; the *at a glance* need failed. Mars Climate Orbiter was Pass 3 dressed as Pass 1; Therac-25 was Pass 3 dressed as Pass 2. A failed Pass 3 has the same two resolutions as Pass 2 — fix the code or amend the SDD — and either way you loop back to Pass 1.
+Pass 3 fails when the build is functionally correct and needfully wrong. The opening of this chapter is a Pass 3 failure: every test passed; the *at a glance* need failed. Mars Climate Orbiter was Pass 3 dressed as Pass 1; Therac-25 was Pass 3 dressed as Pass 2. A failed Pass 3 has the same two resolutions as Pass 2 — fix the code or amend the SDD — and either way you loop back to Pass 1.
 
-The ISO/IEC 25010 software quality standard frames the same distinction in industrial language.[^iso] It names two complementary models: *product quality* (eight characteristics including functional suitability, reliability, security, usability) and *quality in use* (effectiveness, efficiency, satisfaction, freedom from risk, context coverage). Passes 1 and 2 target product quality. Pass 3 targets quality in use. A build can score perfectly on one and fail the other, because the two are different things.
+The ISO/IEC 25010 software quality standard frames the same distinction in industrial language.[^iso] It names two complementary models: *product quality* (functional suitability, reliability, security, usability) and *quality in use* (effectiveness, efficiency, satisfaction, freedom from risk, context coverage). Passes 1 and 2 target product quality. Pass 3 targets quality in use. A build can score perfectly on one and fail the other, because the two are different things.
 
-[^iso]: ISO/IEC 25010:2011, *Systems and Software Quality Requirements and Evaluation (SQuaRE) — System and Software Quality Models*. The standard distinguishes *product quality* (what the software is) from *quality in use* (what the software does for people in context). Passes 1 and 2 check product quality; Pass 3 checks quality in use.
+[^iso]: ISO/IEC 25010:2011, *Systems and Software Quality Requirements and Evaluation (SQuaRE) — System and Software Quality Models*. The standard distinguishes *product quality* (what the software is) from *quality in use* (what the software does for people in context).
 
-The honest version of "the build is done" is *all three passes returned green, on this date, against this version of the SDD*. Anything else is an estimate.
+The honest version of "the build is done" is: all three passes returned green, on this date, against this version of the SDD. Anything else is an estimate.
 
-## Test Quality vs Build Quality
+---
 
 A test that passes because it is a bad test is not a passing test.
 
 This sounds like a tautology. It is not. A 100%-line-coverage test suite can have near-zero real-fault detection if the assertions are weak; the build can fail in production and the suite will still show green.
 
-The empirical case for this is the *mutation testing* literature, most cleanly summarized in the Defects4J benchmark.[^just] The technique: take your build, introduce small, targeted defects into the code (flip a `<` to `<=`, change `+` to `-`, replace a return value with a constant), and run the test suite. If the suite catches the mutant, the suite is doing real work. If the suite passes against the mutant, the suite was not testing the thing the mutant changed. Across thousands of programs, line coverage and mutation score *do not correlate*. A suite at 95% line coverage can have a mutation score below 20%. The lines are touched. Nothing is asserted about them.
+The empirical case is the *mutation testing* literature, most cleanly summarized in the Defects4J benchmark.[^just] The technique: take your build, introduce small targeted defects into the code — flip a `<` to `<=`, change `+` to `-`, replace a return value with a constant — and run the test suite. If the suite catches the mutant, the suite is doing real work. If the suite passes against the mutant, the suite was not testing the thing the mutant changed. Across thousands of programs, line coverage and mutation score do not correlate. A suite at 95% line coverage can have a mutation score below 20%. The lines are touched. Nothing is asserted about them.
 
 [^just]: René Just, Darioush Jalali, and Michael D. Ernst, "Defects4J: A Database of Existing Faults to Enable Controlled Testing Studies for Java Programs," *Proceedings of ISSTA 2014*, 437–440; and the companion FSE 2014 paper, "Are Mutants a Valid Substitute for Real Faults in Software Testing?" Together they establish that mutation analysis correlates with real-fault detection where line coverage does not.
 
-Three concrete patterns of bad tests to spot in your own builds:
+Three patterns of bad tests to spot in your own builds.
 
-**The tautology test.** `expect(addTask([], "x").length).toBe(addTask([], "x").length)` — passes forever, asserts nothing. The Claude-generated version is subtler: a test whose expected value is computed by the same function the test is supposed to verify, often because Claude wrote a test and a helper at the same time and the helper sneaked into the expectation.
+The **tautology test**: the expected value is computed by the same function the test is supposed to verify. Often because Claude wrote a test and a helper at the same time and the helper sneaked into the expectation. `expect(addTask([], "x").length).toBe(addTask([], "x").length)` passes forever and asserts nothing.
 
-**The over-mocked test.** Stubs out everything the unit interacts with, so what's tested is the stubs. Mock the database, network, time, and file system and you are verifying your stub harness composes — not that your code works against the world.
+The **over-mocked test**: stubs out everything the unit interacts with, so what's tested is the stubs. Mock the database, network, time, and file system and you are verifying your stub harness composes — not that your code works against the world.
 
-**The handler-only test.** Calls the function, asserts *something* came back — non-null, right type — but never asserts the *content*. A `deleteTask` test that confirms the result is an array but never that the deleted task is gone passes against any correct implementation. It also passes against *return tasks unchanged*. Indistinguishable.
+The **handler-only test**: calls the function, asserts *something* came back — non-null, right type — but never asserts the content. A `deleteTask` test that confirms the result is an array but never that the deleted task is gone passes against any correct implementation. It also passes against *return tasks unchanged*. Indistinguishable.
 
-Pass 1 assumes its tests are good tests. If they are not, Pass 1 is theater. The cheapest defense on a student-scale build is to ask, *for each test, what minimum change to the code would make this test fail?* If you cannot name one, the test is probably bad. The more rigorous defense is mutation testing — `mutmut` for Python, Stryker for JavaScript, PIT for Java — which automates the question.[^mutationtools]
+Pass 1 assumes its tests are good tests. If they are not, Pass 1 is theater. The cheapest defense is to ask, for each test, *what minimum change to the code would make this test fail?* If you cannot name one, the test is probably bad. The more rigorous defense is mutation testing — `mutmut` for Python, Stryker for JavaScript, PIT for Java — which automates the question.[^mutationtools]
 
-[^mutationtools]: Mutation-testing tooling is mature enough for student-scale builds in 2026. The command names are moderate aging-risk; the *pattern* — introduce defects, run tests, count survivors — is stable.
+[^mutationtools]: Mutation-testing tooling is mature enough for student-scale builds in 2026. The command names carry moderate aging-risk; the pattern — introduce defects, run tests, count survivors — is stable.
 
-Donald Knuth's 1984 case for literate programming is the conceptual ancestor of this section.[^knuth] Code is a work of literature whose primary audience is humans. A test that *reads* as if it is asserting something is not the same as a test that *is*. Verification becomes legible only when the test can be read aloud and defended sentence by sentence: *this test asserts that, given an array with one task and a call to delete that task by id, the returned array has length zero and the original array still has length one.* If the test cannot be read aloud, it cannot be defended, and a test that cannot be defended is not evidence.
+Donald Knuth's 1984 case for literate programming is the conceptual ancestor of this point.[^knuth] Code is a work of literature whose primary audience is humans. A test that *reads* as if it is asserting something is not the same as a test that *is*. Verification becomes legible only when the test can be read aloud and defended: *this test asserts that, given an array with one task and a call to delete that task by id, the returned array has length zero and the original array still has length one.* If the test cannot be read aloud, it cannot be defended, and a test that cannot be defended is not evidence.
 
-[^knuth]: Donald E. Knuth, "Literate Programming," *The Computer Journal* 27, no. 2 (May 1984): 97–111. The argument that code is written for human readers first applies to tests with extra force.
+[^knuth]: Donald E. Knuth, "Literate Programming," *The Computer Journal* 27, no. 2 (May 1984): 97–111.
 
-## The Post-Build Learning Document
+---
 
-Here is the rule the rest of the chapter defends: *the post-build learning document is the most important output of the build.*
+Here is the rule the rest of the chapter defends: the post-build learning document is the most important output of the build.
 
-Not the most important *immediately* — immediately, the running build is what you can show. But across the lifetime of you-as-a-builder, the document outlasts the code. The code becomes obsolete, gets refactored, runs in a deprecated framework, solves a problem you no longer have. The *account* of why this code was built this way, against which needs, with which delegated and retained decisions, is the thing that compounds. Each post-build document is a layer of pattern recognition you carry into the next build.
+Not the most important *immediately* — immediately, the running build is what you can show. But across the lifetime of you-as-a-builder, the document outlasts the code. The code becomes obsolete, gets refactored, runs in a deprecated framework, solves a problem you no longer have. The account of why this build was structured this way, with which delegations and retained decisions, is the thing that compounds. Each document is a layer of pattern recognition you carry into the next build.
 
 The document has five sections. Each is one paragraph, sometimes two. The whole document is one page. Length is a discipline: anything longer is usually padding; anything shorter is usually evasion.
 
-**Section 1 — What I built.** The build, named honestly, with its actual scope. Not what you hoped. Not what the SDD called it. What it actually does, in plain prose, as if telling a friend who has never seen it. If it came in narrower than Phase 1, say so. If a feature is half-implemented, say so. If it works on Chrome but not Safari, say so. The post-build document is not marketing.
+**What I built.** The build named honestly, with its actual scope. Not what you hoped. Not what the SDD called it. What it actually does, in plain prose, as if telling a friend who has never seen it. If a feature is half-implemented, say so. If it works on Chrome but not Safari, say so. This section is not marketing.
 
-**Section 2 — What I delegated to Claude and why.** The rows where Labor said Claude, and the reason each was a Claude row. You wrote those reasons during planning; here you write whether they held up. *Row 3 was delegated because the contract was specifiable; it held with one /rewind to re-specify immutability.* If a delegation did not hold, that is the most useful sentence in the document.
+**What I delegated to Claude and why.** The rows where Labor said Claude, and the reason each was a Claude row. You wrote those reasons during planning; here you write whether they held up. If a delegation did not hold, that is the most useful sentence in the document.
 
-**Section 3 — What I kept for myself and why.** The rows where Labor said Human, and what kept it human. Not "because I wanted to" — the actual supervisory capacity from Chapter 5: problem formulation, taste, judgment under uncertainty, integration, accountability. This is also the place to record *almost-delegations* — the human row you nearly handed to Claude and didn't, and what told you not to.
+**What I kept for myself and why.** The rows where Labor said Human, and what kept it human — the actual supervisory capacity: problem formulation, taste, judgment under uncertainty, integration, accountability. This is also the place to record almost-delegations — the human row you nearly handed to Claude and didn't, and what told you not to.
 
-**Section 4 — What I learned.** *Specific*. Not "I learned a lot about TypeScript." Specific in two registers: a thing you learned about *the domain* and a thing you learned about *yourself as a builder*. The two-register format is the rubric: if either register is missing, the section is not done.
+**What I learned.** Specific, in two registers: something you learned about *the domain* and something you learned about *yourself as a builder*. The two-register format is the rubric. If either is missing, the section is not done.
 
-**Section 5 — What I would do differently.** A single concrete change to your process — not a vague resolution. *Next time, I will copy the User Needs section of the SDD into the top of every Claude prompt during Pass 3.* The test of whether this section is done: *would the difference be visible in the next score I write?* If the change would not show up as a row, a constraint, or a checklist item, it is not concrete enough yet.
+**What I would do differently.** A single concrete change to your process — not a vague resolution. *Next time I will copy the User Needs section of the SDD into the top of every Claude prompt during Pass 3.* The test of whether this section is done: would the difference be visible in the next score I write? If not, it is not concrete enough yet.
 
-The discipline is in the specificity. A document filled with abstractions — *I learned a lot; I would plan better* — is paperwork, not a document. The rubric: *if a stranger read this document and your code together, could they reconstruct what your decisions were and why?* If yes, the document is doing work.
+The discipline is in the specificity. A document filled with abstractions — *I learned a lot; I would plan better* — is paperwork, not a document. The rubric: if a stranger read this document and your code together, could they reconstruct what your decisions were and why? If yes, the document is doing work.
 
-## Why the Post-Build Document Matters More Than the Code
+There are three reasons this matters more than the code, and each is individually sufficient.
 
-Three reasons. Each is, individually, sufficient.
+The code is fungible; the account is not. In 2026, the cost of generating a working task tracker has fallen to roughly the cost of typing the prompt. What is rare — what you can produce that Claude cannot — is the account of why this build was structured this way, with which delegations, with which capacities exercised. The code is one of many possible artifacts that could have come from your SDD. The document is the only artifact that records why this one and not the others.
 
-**The code is fungible; the account is not.** In 2026, the cost of generating a working task tracker has fallen to roughly the cost of typing the prompt. By 2028 it will be lower. What is rare — what you can produce that Claude cannot — is the account of why this build was structured this way, with which delegations, with which capacities exercised. The code is one of many possible artifacts that could have come from your SDD. The document is the only artifact that records *why this one and not the others*. A student who cannot account for the build did not really build it, regardless of whether the tests pass.
+The document is the proof that supervision happened. Each of the five supervisory capacities from Chapter 5 is observable only through accounting. Problem formulation lives in the *what I built* section. Judgment under uncertainty lives in the delegation paragraph. Integration lives in the kept-for-myself paragraph. Without the document, the capacities are claims. With the document, they are evidence.
 
-**The document is the proof that supervision happened.** Chapter 5 named five supervisory capacities. Each is observable only through accounting. Problem formulation lives in the *what I built* section. Judgment under uncertainty lives in the delegation paragraph. Integration lives in the kept-for-myself paragraph. Without the document, the capacities are claims. With the document, they are evidence.
+And reflection is the part of learning that doesn't happen on its own. The CS-education literature converges on a finding that should not surprise you: students who write structured reflections after their builds learn measurably more than students who do not, and the effect size depends on how *structured* the prompt is.[^reflection] Open-ended *what did you learn* yields padding. Specific prompts about specific decisions yield evidence. The five sections above are structured for that reason.
 
-**Reflection is the part of learning that doesn't happen on its own.** The CS-education literature converges on a finding that should not surprise you: students who write structured reflections after their builds learn measurably more than students who do not, and the effect size depends on how *structured* the prompt is.[^reflection] Open-ended *what did you learn* yields padding. Specific prompts about specific decisions yield evidence. The five sections above are structured for that reason.
+[^reflection]: The CS-education reflection literature finds structured prompts substantially outperform open-ended *what did you learn* questions for measured learning gains, with the largest effect on students with low self-regulated-learning skills (Hutt et al., 2022).
 
-[^reflection]: The CS-education reflection literature finds (a) structured prompts substantially outperform open-ended *what did you learn* questions for measured learning gains, and (b) combined feedback — analytics plus human comment — increases engagement with reflective writing, with the largest effect on students with low self-regulated-learning skills (Hutt et al., 2022).
+You will be tempted to skip the document. Resist. The cheapest moment to write it is right after Pass 3 turns green, when the decisions are still live. Wait a week and it becomes guesswork. Wait a month and it becomes fiction.
 
-You will be tempted to skip the document. Resist. The cheapest moment to write it is *right after the verification sequence passes*, when the decisions are still live. Wait a week and the document becomes guesswork. Wait a month and it becomes fiction.
-
-## Worked Example: Pass 1, Pass 2, Pass 3 — and the One Failure
+---
 
 What follows is the verification pass I actually ran on Phase 1. Five rows, nine unit tests, one Pass 3 failure the test suite was structurally incapable of catching. Then the post-build document.
 
-### Pass 1 — Functional verification
+**Pass 1.** The canonical input from the SDD: open the app, type *Buy milk*, click add. Open another, type *Read Liskov 1974*, click add. Click the first one to mark it done. Refresh the browser. Expected: two tasks, the first marked done, persisting across refresh. Actual: two tasks, the first marked done, persisting across refresh. `npm test` reports nine of nine passing. The page loads in Chrome, Firefox, and Safari. No console errors. Pass 1: green.
 
-The canonical input from the SDD: open the app, type *Buy milk*, click add. Open another, type *Read Liskov 1974*, click add. Click the first one to mark it done. Refresh the browser.
-
-Expected: two tasks, the first marked done, persisting across refresh.
-
-Actual: two tasks, the first marked done, persisting across refresh. `npm test` reports nine of nine passing. The page loads in Chrome, Firefox, and Safari. No console errors.
-
-Pass 1: green.
-
-### Pass 2 — Edge-case verification
-
-The boundary inputs the SDD names — and one I added during planning when Claude proposed it. I ran each by hand against the running build.
+**Pass 2.** The boundary inputs the SDD names, plus one Claude proposed during planning.
 
 | Boundary | SDD expectation | Result |
 |---|---|---|
 | Add empty string | Reject; do not add | Pass — input field rejects empty submit |
-| Add 5,000-character string | Accept and truncate display, full text on hover | Pass — accepted, truncated visually, hover shows full |
+| Add 5,000-character string | Accept and truncate display, full text on hover | Pass |
 | Delete the only task | Empty list, no crash | Pass |
 | Toggle a task that doesn't exist (manual `localStorage` injection) | No crash; ignore | Pass |
 | `localStorage` unavailable (Safari private window) | In-memory fallback with notice in root div | Pass |
 | `localStorage["tasks-v1"]` set to malformed JSON | Confirmation dialog; on confirm clear and start empty | Pass |
 | Two tasks with the same `id` (manual injection) | *Not specified in SDD* | **Anomaly** — toggle affects both |
 
-The bottom row is the interesting one. The SDD did not anticipate duplicate IDs because `crypto.randomUUID()` doesn't produce them — but the build toggles both on a hand-injected duplicate. That is a Pass 2 amend-the-SDD case: the spec was silent and needs a sentence. I added one — *`toggleTask` and `deleteTask` operate on the first matching id; downstream uniqueness is the data layer's responsibility* — and looped back to Pass 1. The tests still pass; the SDD change matches existing behavior. Pass 2 turns green.
+The bottom row is the interesting one. The SDD did not anticipate duplicate IDs because `crypto.randomUUID()` doesn't produce them — but the build toggles both on a hand-injected duplicate. That is a Pass 2 amend-the-SDD case: the spec was silent and needs a sentence. I added one — *`toggleTask` and `deleteTask` operate on the first matching id; downstream uniqueness is the data layer's responsibility* — and looped back to Pass 1. The tests still pass; the SDD change matches existing behavior. Pass 2: green.
 
-### Pass 3 — SDD-needs verification
+**Pass 3.** I open the SDD to section 2.3, *User Needs*. I read each sentence aloud against the running build.
 
-I open the SDD to section 2.3, *User Needs*. I read each sentence aloud and check the running build against it.
+*The user should be able to add, mark done, and delete tasks.* Yes. Pass.
 
-> *The user should be able to add, mark done, and delete tasks.*
+*Tasks should persist across browser refresh and reasonable browser closures.* Yes. Pass.
 
-Yes. I added, marked done, deleted. Pass.
+*On corrupted storage, the user should be offered a recovery path, not silently lose data.* Yes, tested in Pass 2. Pass.
 
-> *Tasks should persist across browser refresh and reasonable browser closures.*
+*The user should be able to see at a glance which tasks remain and which are done, without scrolling.* I look at the running build. Six tasks. Three done with strikethrough. List order is insertion order; the done ones are scattered. With twenty tasks across a week, *at a glance* would be impossible. **Pass 3 fails.**
 
-Yes. Refreshed; reopened tab; tasks present. Pass.
+The failure is not in the code. The failure is that the score never had a row for *display order*, because the SDD's prose buried *at a glance* in section 2.3, and by row 5 I had stopped re-reading section 2.3.
 
-> *On corrupted storage, the user should be offered a recovery path, not silently lose data.*
-
-Yes. I tested this in Pass 2. Confirmation dialog appears. Pass.
-
-> *The user should be able to see at a glance which tasks remain and which are done, without scrolling.*
-
-I look at the running build. Six tasks. Three done with strikethrough. List order is insertion order; the done ones are scattered. *At a glance* requires reading the strikethrough on each line. With twenty tasks across a week, *at a glance* would be impossible. **Pass 3 fails.**
-
-The failure is not in the code. The code is functionally correct. The failure is that the score never had a row for *display order*, because the SDD's prose buried *at a glance* in section 2.3, and by row 5 I had stopped re-reading section 2.3.
-
-Resolution: fix the code, not amend the SDD. The need is clear and good; the code did not satisfy it. I add row 6: *Sort displayed tasks: open first, done below, each subgroup in insertion order. Handoff condition: with three open and three done tasks added in arbitrary order, the open ones render above the done ones on every refresh.*
-
-I run row 6 as a Claude row. Prompt: *In `main.ts`, sort displayed tasks before rendering: `done: false` first in insertion order, then `done: true` in insertion order. Sort a copy; don't mutate. Update no other behavior.* Claude produces a six-line change and one new test. `npm test` reports ten of ten passing. I re-run Pass 3 on the *at a glance* sentence. Open on top, done below. *At a glance* now reads as true.
+Resolution: fix the code, not amend the SDD. The need is clear and good; the code did not satisfy it. I add row 6: *Sort displayed tasks: open first, done below, each subgroup in insertion order. Handoff condition: with three open and three done tasks added in arbitrary order, the open ones render above the done ones on every refresh.* I run row 6 as a Claude row. Prompt: *In `main.ts`, sort displayed tasks before rendering: `done: false` first in insertion order, then `done: true` in insertion order. Sort a copy; don't mutate. Update no other behavior.* Claude produces a six-line change and one new test. `npm test` reports ten of ten passing. I re-run Pass 3 on the *at a glance* sentence. Open on top, done below. *At a glance* now reads as true.
 
 Pass 3: green. The build is done.
 
-### Post-build document: Phase 1 of the task tracker
+---
 
-*Written immediately after Pass 3 turned green. One page. Five sections. The document follows.*
+**Post-build document: Phase 1 of the task tracker.** *Written immediately after Pass 3 turned green.*
 
 > **What I built.** Phase 1 of the task tracker is a single-page browser app that lets one user add, mark done, and delete short text tasks. Tasks persist in `localStorage` under the key `tasks-v1`. On parse failure the app shows a recovery dialog. On `localStorage` unavailable the app falls back to in-memory and tells the user. Open tasks render above done tasks; within each group, insertion order is preserved. The app does not yet support editing, due dates, or multiple lists; those are Phase 2 and Phase 3.
 >
@@ -204,17 +170,11 @@ Pass 3: green. The build is done.
 >
 > **What I learned.** I learned, about the domain, that *display order* is part of *what tasks do* in a task tracker; insertion order is not a neutral default but a design decision, and a wrong one for the at-a-glance need. I learned, about myself as a builder, that I treat the SDD's prose as homework once the score is written — I substitute the score's rows for the SDD's needs and stop re-reading the section that produced the rows. This is exactly the failure mode the chapter on verification names. I caught it because I had been taught to run Pass 3 by reading aloud; if I had been running tests-as-verification, I would have shipped a build that passes its tests and fails the need that motivated the build.
 >
-> **What I would do differently.** Next time, I will copy the *User Needs* section of the SDD as a literal block at the top of the Boondoggle Score, above the rows, and I will read it aloud at the start of *every* verification pass, not just Pass 3. The change is concrete: it is a row 0 in the score template. The test of whether it works is whether Pass 3 ever again surfaces a need the score had not already enrolled as a row.
+> **What I would do differently.** Next time, I will copy the *User Needs* section of the SDD as a literal block at the top of the score, above the rows, and I will read it aloud at the start of every verification pass, not just Pass 3. The change is concrete: it is a row 0 in the score template. The test of whether it works is whether Pass 3 ever again surfaces a need the score had not already enrolled as a row.
 
 That document is the most important file in the Phase 1 commit. The code is the second.
 
-## Exercises
-
-1. **(Apply) Run a structured verification pass on your Chapter 12 build.** Run all three passes — functional, edge case, SDD needs — in order, against the build you ran in the previous chapter. For each pass, document the inputs you used, the expected behavior from your SDD, and the actual behavior. At least one pass must surface a discrepancy; if all three return clean on the first attempt, your SDD is probably underspecified. Re-read your *User Needs* section out loud against the running build before you submit.
-
-2. **(Analyze) Diagnose a passing test that does not test the right thing.** Pick one test from your Chapter 12 build that currently passes. Ask: *what minimum change to the code would make this test fail?* If you cannot name a change, the test is bad. Diagnose the badness (tautology, over-mocked, handler-only, or another pattern), rewrite the test so a real defect would fail it, and verify the rewrite by deliberately breaking the code and watching the new test catch it. Submit the original test, the rewritten test, and a one-paragraph explanation of what the rewrite is asserting that the original was not.
-
-3. **(Create) Write a post-build learning document for your Chapter 12 build.** Five sections. One page. Follow the rubric in this chapter: each section specific, the two-register learning section present (something about the domain and something about yourself), and the *what I would do differently* section concrete enough that it would change a row in the score for your next build. Submit alongside the code.
+---
 
 ## 🕰️ AI Wayback Machine
 
@@ -222,7 +182,7 @@ That document is the most important file in the Phase 1 commit. The code is the 
 
 Liskov's contribution is the formal version of *"correct" must be defined before it can be verified*. Pass 3 is its operational form. You cannot check whether a build does what the user needs until the needs are specified independently of the code. The score is the schedule; the SDD is the Liskov contract.[^liskov-note]
 
-[^liskov-note]: Honest flag. The AI Wayback Machine rule in this book is *pre-2000 foundational, deceased by 2001*. Barbara Liskov is alive (born 1939) and her best-known formalization (Liskov & Wing) is 1994 — by strict reading she does not qualify. We are keeping her in this chapter because her contribution is the precise intellectual ancestor of the SDD-needs verification pass, and replacing her with a strictly-qualifying figure would weaken the connection the chapter is making. The override is a deliberate editorial choice, not an oversight. The alternates we considered — Tony Hoare, Margaret Hamilton, Robin Milner — each appear elsewhere in this book.
+[^liskov-note]: Honest flag. The AI Wayback Machine rule in this book is pre-2000 foundational, with contributors deceased by 2001. Barbara Liskov is alive (born 1939) and her best-known formalization (Liskov & Wing) is 1994 — by strict reading she does not qualify. She is kept here because her contribution is the precise intellectual ancestor of the SDD-needs verification pass, and replacing her with a strictly-qualifying figure would weaken the connection the chapter is making. The alternates considered — Tony Hoare, Margaret Hamilton, Robin Milner — each appear elsewhere in this book. The override is deliberate editorial choice, not oversight.
 
 **Run this:**
 
@@ -232,4 +192,15 @@ Paste your SDD's *User Needs* section underneath the prompt. The output is your 
 
 ---
 
-**Bridge:** The reader has the discipline. Chapter 14 hands them the build.
+**Links:** [boondoggling.ai](https://boondoggling.ai) · [irreducibly.xyz](https://irreducibly.xyz)
+
+**References (in-chapter citations):**
+
+- Hoare, C. A. R. (1969). An axiomatic basis for computer programming. *Communications of the ACM*, 12(10), 576–580.
+- ISO/IEC 25010:2011. *Systems and Software Quality Requirements and Evaluation (SQuaRE) — System and Software Quality Models*. ISO/IEC.
+- Just, R., Jalali, D., & Ernst, M. D. (2014). Defects4J: A database of existing faults to enable controlled testing studies for Java programs. *Proceedings of ISSTA 2014*, 437–440.
+- Knuth, D. E. (1984). Literate programming. *The Computer Journal*, 27(2), 97–111.
+- Leveson, N. G., & Turner, C. S. (1993). An investigation of the Therac-25 accidents. *IEEE Computer*, 26(7), 18–41.
+- Liskov, B. H., & Wing, J. M. (1994). A behavioral notion of subtyping. *ACM Transactions on Programming Languages and Systems*, 16(6), 1811–1841.
+- Liskov, B. H., & Zilles, S. N. (1974). Programming with abstract data types. *ACM SIGPLAN Notices*, 9(4), 50–59.
+- Mars Climate Orbiter Mishap Investigation Board (1999). *Phase I Report*. NASA.
