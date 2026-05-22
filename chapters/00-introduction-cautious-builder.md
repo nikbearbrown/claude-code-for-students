@@ -52,7 +52,8 @@ Researchers at Anthropic found something similar in 2026 with software engineers
 
 I'll get into these numbers in Chapter 1. For now I just want to establish that what I watched happen to D is not a one-off observation from a single AP CS class in one school. The structure of the failure is replicable. The researchers are finding the same shape.
 
-<!-- → [DIAGRAM: Seth's arc from observer to practitioner — simple two-point timeline showing "watches friends" → "builds the discipline". Minimal. Editorial style. No color.] -->
+![Two-point editorial timeline showing the arc from watching friends paste prompts and copy answers to building a disciplined conducting practice.](images/00-introduction-cautious-builder-fig-01.png)
+*Figure 0.1 — From observer to practitioner*
 
 ---
 
@@ -84,7 +85,7 @@ There's a broader shape to this that I find genuinely interesting, and it goes b
 
 Norbert Wiener was a mathematician at MIT who, in the 1940s, was watching anti-aircraft gunners try to predict where a plane would be by the time the shell got there. He became convinced that the interesting thing about any tool was not what the tool did, but what happened in the *loop* between the tool and the person using it. He named the study of this loop *cybernetics*, from the Greek for *steersman* — the person on the boat who doesn't row but decides where the boat goes. He wrote, in 1950, that automation would be morally neutral as a technology and morally consequential as a *use*. The question worth asking, he said, is not what the machine can do. The question is what the machine does to the person who uses it.
 
-<!-- → [SIDEBAR: Wiener, N. (1950/1954). *The Human Use of Human Beings: Cybernetics and Society.* Da Capo Press.] -->
+> Wiener, N. (1950/1954). *The Human Use of Human Beings: Cybernetics and Society.* Da Capo Press.
 
 Wiener died in 1964. He never saw a laptop. He saw the shape of this argument anyway. The shape is: when you put a capable tool in the loop, you have not only changed what gets done. You have changed the loop itself, and therefore you have changed what the person inside the loop becomes. D's loop changed. D changed. Not because he made a bad choice in any obvious sense, but because the structure of his practice changed in a way that had consequences he couldn't see.
 
@@ -96,7 +97,9 @@ The answer, as far as I can tell, is something like: keep your hands on the thin
 
 Here is how this book works, because it is a little unusual.
 
-I'm Seth. I'm a high-school student, and I will be narrating in my own voice through the early chapters, and again at the end. In the chapters in between, my dad — Nik — takes over, because those chapters are about frameworks and he teaches that stuff for a living. I noticed things. He can explain why I noticed them. The voice will shift between us. That is on purpose.
+I'm Seth. I'm a high-school senior in Troy, Missouri. I build games — that's the part of my life that matters most to this book, because the discipline I'm going to describe is the discipline I worked out under real deadlines on real builds, not on AP CS homework. I've shipped a co-op horror survival game in Godot 4 called *Haunt & Harvest* — I migrated the whole thing from Unreal Engine system by system, which meant rewriting the AI, the inventory, and the networked co-op from scratch. I built a Roblox horror game in Luau called *Midnight Fuel* with a cinematic cutscene system and modular scripting that I designed to scale to multiplayer. I shipped a mobile arcade game called *Bubble Pop* to Google Play, handled the AdMob integration and the Play Console paperwork end to end. I run *Zebonastic* — a Next.js platform where I publish weekly articles on horror game psychology and adrenaline mechanics. I'm 17. I work at Pizza Ranch on weekends. I play electric guitar in a metalcore cover band. This is the life the discipline has to survive in.
+
+I will be narrating in my own voice through the early chapters, and again at the end. In the chapters in between, my dad — Nik — takes over, because those chapters are about frameworks and he teaches that stuff for a living. I noticed things on my own builds. He can explain why I noticed them. The voice will shift between us. That is on purpose.
 
 This is not an AI ethics book. I am not going to tell you whether to use Claude. You are going to use Claude. Your school is going to use it. The question is not whether. The question is how — and how is a capability question, not an ethics question. If you came for a lecture about academic integrity, I am the wrong narrator.
 
@@ -124,3 +127,19 @@ to use it. Tell me what to notice.
 ---
 
 **Links:** [boondoggling.ai](https://boondoggling.ai) · [irreducibly.xyz](https://irreducibly.xyz)
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 0.1 — From observer to practitioner
+
+Build a single-row editorial timeline in D3 v7 with two endpoint nodes connected by a left-to-right arrow on a horizontal baseline. Place the baseline at y ≈ 180 across the chart width with 120px inset on the left and right. Render the two endpoints as filled circles (radius 6) using `--color-ink`. Above each circle, a small ALL CAPS monospace label: BEFORE on the left, AFTER on the right. Below each circle, a serif bold title — "Watches friends" left, "Builds the discipline" right — followed by two lines of body text (size 11) describing the behavior at that point. At the horizontal midpoint, draw a short vertical dashed tick (`--color-border`, dash 4 3) with a monospace "THE TURN" caption above it and a two-line italic secondary-color note about noticing the gap between output and learning. Single arrow marker at the right end of the baseline. No legend, no color accent — pure ink-on-warm-white editorial style. Hovering a circle reveals a tooltip with one sentence elaborating that endpoint.
+
+> Reference implementation: `d3/00-introduction-cautious-builder-fig-01.html`

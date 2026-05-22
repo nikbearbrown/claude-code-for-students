@@ -34,7 +34,13 @@ Daniel Kahneman called the fast, associative, pattern-completing mode of human c
 
 The only defense against this is to route Claude's outputs, deliberately, into your own System 2 before you act on them. The whole chapter is about how.
 
-<!-- → [TABLE: Division of labor — two columns: Claude does / Human does. Rows: pattern completion, code generation, syntax resolution, test execution (Claude) vs. plausibility auditing, problem formulation, interpretive judgment, tool orchestration, executive integration (Human). No color.] -->
+| Claude does | Human does |
+|---|---|
+| Pattern completion across millions of training samples | Plausibility auditing — hearing the wrong note before tests catch it |
+| Code generation from a specified prompt | Problem formulation — deciding what the build IS before Claude sees it |
+| Syntax resolution and library-idiom translation | Interpretive judgment — deciding what an output means for *this* project |
+| Test execution and mechanical iteration against output | Tool orchestration — which task, in what order, with what trust level |
+| Searching a codebase for a documented pattern | Executive integration — holding the build's whole across a long session |
 
 ---
 
@@ -76,7 +82,8 @@ There is a corollary worth drawing out, because it sets the shape of the whole s
 
 Claude's solve speed is rising fast. It has been rising fast for three years and there is no public evidence the rise is slowing. Every model generation gets faster, gets more accurate on standard benchmarks, handles more context. Your verification speed — how quickly you can check whether the candidate solution is correct against the domain you're working in — is approximately constant. You can train it; a year of serious programming work measurably improves your verification on the code you write. But it does not improve at the rate Claude's solve speed improves, and it cannot, because verification is bottlenecked on a human cognitive process Claude is not subject to.
 
-<!-- → [DIAGRAM: The solve-verify asymmetry — simple timeline. Claude's solve speed increasing over time. Human verification capacity stable. The gap widens. The human's job is not to solve faster but to verify better.] -->
+![A line chart over time. Claude's solve speed rises steeply; human verification capacity stays roughly flat. The gap between the two trajectories widens.](images/02-division-of-labor-fig-01.png)
+*Figure 2.1 — The solve-verify asymmetry*
 
 Two lines. One rising. One roughly flat. The gap between them is widening.
 
@@ -135,3 +142,19 @@ I want to be honest about Taylor, because he is famous and he is controversial a
 ## Bridge
 
 The reader can name the five capacities. Chapter 3 explains why school isn't teaching them — and why the student is on their own.
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 2.1 — The solve-verify asymmetry
+
+Build a two-series line chart in D3 v7 with time on the x-axis (labeled 2022, 2023, 2024, 2025, 2026 →) and relative capacity on the y-axis (label rotated 90°, no numeric scale). The chart area uses `--color-fill` background with `--color-border` border. Series 1 ("Claude solves") rises steeply along an accelerating curve from low-left to high-right — approximately `0.05 + t^2.1 * 0.92` for `t ∈ [0,1]`. Series 2 ("Human verifies") moves almost flat with a small positive slope — `0.18 + 0.08 * t`. Both series use `--color-ink` stroke at width 1.5 with a Catmull-Rom curve. At three sample times (≈ 0.4, 0.65, 0.9), draw a dashed vertical hairline (`--color-border`, dash 4 3) between the two curves to make the gap visible. Place a monospace ALL CAPS "THE WIDENING GAP" label inside the gap region. End-of-line labels (right of the plot area) name each series in bold serif with a secondary-color subtitle below. Hovering either line shows a tooltip with one sentence about that trajectory. Footer caption: "Your job is not to solve faster. Your job is to verify better."
+
+> Reference implementation: `d3/02-division-of-labor-fig-01.html`

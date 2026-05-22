@@ -1,0 +1,101 @@
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">The build loop</title>
+  <desc id="desc">Specification feeds Claude execution, output is checked against the handoff condition. Pass leads to the next step; fail loops back via /rewind and respecification. The check step is governed by Plausibility Auditing, highlighted in red.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#C8102E"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 12.1 — THE BUILD LOOP</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Specification → execution → audit → next step, or /rewind and respecify</text>
+
+  <!-- Top row: Specification, Claude executes, Check -->
+  <!-- Box 1: Specification (row + prompt) -->
+  <g>
+    <rect x="32" y="128" width="148" height="80" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="32" y="128" width="148" height="24" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="106" y="145" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">SPECIFICATION</text>
+    <text x="106" y="174" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Row + prompt</text>
+    <text x="106" y="192" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Score row, SDD section,</text>
+    <text x="106" y="204" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">acceptance criteria.</text>
+  </g>
+
+  <line x1="180" y1="168" x2="212" y2="168" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Box 2: Claude executes -->
+  <g>
+    <rect x="212" y="128" width="148" height="80" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="212" y="128" width="148" height="24" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="286" y="145" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">CLAUDE EXECUTES</text>
+    <text x="286" y="174" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Produces diff</text>
+    <text x="286" y="192" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Files, tests, output.</text>
+    <text x="286" y="204" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Read before running.</text>
+  </g>
+
+  <line x1="360" y1="168" x2="392" y2="168" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Box 3: Check (highlighted) -->
+  <g>
+    <rect x="392" y="128" width="148" height="80" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+    <rect x="392" y="128" width="148" height="24" fill="#F5EFE8" stroke="#C8102E" stroke-width="1"/>
+    <text x="466" y="145" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#C8102E">HANDOFF CHECK</text>
+    <text x="466" y="174" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#C8102E">Audit, not approve</text>
+    <text x="466" y="192" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Condition I wrote +</text>
+    <text x="466" y="204" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">condition I should have.</text>
+  </g>
+
+  <!-- PA badge tag pointing at check -->
+  <g>
+    <rect x="556" y="140" width="108" height="56" fill="#F5EFE8" stroke="#C8102E" stroke-width="1"/>
+    <text x="610" y="158" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#C8102E">[PA]</text>
+    <text x="610" y="176" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">Plausibility</text>
+    <text x="610" y="188" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">Auditing governs</text>
+  </g>
+  <line x1="556" y1="168" x2="544" y2="168" stroke="#C8102E" stroke-width="1" fill="none" stroke-dasharray="3 2"/>
+
+  <!-- Pass arrow down-right, Fail arrow down-left -->
+  <!-- Pass: from bottom of check, right and down to Next step -->
+  <path d="M 466 208 L 466 256 L 564 256 L 564 296" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="478" y="248" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">PASS</text>
+
+  <!-- Fail: from bottom of check, left and down to /rewind -->
+  <path d="M 466 208 L 466 256 L 252 256 L 252 296" stroke="#C8102E" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+  <text x="332" y="248" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#C8102E">FAIL</text>
+
+  <!-- Box: /rewind and respecify -->
+  <g>
+    <rect x="148" y="296" width="208" height="80" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+    <rect x="148" y="296" width="208" height="24" fill="#F5EFE8" stroke="#C8102E" stroke-width="1"/>
+    <text x="252" y="313" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#C8102E">/REWIND + RESPECIFY</text>
+    <text x="252" y="342" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Esc-Esc, then tighten</text>
+    <text x="252" y="360" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">New prompt is strictly more</text>
+    <text x="252" y="372" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">specified — not a complaint.</text>
+  </g>
+
+  <!-- Box: Next step -->
+  <g>
+    <rect x="460" y="296" width="208" height="80" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="460" y="296" width="208" height="24" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="564" y="313" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">NEXT STEP</text>
+    <text x="564" y="342" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Row closes; advance</text>
+    <text x="564" y="360" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Next row in the Score.</text>
+    <text x="564" y="372" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">/clear if unrelated.</text>
+  </g>
+
+  <!-- Loop back arrow: from /rewind back up to Specification -->
+  <path d="M 148 336 L 96 336 L 96 168 L 32 168" stroke="#C8102E" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)" stroke-dasharray="4 3"/>
+  <text x="56" y="252" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#C8102E">loop:</text>
+  <text x="56" y="266" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#C8102E">tighter spec</text>
+
+  <!-- Bottom rule and caption -->
+  <line x1="32" y1="408" x2="668" y2="408" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+  <text x="32" y="432" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Two-rewind rule — second failure on the same row for the same reason means the spec is broken, not Claude.</text>
+  <text x="32" y="448" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Stop, thicken the SDD section the row inherits from, restart from the last passing row. </text>
+  <text x="486" y="448" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">Forward correction adds rot.</text>
+</svg>

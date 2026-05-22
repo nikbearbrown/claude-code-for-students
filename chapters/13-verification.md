@@ -4,17 +4,18 @@
 
 ---
 
-It is late Saturday afternoon. Phase 1 of the task tracker is done. Five rows on the score, all green. `npm test` reports nine of nine passing. The page loads. I can add a task, toggle it, delete it, refresh the browser, and the tasks come back. The handoff conditions I wrote in Chapter 11 — *three tests pass on a `Task[]` of length 0, 1, 3*; *refresh preserves state across 10 toggles*; *parse failure triggers the confirmation dialog* — all run, all pass. I am about to type the commit message and call Phase 1 finished.
+It is late Saturday afternoon. Phase 1 of the application tracker is done. Five rows on the score, all green. `npm test` reports nine of nine passing. The page loads. I can add an application, toggle it submitted, delete it, refresh the browser, and the applications come back. The handoff conditions I wrote in Chapter 11 — *three tests pass on an `Application[]` of length 0, 1, 3*; *refresh preserves state across 10 toggles*; *parse failure triggers the confirmation dialog* — all run, all pass. I am about to type the commit message and call Phase 1 finished.
 
-I do one more thing first. I open the SDD I wrote at the beginning of the build and read it out loud. Not the bullet points I extracted into the score — the full prose. Section 2.3, *User Needs*, has a sentence I had stopped looking at by row 3: *The user should be able to see at a glance which tasks remain and which are done, without scrolling.*
+I do one more thing first. I open the SDD I wrote at the beginning of the build and read it out loud. Not the bullet points I extracted into the score — the full prose. Section 2.3, *User Needs*, has a sentence I had stopped looking at by row 3: *The user should be able to see at a glance which applications remain to submit and which are already in, without scrolling.*
 
-I look at the running build. Six tasks visible, three done with strikethrough, list in insertion order — newest at the bottom. If I use the app for a week, the things I still have to do will be scattered through the list, mixed with the things I finished on Tuesday. *At a glance* fails. Not because the code is wrong. Because the spec said *what the user needs* and I built *what the score asked for*, and the score asked for `addTask`, `toggleTask`, `deleteTask` — not *display order that surfaces what remains*.
+I look at the running build. Six applications visible, three submitted with strikethrough, list in insertion order — newest at the bottom. If I use the app across the November–January application window, the schools I still have to submit to will be scattered through the list, mixed with the ones I sent off in October. *At a glance* fails. Not because the code is wrong. Because the spec said *what the user needs* and I built *what the score asked for*, and the score asked for `addApplication`, `toggleSubmitted`, `deleteApplication` — not *display order that surfaces what remains*.
 
 The failure is not a bug in the code. It is a gap between the SDD's prose and the score's rows. The handoff conditions I wrote are all satisfied. The need the SDD named is not.
 
 This is the chapter. The build passes its tests; the build does not pass its needs. Tests are a proxy for needs; sometimes the proxy is wrong. Verification — real verification — is the discipline of checking the build against the needs, not against the proxy.
 
-<!-- → [DIAGRAM: The verification sequence — three passes in order. Pass 1: functional verification (does it run?). Pass 2: edge case verification (does it handle what the SDD defines as out of bounds?). Pass 3: SDD needs verification (does it do what the user needs?). Each pass has a binary result and a path to resolution. Pass 1 and Pass 2 carry gear icons (automatable). Pass 3 carries a human-eye icon (not automatable). Failures on Pass 1 and 2 loop back to "fix code." Failures on Pass 3 loop back to either "fix code" or "amend SDD" — and amending the SDD invalidates the earlier passes, sending the diagram back to Pass 1. Editorial style.] -->
+![Three vertically stacked verification passes — Pass 1 functional and Pass 2 edge case marked with gear icons, Pass 3 SDD needs marked with a human-eye icon and bordered in red. Each pass branches right on failure to one or two resolution boxes (fix code, amend SDD). Amend-SDD boxes are red-bordered with a loop-back arrow returning the sequence to Pass 1.](images/13-verification-fig-01.png)
+*Figure 13.1 — The verification sequence: three passes, two resolutions, one loop-back*
 
 ---
 
@@ -58,6 +59,8 @@ Pass 2 is partially automatable: the boundary inputs can sit in a test file. Wha
 
 Pass 3 fails when the build is functionally correct and needfully wrong. The opening of this chapter is a Pass 3 failure: every test passed; the *at a glance* need failed. Mars Climate Orbiter was Pass 3 dressed as Pass 1; Therac-25 was Pass 3 dressed as Pass 2. A failed Pass 3 has the same two resolutions as Pass 2 — fix the code or amend the SDD — and either way you loop back to Pass 1.
 
+This pattern shows up at studio scale. In Seth's Zebonastic reconstruction of *Hollow Knight*'s development, the studio's Pass 3 equivalent is the *cut*. The Boneforest — a planned area at the bottom of the map, with art already produced — was cut because it did not satisfy the world's theme as well as the Abyss and Ancient Basin did. The White Palace boss encounters were prototyped and cut in favor of pure platforming. A second playable character, Hornet, was fully designed, found to break Hallownest's existing geometry, and spun out into a separate game (*Silksong*) rather than wedged into the one already shipping. Each of these features was functionally correct: the art existed, the systems worked, the prototypes ran. Each failed Pass 3 against the larger need the studio held — the world's theme, the platforming purity, the geometric coherence of Hallownest — and each got cut on that basis. The cuts are the verification. A studio that ships everything it builds has skipped Pass 3.
+
 The ISO/IEC 25010 software quality standard frames the same distinction in industrial language.[^iso] It names two complementary models: *product quality* (functional suitability, reliability, security, usability) and *quality in use* (effectiveness, efficiency, satisfaction, freedom from risk, context coverage). Passes 1 and 2 target product quality. Pass 3 targets quality in use. A build can score perfectly on one and fail the other, because the two are different things.
 
 [^iso]: ISO/IEC 25010:2011, *Systems and Software Quality Requirements and Evaluation (SQuaRE) — System and Software Quality Models*. The standard distinguishes *product quality* (what the software is) from *quality in use* (what the software does for people in context).
@@ -76,17 +79,17 @@ The empirical case is the *mutation testing* literature, most cleanly summarized
 
 Three patterns of bad tests to spot in your own builds.
 
-The **tautology test**: the expected value is computed by the same function the test is supposed to verify. Often because Claude wrote a test and a helper at the same time and the helper sneaked into the expectation. `expect(addTask([], "x").length).toBe(addTask([], "x").length)` passes forever and asserts nothing.
+The **tautology test**: the expected value is computed by the same function the test is supposed to verify. Often because Claude wrote a test and a helper at the same time and the helper sneaked into the expectation. `expect(addApplication([], "x").length).toBe(addApplication([], "x").length)` passes forever and asserts nothing.
 
 The **over-mocked test**: stubs out everything the unit interacts with, so what's tested is the stubs. Mock the database, network, time, and file system and you are verifying your stub harness composes — not that your code works against the world.
 
-The **handler-only test**: calls the function, asserts *something* came back — non-null, right type — but never asserts the content. A `deleteTask` test that confirms the result is an array but never that the deleted task is gone passes against any correct implementation. It also passes against *return tasks unchanged*. Indistinguishable.
+The **handler-only test**: calls the function, asserts *something* came back — non-null, right type — but never asserts the content. A `deleteApplication` test that confirms the result is an array but never that the deleted application is gone passes against any correct implementation. It also passes against *return applications unchanged*. Indistinguishable.
 
 Pass 1 assumes its tests are good tests. If they are not, Pass 1 is theater. The cheapest defense is to ask, for each test, *what minimum change to the code would make this test fail?* If you cannot name one, the test is probably bad. The more rigorous defense is mutation testing — `mutmut` for Python, Stryker for JavaScript, PIT for Java — which automates the question.[^mutationtools]
 
 [^mutationtools]: Mutation-testing tooling is mature enough for student-scale builds in 2026. The command names carry moderate aging-risk; the pattern — introduce defects, run tests, count survivors — is stable.
 
-Donald Knuth's 1984 case for literate programming is the conceptual ancestor of this point.[^knuth] Code is a work of literature whose primary audience is humans. A test that *reads* as if it is asserting something is not the same as a test that *is*. Verification becomes legible only when the test can be read aloud and defended: *this test asserts that, given an array with one task and a call to delete that task by id, the returned array has length zero and the original array still has length one.* If the test cannot be read aloud, it cannot be defended, and a test that cannot be defended is not evidence.
+Donald Knuth's 1984 case for literate programming is the conceptual ancestor of this point.[^knuth] Code is a work of literature whose primary audience is humans. A test that *reads* as if it is asserting something is not the same as a test that *is*. Verification becomes legible only when the test can be read aloud and defended: *this test asserts that, given an array with one application and a call to delete that application by id, the returned array has length zero and the original array still has length one.* If the test cannot be read aloud, it cannot be defended, and a test that cannot be defended is not evidence.
 
 [^knuth]: Donald E. Knuth, "Literate Programming," *The Computer Journal* 27, no. 2 (May 1984): 97–111.
 
@@ -112,7 +115,7 @@ The discipline is in the specificity. A document filled with abstractions — *I
 
 There are three reasons this matters more than the code, and each is individually sufficient.
 
-The code is fungible; the account is not. In 2026, the cost of generating a working task tracker has fallen to roughly the cost of typing the prompt. What is rare — what you can produce that Claude cannot — is the account of why this build was structured this way, with which delegations, with which capacities exercised. The code is one of many possible artifacts that could have come from your SDD. The document is the only artifact that records why this one and not the others.
+The code is fungible; the account is not. In 2026, the cost of generating a working application tracker has fallen to roughly the cost of typing the prompt. What is rare — what you can produce that Claude cannot — is the account of why this build was structured this way, with which delegations, with which capacities exercised. The code is one of many possible artifacts that could have come from your SDD. The document is the only artifact that records why this one and not the others.
 
 The document is the proof that supervision happened. Each of the five supervisory capacities from Chapter 5 is observable only through accounting. Problem formulation lives in the *what I built* section. Judgment under uncertainty lives in the delegation paragraph. Integration lives in the kept-for-myself paragraph. Without the document, the capacities are claims. With the document, they are evidence.
 
@@ -126,7 +129,7 @@ You will be tempted to skip the document. Resist. The cheapest moment to write i
 
 What follows is the verification pass I actually ran on Phase 1. Five rows, nine unit tests, one Pass 3 failure the test suite was structurally incapable of catching. Then the post-build document.
 
-**Pass 1.** The canonical input from the SDD: open the app, type *Buy milk*, click add. Open another, type *Read Liskov 1974*, click add. Click the first one to mark it done. Refresh the browser. Expected: two tasks, the first marked done, persisting across refresh. Actual: two tasks, the first marked done, persisting across refresh. `npm test` reports nine of nine passing. The page loads in Chrome, Firefox, and Safari. No console errors. Pass 1: green.
+**Pass 1.** The canonical input from the SDD: open the app, type *Submit Common App to Mizzou*, click add. Open another, type *Finish supplemental for Drexel game dev program*, click add. Click the first one to mark it submitted. Refresh the browser. Expected: two applications, the first marked submitted, persisting across refresh. Actual: two applications, the first marked submitted, persisting across refresh. `npm test` reports nine of nine passing. The page loads in Chrome, Firefox, and Safari. No console errors. Pass 1: green.
 
 **Pass 2.** The boundary inputs the SDD names, plus one Claude proposed during planning.
 
@@ -134,41 +137,41 @@ What follows is the verification pass I actually ran on Phase 1. Five rows, nine
 |---|---|---|
 | Add empty string | Reject; do not add | Pass — input field rejects empty submit |
 | Add 5,000-character string | Accept and truncate display, full text on hover | Pass |
-| Delete the only task | Empty list, no crash | Pass |
-| Toggle a task that doesn't exist (manual `localStorage` injection) | No crash; ignore | Pass |
+| Delete the only application | Empty list, no crash | Pass |
+| Toggle an application that doesn't exist (manual `localStorage` injection) | No crash; ignore | Pass |
 | `localStorage` unavailable (Safari private window) | In-memory fallback with notice in root div | Pass |
-| `localStorage["tasks-v1"]` set to malformed JSON | Confirmation dialog; on confirm clear and start empty | Pass |
-| Two tasks with the same `id` (manual injection) | *Not specified in SDD* | **Anomaly** — toggle affects both |
+| `localStorage["applications-v1"]` set to malformed JSON | Confirmation dialog; on confirm clear and start empty | Pass |
+| Two applications with the same `id` (manual injection) | *Not specified in SDD* | **Anomaly** — toggle affects both |
 
-The bottom row is the interesting one. The SDD did not anticipate duplicate IDs because `crypto.randomUUID()` doesn't produce them — but the build toggles both on a hand-injected duplicate. That is a Pass 2 amend-the-SDD case: the spec was silent and needs a sentence. I added one — *`toggleTask` and `deleteTask` operate on the first matching id; downstream uniqueness is the data layer's responsibility* — and looped back to Pass 1. The tests still pass; the SDD change matches existing behavior. Pass 2: green.
+The bottom row is the interesting one. The SDD did not anticipate duplicate IDs because `crypto.randomUUID()` doesn't produce them — but the build toggles both on a hand-injected duplicate. That is a Pass 2 amend-the-SDD case: the spec was silent and needs a sentence. I added one — *`toggleSubmitted` and `deleteApplication` operate on the first matching id; downstream uniqueness is the data layer's responsibility* — and looped back to Pass 1. The tests still pass; the SDD change matches existing behavior. Pass 2: green.
 
 **Pass 3.** I open the SDD to section 2.3, *User Needs*. I read each sentence aloud against the running build.
 
-*The user should be able to add, mark done, and delete tasks.* Yes. Pass.
+*The user should be able to add, mark submitted, and delete applications.* Yes. Pass.
 
-*Tasks should persist across browser refresh and reasonable browser closures.* Yes. Pass.
+*Applications should persist across browser refresh and reasonable browser closures.* Yes. Pass.
 
 *On corrupted storage, the user should be offered a recovery path, not silently lose data.* Yes, tested in Pass 2. Pass.
 
-*The user should be able to see at a glance which tasks remain and which are done, without scrolling.* I look at the running build. Six tasks. Three done with strikethrough. List order is insertion order; the done ones are scattered. With twenty tasks across a week, *at a glance* would be impossible. **Pass 3 fails.**
+*The user should be able to see at a glance which applications remain to submit and which are already in, without scrolling.* I look at the running build. Six applications. Three submitted with strikethrough. List order is insertion order; the submitted ones are scattered. With twenty applications across the November–January window, *at a glance* would be impossible. **Pass 3 fails.**
 
 The failure is not in the code. The failure is that the score never had a row for *display order*, because the SDD's prose buried *at a glance* in section 2.3, and by row 5 I had stopped re-reading section 2.3.
 
-Resolution: fix the code, not amend the SDD. The need is clear and good; the code did not satisfy it. I add row 6: *Sort displayed tasks: open first, done below, each subgroup in insertion order. Handoff condition: with three open and three done tasks added in arbitrary order, the open ones render above the done ones on every refresh.* I run row 6 as a Claude row. Prompt: *In `main.ts`, sort displayed tasks before rendering: `done: false` first in insertion order, then `done: true` in insertion order. Sort a copy; don't mutate. Update no other behavior.* Claude produces a six-line change and one new test. `npm test` reports ten of ten passing. I re-run Pass 3 on the *at a glance* sentence. Open on top, done below. *At a glance* now reads as true.
+Resolution: fix the code, not amend the SDD. The need is clear and good; the code did not satisfy it. I add row 6: *Sort displayed applications: not-yet-submitted first, submitted below, each subgroup in insertion order. Handoff condition: with three unsubmitted and three submitted applications added in arbitrary order, the unsubmitted ones render above the submitted ones on every refresh.* I run row 6 as a Claude row. Prompt: *In `main.ts`, sort displayed applications before rendering: `submitted: false` first in insertion order, then `submitted: true` in insertion order. Sort a copy; don't mutate. Update no other behavior.* Claude produces a six-line change and one new test. `npm test` reports ten of ten passing. I re-run Pass 3 on the *at a glance* sentence. Unsubmitted on top, submitted below. *At a glance* now reads as true.
 
 Pass 3: green. The build is done.
 
 ---
 
-**Post-build document: Phase 1 of the task tracker.** *Written immediately after Pass 3 turned green.*
+**Post-build document: Phase 1 of the application tracker.** *Written immediately after Pass 3 turned green.*
 
-> **What I built.** Phase 1 of the task tracker is a single-page browser app that lets one user add, mark done, and delete short text tasks. Tasks persist in `localStorage` under the key `tasks-v1`. On parse failure the app shows a recovery dialog. On `localStorage` unavailable the app falls back to in-memory and tells the user. Open tasks render above done tasks; within each group, insertion order is preserved. The app does not yet support editing, due dates, or multiple lists; those are Phase 2 and Phase 3.
+> **What I built.** Phase 1 of the application tracker is a single-page browser app that lets one user add, mark submitted, and delete short college-application entries. Applications persist in `localStorage` under the key `applications-v1`. On parse failure the app shows a recovery dialog. On `localStorage` unavailable the app falls back to in-memory and tells the user. Unsubmitted applications render above submitted ones; within each group, insertion order is preserved. The app does not yet support editing, per-school supplements, recommender tracking, or fee-waiver status; those are Phase 2 and Phase 3.
 >
-> **What I delegated to Claude and why.** Three rows were Claude rows. Row 2 (HTML scaffold) was delegated because the boilerplate is bounded and not load-bearing; the delegation held. Row 3 (`addTask`, `toggleTask`, `deleteTask`) was delegated because the contract was specifiable as a tested interface; it held with one `/rewind` to re-specify immutability after Claude's first pass used `splice`. Row 5 (`localStorage` wiring) was delegated because the platform API is well-documented and Claude was useful for the parse-failure recovery dialog; it held. The pattern: I delegated rows whose handoff condition was unambiguous and whose scope was small enough to read in a single sitting.
+> **What I delegated to Claude and why.** Three rows were Claude rows. Row 2 (HTML scaffold) was delegated because the boilerplate is bounded and not load-bearing; the delegation held. Row 3 (`addApplication`, `toggleSubmitted`, `deleteApplication`) was delegated because the contract was specifiable as a tested interface; it held with one `/rewind` to re-specify immutability after Claude's first pass used `splice`. Row 5 (`localStorage` wiring) was delegated because the platform API is well-documented and Claude was useful for the parse-failure recovery dialog; it held. The pattern: I delegated rows whose handoff condition was unambiguous and whose scope was small enough to read in a single sitting.
 >
-> **What I kept for myself and why.** Two rows were human rows, plus an emergent row 6 during verification. Row 1 (data model) was Problem Formulation — deciding what a *task* is in this app, in writing, before the UI existed. Row 4 (visual hierarchy) was Aesthetic Judgment — three CSS variables decided before any styles were written, so Claude inherits the palette instead of choosing it. Row 6 (sort order) emerged from Pass 3 and stayed human because the *at a glance* need is a judgment call about what the user sees; the implementation was a Claude row once the order was decided. The supervisory capacity that did the most work across the build was Integration — connecting the SDD's prose to the score's rows. The capacity that almost failed was Accountability — I almost skipped Pass 3.
+> **What I kept for myself and why.** Two rows were human rows, plus an emergent row 6 during verification. Row 1 (data model) was Problem Formulation — deciding what an *application* is in this app, in writing, before the UI existed. Row 4 (visual hierarchy) was Aesthetic Judgment — three CSS variables decided before any styles were written, so Claude inherits the palette instead of choosing it. Row 6 (sort order) emerged from Pass 3 and stayed human because the *at a glance* need is a judgment call about what the user sees; the implementation was a Claude row once the order was decided. The supervisory capacity that did the most work across the build was Integration — connecting the SDD's prose to the score's rows. The capacity that almost failed was Accountability — I almost skipped Pass 3.
 >
-> **What I learned.** I learned, about the domain, that *display order* is part of *what tasks do* in a task tracker; insertion order is not a neutral default but a design decision, and a wrong one for the at-a-glance need. I learned, about myself as a builder, that I treat the SDD's prose as homework once the score is written — I substitute the score's rows for the SDD's needs and stop re-reading the section that produced the rows. This is exactly the failure mode the chapter on verification names. I caught it because I had been taught to run Pass 3 by reading aloud; if I had been running tests-as-verification, I would have shipped a build that passes its tests and fails the need that motivated the build.
+> **What I learned.** I learned, about the domain, that *display order* is part of *what applications do* in an application tracker; insertion order is not a neutral default but a design decision, and a wrong one for the at-a-glance need. I learned, about myself as a builder, that I treat the SDD's prose as homework once the score is written — I substitute the score's rows for the SDD's needs and stop re-reading the section that produced the rows. This is exactly the failure mode the chapter on verification names. I caught it because I had been taught to run Pass 3 by reading aloud; if I had been running tests-as-verification, I would have shipped a build that passes its tests and fails the need that motivated the build.
 >
 > **What I would do differently.** Next time, I will copy the *User Needs* section of the SDD as a literal block at the top of the score, above the rows, and I will read it aloud at the start of every verification pass, not just Pass 3. The change is concrete: it is a row 0 in the score template. The test of whether it works is whether Pass 3 ever again surfaces a need the score had not already enrolled as a row.
 
@@ -204,3 +207,19 @@ Paste your SDD's *User Needs* section underneath the prompt. The output is your 
 - Liskov, B. H., & Wing, J. M. (1994). A behavioral notion of subtyping. *ACM Transactions on Programming Languages and Systems*, 16(6), 1811–1841.
 - Liskov, B. H., & Zilles, S. N. (1974). Programming with abstract data types. *ACM SIGPLAN Notices*, 9(4), 50–59.
 - Mars Climate Orbiter Mishap Investigation Board (1999). *Phase I Report*. NASA.
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 13.1 — The verification sequence
+
+Build a three-column flowchart in D3 v7. Column 1, left side, stacks three vertical pass cards top to bottom — `PASS 1 — FUNCTIONAL`, `PASS 2 — EDGE CASE`, `PASS 3 — SDD NEEDS`. Each card has a `--color-fill` ALL CAPS header, an icon in the top-right of the header strip (gear for Pass 1 and Pass 2, eye for Pass 3), and a body with a bold two-line question and a `--color-secondary` body paragraph. The Pass 3 card is bordered, headed, and titled in `--color-red`. Vertical ink arrows labeled `PASS` connect Pass 1 to Pass 2 to Pass 3. Column 2, middle, holds three `Fix code` resolution boxes, one per pass; the Pass-3 fix-code box is red-bordered. Column 3, right, holds two `AMEND SDD` boxes — one for Pass 2, one for Pass 3 — both red-bordered with a `--color-fill` ALL CAPS header strip and an italic `Invalidates earlier passes.` line in red. Red dashed `FAIL` arrows go from each pass card to its Fix-code box; red dashed `or` arrows connect Fix-code to Amend-SDD on Pass 2 and Pass 3. A red dashed loop-back arrow runs from both Amend-SDD boxes along the right margin back up to the top of Pass 1 with an italic `re-run from Pass 1` label. Hover any card or box for the longer rule. Footer caption explains the gear-versus-eye convention.
+
+> Reference implementation: `d3/13-verification-fig-01.html`

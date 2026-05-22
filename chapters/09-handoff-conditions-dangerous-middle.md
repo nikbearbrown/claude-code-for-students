@@ -1,19 +1,19 @@
 # Chapter 9 — Handoff Conditions and the Dangerous Middle
 
-Seth shipped a small thing on a Wednesday. The CSV parser had been working for a week, and now he wanted it to support pagination — the teacher's exports had gotten large enough that he wanted to view grades fifty at a time. He wrote a specification. He gave it to Claude. Claude returned thirty lines in `parsers/pages.py` that included this function:
+Seth shipped a small thing on a Wednesday. The *Haunt & Harvest* networked inventory had been working for a week, and now he wanted it to support pagination — the host's pickups had gotten frequent enough that he wanted to send the inventory to clients fifty items at a time. He wrote a specification. He gave it to Claude. Claude returned thirty lines in `inventory/pages.gd` that included this function:
 
-```python
-def get_page(items: list, page: int, size: int = 50) -> list:
-    """Return page `page` (1-indexed) of `items`, with `size` items per page."""
-    start = (page - 1) * size
-    return items[start:start + size]
+```gdscript
+func get_page(items: Array, page: int, size: int = 50) -> Array:
+    # Return page `page` (1-indexed) of `items`, with `size` items per page.
+    var start = (page - 1) * size
+    return items.slice(start, start + size)
 ```
 
-Seth read the function. It read correctly. He wrote a test that asked for page 1 of a fifty-item list, got fifty items back. He wrote another test that asked for page 2 of a hundred-item list, got the second fifty. The tests passed. The teacher's actual export — 247 rows — paginated cleanly: pages 1 through 4 returned 50 rows each, page 5 returned 47, page 6 returned an empty list. Seth ticked the box. He committed. He moved on.
+Seth read the function. It read correctly. He wrote a test that asked for page 1 of a fifty-item inventory, got fifty items back. He wrote another test that asked for page 2 of a hundred-item inventory, got the second fifty. The tests passed. A real co-op session of 247 picked-up items paginated cleanly: pages 1 through 4 returned 50 items each, page 5 returned 47, page 6 returned an empty array. Seth ticked the box. He committed. He moved on.
 
-Six days later the dashboard crashed for a single user. The student's name was Avery. Avery was the 251st row in a teacher's export of exactly 251 rows. Page 5 returned rows 201 through 250 — fine. Page 6 returned an empty list — wrong. Avery was on no page. Avery did not exist in the dashboard.
+Six days later the inventory crashed for a single late-joining player. The player's name was Avery. Avery joined a session in progress, and the host's inventory had grown to exactly 251 items by the time Avery's client requested the sync. Page 5 returned items 201 through 250 — fine. Page 6 returned an empty array — wrong. The 251st item — a flashlight someone had dropped just before Avery joined — was on no page. From Avery's client's point of view, that flashlight did not exist.
 
-The bug took Seth forty minutes to find. Read the function again. The function itself is fine. The problem was in the calling loop, which used `while len(page) == size` as its termination condition. The moment a page returned exactly 50 items, the loop assumed there was nothing more to fetch and stopped. For 247 rows, page 5 comes back with 47, the loop stops, and the 47 rows on page 5 are the last ones seen — which is correct. For 250 rows, page 5 comes back with 50, the loop stops, and Avery at row 251 is never fetched. Every test Seth thought to write was sized to a multiple of fifty.
+The bug took Seth forty minutes to find. Read the function again. The function itself is fine. The problem was in the calling loop on the client, which used `while page.size() == size` as its termination condition. The moment a page returned exactly 50 items, the loop assumed there was nothing more to fetch and stopped. For 247 items, page 5 comes back with 47, the loop stops, and the 47 items on page 5 are the last ones seen — which is correct. For 250 items the loop stops at page 5, and the 251st item is never fetched. Every test Seth thought to write was sized to a multiple of fifty.
 
 The handoff condition that would have caught this — *given `total_items = page_size * 3 + 1`, the last page returns exactly one item and the calling loop terminates after it* — was never written down, because Seth did not know to write it.
 
@@ -35,7 +35,13 @@ Bertrand Meyer, twenty-three years later, gave the idea its working engineer's f
 
 The deepest version of this argument belongs to Nancy Leveson. In *Engineering a Safer World* she argues that accidents in complex systems are almost never component failures. They are control failures: the system lacked an enforced constraint between subsystems. A correctly-built component handed off to the wrong next step produces a failure that no inspection of either component will explain. The pagination bug above was not a Claude failure and it was not a loop failure. The function was reasonable. The loop was reasonable. The failure was at the *joint*. The dangerous middle is always at a joint.
 
-<!-- → [TABLE: Strong vs. weak handoff conditions — two columns. Five examples. Left: weak ("looks good," "tests pass," "works for me"). Right: strong (specific, testable, binary). No color.] -->
+| Weak handoff condition | Strong handoff condition |
+|---|---|
+| "Looks good." | "`pytest tests/parser.py -q` exits 0; the test for `parse_grades('data/grades_with_bom.csv')` passes." |
+| "Tests pass." | "`npm test` reports 12 of 12 passing, including the duplicate-id test and the empty-input test." |
+| "It compiles and runs." | "`python -m main --input=fixtures/sample.json` returns the documented output and exits 0; no warnings." |
+| "Works for me." | "On `inventory_size = page_size * 3 + 1`, the calling loop terminates after the final 1-item page is returned." |
+| "Performance seems fine." | "`EXPLAIN ANALYZE` shows index use; the seed-DB query returns in under 50 ms." |
 
 ---
 
@@ -52,6 +58,14 @@ Joseph Spracklen and colleagues, in a 2025 USENIX Security paper on what the sec
 The mechanism behind all of this has its own literature. Bogner and colleagues measured confirmation bias in LLM-assisted security code review: when the user framed the question in a way that suggested the code was secure, adversarial framing succeeded in 35 percent of one-shot attacks against Copilot and 88 percent against Claude Code in real project configurations. The model agreed with the framing instead of with the code's actual state. This is the empirical mechanism behind "looks good": the student says looks good, Claude agrees, and the agreement is not evidence. It is the model optimizing for the signal the student is offering it.
 
 Wei and colleagues complete the picture: LLMs overestimate the probability that their own answer is correct by 20 to 60 percent across a range of tasks. The model's expressed confidence is systematically miscalibrated upward. Combine the two results and the dynamic becomes legible: the student offers "looks good"; the model amplifies the framing; the model overestimates its own answer; the output is approved on the strength of two correlated, miscalibrated signals. The dangerous middle is the predictable steady state of this loop.
+
+Seth has worked through this empirical literature in his own published criticism — specifically in an analysis of AI-assisted Unity development comparing ChatGPT and Claude across three representative tasks (player movement, projectile physics, UI binding). The shape of the findings is the same one Pearce, Spracklen, Bogner, and Wei describe in their respective papers, transposed into a specific production context:
+
+> Both ChatGPT and Claude produced output that frequently compiles on first paste. Both fail in ways that are specific, predictable, and almost never disclosed upfront. The failures cluster around Unity's serialization rules, its physics timing contract, its render pipeline version dependencies, and the gap between what the AI's training data knew and what your specific project actually contains.
+
+The specific failures Seth documented are textbook dangerous-middle artifacts. `Vector3.right` produced where `transform.right` was meant — a projectile that flies east regardless of which way the player is facing. `OnCollisionEnter2D` setting `isGrounded = true` without a matching `OnCollisionExit2D` to set it back to `false` — a character that can jump in mid-air after leaving any surface, undetected because the bug only manifests if you test the jump *after* leaving the ground rather than during normal play. Legacy `UnityEngine.UI.Text` generated after the project had already migrated to `TextMeshProUGUI` — code that runs, displays text, and is using a component the team standardized away from two years ago.
+
+Each of these compiles. Each runs. Each ships a bug the student will only catch if they knew which categories to check. Seth's piece names them as five: physics timing, directional conventions, package currency, serialization rules, component configuration. The handoff condition is not the cure for any individual bug. It is the discipline that turns "check the output" into "check the five places where the output most often lies."
 
 Here is the hard part. You have done this. If you have used Claude Code for any length of time, you have approved an output where one of these mechanisms was at play. The specific bug may not have surfaced — most of the time it doesn't, because the dangerous middle is probabilistic and most builds don't hit the case the bug cares about. The chapter is not asking you to feel bad about past approvals. It is asking you to recognize that the procedure that produced those approvals is not robust, and that the discomfort of recognizing this is the entry fee for the procedure that is.
 
@@ -101,18 +115,18 @@ The STOP block and the handoff condition work as a pair. The handoff condition s
 
 Now I want to show the dangerous middle from the inside, with a worked example, because the abstract version of the failure is almost impossible to feel.
 
-Seth's task tracker has a login function. He wants Claude to write it: accept an email and a password, look up the user in a small SQLite database, verify the password hash with `bcrypt`, return a session token on success. Standard student-scale build. Here are three handoff conditions he could write — one strong, one weak, one that looks fine until it isn't.
+Seth's *Midnight Fuel* server-side scripts have a session-refresh function. He wants Claude to write it: accept a player's user ID and a stored session token, look the user up in Roblox's DataStore, verify the token hash with `bcrypt` (he's vendored a Luau port), return a fresh session token on success. Standard student-scale build, ported into the Roblox setting. Here are three handoff conditions he could write — one strong, one weak, one that looks fine until it isn't.
 
 The strong condition:
 
-> - `login('alice@example.com', 'correct')` returns a non-empty string of length ≥ 32.
-> - `login('alice@example.com', 'wrong')` returns `None` and raises no exception.
-> - `login('alice@example.com', 'wrong')` and `login('nonexistent@example.com', 'anything')` complete within ±5 ms of each other. No timing oracle.
-> - The SQL statement is a parameterized query; the string `email` never appears inside an f-string or `+` concatenation to the SQL driver.
-> - `pytest tests/test_login.py -q` exits with code 0.
-> - `bandit -r src/auth/` exits with code 0.
+> - `refresh_session(2034917, 'correct_token')` returns a non-empty string of length ≥ 32.
+> - `refresh_session(2034917, 'wrong_token')` returns `nil` and raises no exception.
+> - `refresh_session(2034917, 'wrong_token')` and `refresh_session(9999999, 'anything')` complete within ±5 ms of each other. No timing oracle that reveals whether the user ID exists.
+> - The DataStore key is built from a parameterized helper; the `user_id` never appears inside string concatenation to the DataStore driver.
+> - The Luau test suite (`run_tests.lua tests/refresh_session/`) exits with code 0.
+> - The Roblox security linter (`rbx-secure-scan` on `src/auth/`) exits with code 0.
 
-Six lines. Specific, testable, binary. It catches the obvious failure and the non-obvious one — the timing oracle that reveals whether an email exists. It catches the security-shaped failure by structural inspection, not by hoping Claude wrote good code.
+Six lines. Specific, testable, binary. It catches the obvious failure and the non-obvious one — the timing oracle that reveals whether a user ID exists in the DataStore. It catches the security-shaped failure by structural inspection, not by hoping Claude wrote good code.
 
 The weak condition:
 
@@ -124,21 +138,21 @@ Every clause here could be true and the code could still be broken. "Login works
 
 Now the third condition — the one that looks fine and misses the dangerous middle:
 
-> - `login(email, password)` returns a non-empty session token on a valid pair.
-> - `login(email, password)` returns `None` on an invalid pair.
-> - The password is never stored in plaintext; `bcrypt.checkpw` is used for verification.
-> - The SQL query is parameterized.
-> - All existing tests in `tests/test_login.py` pass.
+> - `refresh_session(user_id, token)` returns a non-empty session token on a valid pair.
+> - `refresh_session(user_id, token)` returns `nil` on an invalid pair.
+> - The token is never stored in plaintext; `bcrypt.checkpw` is used for verification.
+> - The DataStore key is built from a parameterized helper.
+> - All existing tests in `tests/refresh_session/` pass.
 
-Is it strong? It is specific — it names function calls, return types, hashing library, query style. It is testable. It is binary. By the chapter's own three-part definition this looks like a strong condition.
+Is it strong? It is specific — it names function calls, return types, hashing library, key construction. It is testable. It is binary. By the chapter's own three-part definition this looks like a strong condition.
 
 It misses the dangerous middle.
 
-The miss: the session token returned by `login` is never bound to anything. The condition says it must be non-empty. It does not say it must be unique per session, signed against tampering, stored server-side with an expiry, or bound to the user's session. Claude will satisfy this condition with a function that returns a random 32-character string and stores nothing — and every test will pass, because the test only checks that a string came back. The session token is, in production, useless. The server has no record of it. Any subsequent request that includes the token is unauthenticated, because the server has no way to verify which user it came from.
+The miss: the session token returned by `refresh_session` is never bound to anything. The condition says it must be non-empty. It does not say it must be unique per session, signed against tampering, stored server-side with an expiry, or bound to the player's user ID. Claude will satisfy this condition with a function that returns a random 32-character string and stores nothing — and every test will pass, because the test only checks that a string came back. The session token is, in production, useless. The server has no record of it. Any subsequent request from the client that includes the token is unauthenticated, because the server has no way to verify which user it came from.
 
 This is a control failure in Leveson's sense. The component is correct against its written contract. The system is broken because the contract did not constrain the property that matters at the joint. A reasonable AP-CS student writes the third condition. The author of this chapter wrote the third condition once, in an internship, and shipped it. The bug was found in code review by an engineer who had been doing auth for fifteen years and recognized the shape of the miss in three seconds.
 
-The handoff condition that catches it — *the returned token, used as the `Authorization: Bearer` header on a subsequent request, must resolve to the same user on the server side* — is exactly the kind of condition you write only if you have already thought about the joint. The chapter's claim is that you have to learn to think about the joint, because there is no general procedure that will surface it automatically.
+The handoff condition that catches it — *the returned token, sent back on a subsequent RemoteEvent from the client, must resolve to the same `user_id` on the server side via a DataStore lookup, and must have a non-expired `exp` timestamp* — is exactly the kind of condition you write only if you have already thought about the joint. The chapter's claim is that you have to learn to think about the joint, because there is no general procedure that will surface it automatically.
 
 The procedure that comes closest is to ask, at the end of writing any handoff condition: *what would still be wrong if every line of this condition were true?* Answer that honestly and the dangerous middle becomes legible. Sometimes the answer is nothing. Sometimes the answer is the entire purpose of the function. The discipline is to ask every time.
 

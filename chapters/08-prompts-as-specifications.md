@@ -4,7 +4,7 @@
 
 ---
 
-Here are two things Seth typed to Claude, one minute apart, on a Tuesday evening.
+Here are two things Seth typed to Claude, one minute apart, on a Tuesday evening. He is filling out the Common App. The "Academic Record" section wants his weighted GPA broken out by year, across AP, honors, and regular tracks, and the only file he has is the messy CSV export from his school's student information system — every row a course, every column a column his guidance counselor never explains.
 
 The first:
 
@@ -22,7 +22,13 @@ The model did not change between those two prompts. Seth's project did not chang
 
 This chapter is about what changed.
 
-<!-- → [TABLE: Prompt vs. specification — two columns, five rows. Each row: one element of the specification format. Left column: weak prompt version. Right column: specification version.] -->
+| Element | Weak prompt | Specification |
+|---|---|---|
+| Artifact name | "Help me with auth." | "Implement `authenticate(username, password) → Optional[User]` in `auth/auth.py`." |
+| Invariants | (none stated) | "The `User` class is unchanged. The `users` table schema is unchanged. No new dependency added." |
+| Context | (none stated) | "Use the existing `bcrypt` pattern from `auth/hashing.py`. Reference the AGENTS.md never-rules." |
+| Output format | "Make it work." | "A complete file plus a unit test in `tests/auth/test_auth.py` covering: success, missing-user, wrong-password." |
+| Negative constraints | (none stated) | "Do not modify `auth/hashing.py`. Do not return raw User passwords. Do not add OAuth or session storage." |
 
 ---
 

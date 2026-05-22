@@ -1,0 +1,60 @@
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">The solve-verify asymmetry</title>
+  <desc id="desc">Two trajectories over time: Claude's solve speed rising steeply while human verification capacity remains roughly flat. The widening gap between them is the territory of human supervision.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 2.1 — SOLVE/VERIFY</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Solve speed rises. Verification capacity does not.</text>
+
+  <!-- Chart area -->
+  <rect x="80" y="120" width="560" height="260" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+
+  <!-- Y axis -->
+  <line x1="80" y1="120" x2="80" y2="380" stroke="#2a1a0e" stroke-width="1"/>
+  <!-- X axis -->
+  <line x1="80" y1="380" x2="640" y2="380" stroke="#2a1a0e" stroke-width="1"/>
+
+  <!-- Y axis label (rotated) -->
+  <text x="50" y="250" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#545454" transform="rotate(-90 50 250)">capacity / speed (relative)</text>
+  <!-- X axis label -->
+  <text x="360" y="408" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#545454">time →</text>
+
+  <!-- X ticks (axis labels for years/eras) -->
+  <text x="120" y="396" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">2022</text>
+  <text x="240" y="396" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">2023</text>
+  <text x="360" y="396" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">2024</text>
+  <text x="480" y="396" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">2025</text>
+  <text x="600" y="396" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">2026 →</text>
+
+  <!-- Human verification line (roughly flat, slight upward) -->
+  <path d="M 120,330 C 240,326 360,322 480,316 S 620,308 620,308"
+        stroke="#2a1a0e" stroke-width="1.5" fill="none"/>
+
+  <!-- Claude solve speed curve (rising steeply) -->
+  <path d="M 120,322 C 200,300 280,260 360,210 S 520,140 620,128"
+        stroke="#2a1a0e" stroke-width="1.5" fill="none"/>
+
+  <!-- Gap shading using dashed verticals at three points (no fill — editorial style) -->
+  <line x1="280" y1="252" x2="280" y2="324" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+  <line x1="420" y1="178" x2="420" y2="320" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+  <line x1="560" y1="136" x2="560" y2="312" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+
+  <!-- Gap label -->
+  <text x="490" y="232" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">THE WIDENING GAP</text>
+
+  <!-- End-of-line labels -->
+  <text x="626" y="124" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Claude solves</text>
+  <text x="626" y="138" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">rising fast</text>
+
+  <text x="626" y="306" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Human verifies</text>
+  <text x="626" y="320" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">roughly stable</text>
+
+  <!-- Footer -->
+  <text x="32" y="448" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Your job is not to solve faster. Your job is to verify better.</text>
+</svg>

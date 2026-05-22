@@ -1,0 +1,168 @@
+<svg viewBox="0 0 700 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">The verification sequence</title>
+  <desc id="desc">Three verification passes in order. Pass 1 functional and Pass 2 edge case are gear-icon automatable; Pass 3 SDD needs carries a human eye and is not automatable. Failures on Pass 1 and 2 loop to fix code. Failures on Pass 3 either fix code or amend the SDD — amending the SDD invalidates earlier passes and sends the sequence back to Pass 1. Pass 3 is highlighted in red.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#C8102E"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="540" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 13.1 — THE VERIFICATION SEQUENCE</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Three passes in order — each catches what the earlier passes are blind to</text>
+
+  <!-- Pass 1: Functional -->
+  <g>
+    <rect x="32" y="128" width="196" height="120" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="32" y="128" width="196" height="28" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="46" y="146" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">PASS 1 — FUNCTIONAL</text>
+    <!-- gear icon -->
+    <g transform="translate(206,142)">
+      <circle cx="0" cy="0" r="7" fill="none" stroke="#545454" stroke-width="1"/>
+      <circle cx="0" cy="0" r="2.5" fill="#545454"/>
+      <g stroke="#545454" stroke-width="1" fill="none">
+        <line x1="0" y1="-9" x2="0" y2="-7"/>
+        <line x1="0" y1="7" x2="0" y2="9"/>
+        <line x1="-9" y1="0" x2="-7" y2="0"/>
+        <line x1="7" y1="0" x2="9" y2="0"/>
+        <line x1="-6.4" y1="-6.4" x2="-5" y2="-5"/>
+        <line x1="5" y1="5" x2="6.4" y2="6.4"/>
+        <line x1="-6.4" y1="6.4" x2="-5" y2="5"/>
+        <line x1="5" y1="-5" x2="6.4" y2="-6.4"/>
+      </g>
+    </g>
+    <text x="130" y="180" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Does it run?</text>
+    <text x="42" y="202" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">The happy path returns the</text>
+    <text x="42" y="216" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">expected output on the</text>
+    <text x="42" y="230" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">SDD's canonical input.</text>
+  </g>
+
+  <!-- Pass 1 → Pass 2 arrow -->
+  <path d="M 130 248 L 130 280" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="138" y="266" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">PASS</text>
+
+  <!-- Pass 1 fail → fix code (right) -->
+  <path d="M 228 188 L 296 188" stroke="#C8102E" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)" stroke-dasharray="4 3"/>
+  <text x="240" y="180" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#C8102E">FAIL</text>
+
+  <!-- Pass 2: Edge case -->
+  <g>
+    <rect x="32" y="280" width="196" height="120" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="32" y="280" width="196" height="28" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="46" y="298" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">PASS 2 — EDGE CASE</text>
+    <!-- gear icon -->
+    <g transform="translate(206,294)">
+      <circle cx="0" cy="0" r="7" fill="none" stroke="#545454" stroke-width="1"/>
+      <circle cx="0" cy="0" r="2.5" fill="#545454"/>
+      <g stroke="#545454" stroke-width="1" fill="none">
+        <line x1="0" y1="-9" x2="0" y2="-7"/>
+        <line x1="0" y1="7" x2="0" y2="9"/>
+        <line x1="-9" y1="0" x2="-7" y2="0"/>
+        <line x1="7" y1="0" x2="9" y2="0"/>
+        <line x1="-6.4" y1="-6.4" x2="-5" y2="-5"/>
+        <line x1="5" y1="5" x2="6.4" y2="6.4"/>
+        <line x1="-6.4" y1="6.4" x2="-5" y2="5"/>
+        <line x1="5" y1="-5" x2="6.4" y2="-6.4"/>
+      </g>
+    </g>
+    <text x="130" y="332" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Does it handle the</text>
+    <text x="130" y="346" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">out-of-bounds?</text>
+    <text x="42" y="368" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Empty, oversized, malformed,</text>
+    <text x="42" y="382" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">adversarial — each boundary</text>
+    <text x="42" y="396" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">input the SDD names.</text>
+  </g>
+
+  <!-- Pass 2 → Pass 3 arrow -->
+  <path d="M 130 400 L 130 432" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="138" y="418" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">PASS</text>
+
+  <!-- Pass 2 fail → fix code (right) -->
+  <path d="M 228 340 L 296 340" stroke="#C8102E" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)" stroke-dasharray="4 3"/>
+  <text x="240" y="332" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#C8102E">FAIL</text>
+
+  <!-- Pass 3: SDD needs — highlighted -->
+  <g>
+    <rect x="32" y="432" width="196" height="80" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+    <rect x="32" y="432" width="196" height="28" fill="#F5EFE8" stroke="#C8102E" stroke-width="1"/>
+    <text x="46" y="450" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#C8102E">PASS 3 — SDD NEEDS</text>
+    <!-- human eye icon -->
+    <g transform="translate(206,446)">
+      <path d="M -9 0 Q 0 -7 9 0 Q 0 7 -9 0 Z" fill="none" stroke="#C8102E" stroke-width="1"/>
+      <circle cx="0" cy="0" r="3" fill="#C8102E"/>
+    </g>
+    <text x="130" y="478" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#C8102E">Does it do what</text>
+    <text x="130" y="492" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#C8102E">the user needs?</text>
+    <text x="130" y="506" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">Read aloud against the running build.</text>
+  </g>
+
+  <!-- Pass 3 fail → two-way branch -->
+  <path d="M 228 460 L 296 460" stroke="#C8102E" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)" stroke-dasharray="4 3"/>
+  <text x="240" y="452" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#C8102E">FAIL</text>
+
+  <!-- Resolution column header -->
+  <text x="296" y="146" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">RESOLUTION</text>
+
+  <!-- Fix code box -->
+  <g>
+    <rect x="296" y="160" width="148" height="80" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="370" y="182" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Fix code</text>
+    <text x="306" y="204" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">The SDD specified;</text>
+    <text x="306" y="218" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">the code did not</text>
+    <text x="306" y="232" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">implement it.</text>
+  </g>
+
+  <g>
+    <rect x="296" y="312" width="148" height="80" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="370" y="334" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Fix code</text>
+    <text x="306" y="356" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">SDD specified;</text>
+    <text x="306" y="370" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">code didn't handle</text>
+    <text x="306" y="384" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">the boundary.</text>
+  </g>
+
+  <!-- Pass 2 fail also branches to amend SDD -->
+  <path d="M 444 340 L 484 340" stroke="#C8102E" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)" stroke-dasharray="4 3"/>
+  <text x="448" y="332" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="9" font-style="italic" fill="#C8102E">or</text>
+
+  <!-- Pass 3 fail boxes: fix code + amend SDD -->
+  <g>
+    <rect x="296" y="432" width="148" height="80" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+    <text x="370" y="454" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Fix code</text>
+    <text x="306" y="476" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Need is clear;</text>
+    <text x="306" y="490" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">code did not</text>
+    <text x="306" y="504" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">satisfy it.</text>
+  </g>
+
+  <path d="M 444 460 L 484 460" stroke="#C8102E" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)" stroke-dasharray="4 3"/>
+  <text x="448" y="452" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="9" font-style="italic" fill="#C8102E">or</text>
+
+  <!-- Amend SDD boxes -->
+  <g>
+    <rect x="484" y="312" width="148" height="80" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+    <rect x="484" y="312" width="148" height="24" fill="#F5EFE8" stroke="#C8102E" stroke-width="1"/>
+    <text x="558" y="328" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#C8102E">AMEND SDD</text>
+    <text x="494" y="354" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Spec was silent.</text>
+    <text x="494" y="368" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Add the sentence.</text>
+    <text x="494" y="384" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#C8102E">Invalidates earlier passes.</text>
+  </g>
+
+  <g>
+    <rect x="484" y="432" width="148" height="80" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+    <rect x="484" y="432" width="148" height="24" fill="#F5EFE8" stroke="#C8102E" stroke-width="1"/>
+    <text x="558" y="448" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#C8102E">AMEND SDD</text>
+    <text x="494" y="474" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">The need was wrong;</text>
+    <text x="494" y="488" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">rewrite it.</text>
+    <text x="494" y="504" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#C8102E">Invalidates earlier passes.</text>
+  </g>
+
+  <!-- Loop-back arrow from amend boxes back to Pass 1 -->
+  <path d="M 632 350 L 660 350 L 660 110 L 130 110 L 130 124" stroke="#C8102E" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)" stroke-dasharray="4 3"/>
+  <path d="M 632 472 L 668 472 L 668 110" stroke="#C8102E" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+  <text x="612" y="100" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#C8102E">re-run from Pass 1</text>
+
+  <!-- Pass-through "DONE" -->
+  <text x="166" y="528" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">All three pass → build is done</text>
+</svg>

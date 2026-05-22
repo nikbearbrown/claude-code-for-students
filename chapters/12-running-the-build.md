@@ -1,26 +1,27 @@
 # Chapter 12 — Running the Build: Claude Tasks and Human Tasks
 
-It is Saturday morning. The Boondoggle Score for Phase 1 of the task tracker is on my left monitor. Five rows. Two mine, three Claude's. Every row has a handoff condition. The plan is finished, and it is the most important document in the room.
+It is Saturday morning. The Boondoggle Score for Phase 1 of the application tracker is on my left monitor. Five rows. Two mine, three Claude's. Every row has a handoff condition. The plan is finished, and it is the most important document in the room.
 
 On the right monitor, Claude Code is blinking inside the project directory. The directory has one file: `types.ts`, which I wrote by hand in row 1 because row 1's labor column says *human*. I read it twice. Row 1 passes. I move to row 2.
 
 Row 2 says: scaffold the HTML page; handoff condition: page loads with empty root, no console errors. I paste a prompt. Claude produces an `index.html`. I open it in the browser. Page loads. Console clean. Row 2 passes.
 
-Row 3 is where the morning gets interesting. Implement `addTask`, `toggleTask`, `deleteTask`; handoff condition: three unit tests pass on a `Task[]` of length 0, 1, 3. I paste a prompt. Claude produces three functions and three tests. I run the tests. All three pass. I read the diff. Something is off. `deleteTask` is removing the task with `tasks.splice(index, 1)` instead of `tasks.filter(t => t.id !== id)`. Splice mutates. Filter returns a new array. My SDD did not say *immutable updates only* — the handoff condition I wrote does not catch it. The tests pass with splice. They also pass with filter. The tests are blind to the thing I am suddenly seeing.
+Row 3 is where the morning gets interesting. Implement `addApplication`, `toggleSubmitted`, `deleteApplication`; handoff condition: three unit tests pass on an `Application[]` of length 0, 1, 3. I paste a prompt. Claude produces three functions and three tests. I run the tests. All three pass. I read the diff. Something is off. `deleteApplication` is removing the entry with `applications.splice(index, 1)` instead of `applications.filter(a => a.id !== id)`. Splice mutates. Filter returns a new array. My SDD did not say *immutable updates only* — the handoff condition I wrote does not catch it. The tests pass with splice. They also pass with filter. The tests are blind to the thing I am suddenly seeing.
 
 This is the moment the chapter is about. I do not have a test that has failed. I have an output that passes the handoff condition I wrote and still fails the condition I should have written. The tests-pass path is fast. The reject-and-respecify path is slow. The reject-and-respecify path is the chapter.
 
-I press Esc twice. The conversation rewinds to before the row 3 prompt. The files Claude wrote are gone. I rewrite the prompt with one added sentence: *Use only immutable updates — return new arrays from `toggleTask` and `deleteTask`; do not mutate the input.* I paste. Claude produces three functions using spread, map, and filter. The tests pass. Row 3 passes.
+I press Esc twice. The conversation rewinds to before the row 3 prompt. The files Claude wrote are gone. I rewrite the prompt with one added sentence: *Use only immutable updates — return new arrays from `toggleSubmitted` and `deleteApplication`; do not mutate the input.* I paste. Claude produces three functions using spread, map, and filter. The tests pass. Row 3 passes.
 
 That is what running a build feels like. Not pressing *accept all changes* on each output — evaluating, at every row, against the condition I wrote and the condition I should have written; rejecting the ones that fail either test; tightening the spec when the spec was thin. The build is not a series of approvals. It is a series of *audits*, performed by a person who can stop the line.
 
-<!-- → [DIAGRAM: The build loop — Specification → Claude executes → Handoff condition check → [Pass: next step] / [Fail: /rewind and respecify]. Loop annotation showing supervisory capacity at the check step. Editorial style.] -->
+![Three boxes across the top — Specification, Claude executes, Handoff check — with a side badge labeling the check step as governed by Plausibility Auditing. The check branches into Pass leading to Next step, and Fail leading to /rewind and respecify, which loops back to Specification.](images/12-running-the-build-fig-01.png)
+*Figure 12.1 — The build loop: specification, execution, audit, branch*
 
 ---
 
 Running a Claude row has four parts, in order.
 
-**Read the row.** Out loud, if you are alone. The row contains a step, a handoff condition, and — implicitly — a scope. Row 3 said *implement `addTask`, `toggleTask`, `deleteTask`*. It did not say *implement a `TaskList` component* or *add styling*. The prompt has to honor what the row is silent about as much as what it says.
+**Read the row.** Out loud, if you are alone. The row contains a step, a handoff condition, and — implicitly — a scope. Row 3 said *implement `addApplication`, `toggleSubmitted`, `deleteApplication`*. It did not say *implement a `TaskList` component* or *add styling*. The prompt has to honor what the row is silent about as much as what it says.
 
 **Write the prompt from the row.** The specification is already in the row; the prompt assembles the row, the relevant SDD section, and the acceptance criteria into one paragraph. The temptation is to skip the row and prompt from the SDD directly. Resist. The row exists so the prompt is bounded; skip the row, lose the bound.
 
@@ -66,7 +67,7 @@ This is scope creep, and it is the most common Claude failure on a Boondoggled b
 
 The response is `/rewind` plus an explicit scope fence in the re-prompt: *Do not add styles. Row 4 handles styles. Limit output to head, root div, minimal HTML to load.* The `<style>` block disappears. Row 2 does the row and nothing else.
 
-A second pattern, less obvious but more dangerous: Claude proposes a refactor during a feature implementation. *I noticed `addTask` could be cleaner if we refactored the index lookup into a helper. While I was at it, I made that change.* The refactor may be correct. The problem is not its quality — it is that a change not on the score has been smuggled into a row whose handoff condition does not test for it.
+A second pattern, less obvious but more dangerous: Claude proposes a refactor during a feature implementation. *I noticed `addApplication` could be cleaner if we refactored the index lookup into a helper. While I was at it, I made that change.* The refactor may be correct. The problem is not its quality — it is that a change not on the score has been smuggled into a row whose handoff condition does not test for it.
 
 The response is `/rewind`, scope fence, and a STOP block: *Do not refactor surrounding code. Any refactor proposal goes in a top-of-file comment labeled `// REFACTOR PROPOSAL` and is otherwise untouched.* The comment turns the smuggled change into a suggestion — a separate row, evaluated separately, later.
 
@@ -84,13 +85,13 @@ The opposite failure is also real. Some outputs almost pass — the row is done,
 
 One piece of standing infrastructure changes the verification picture, and it should be built before any Claude row that warrants it.
 
-The infrastructure is a verification mechanism Claude can run against itself — a single bash command whose exit code is the handoff condition's pass/fail signal. In Phase 1 of the task tracker, that is `npm test`. In a Python project it might be `pytest` and `ruff`. The form does not matter. What matters is that the mechanism exists.
+The infrastructure is a verification mechanism Claude can run against itself — a single bash command whose exit code is the handoff condition's pass/fail signal. In Phase 1 of the application tracker, that is `npm test`. In a Python project it might be `pytest` and `ruff`. The form does not matter. What matters is that the mechanism exists.
 
 Once it does, the prompt for a Claude row changes shape. Not *implement the functions, here are the requirements*. Instead: *implement the functions; run `npm test` after each iteration; iterate until all tests pass.* Claude is now in a feedback loop with a verification mechanism, and the loop closes without the human in the middle. This is not delegation — the human wrote the tests; the tests *are* the handoff condition; the human still audits the final output. What has changed is that Claude is iterating against a feedback mechanism the human installed, not producing single-shot output against a spec.
 
 Sandeep Lahiri and colleagues, in a 2024 study on test-driven interactive code generation, found that LLM coding agents improved pass@1 by roughly 46 percent within five user interactions when iterating against a test signal, with diminishing returns past three to four iterations. That ceiling is also the empirical basis for the two-rewind rule: if the feedback loop hasn't produced the right output in three to four iterations, the spec is wrong, not the model.
 
-The discipline reorders the build. The verification mechanism is row zero — the row before any Claude row that needs it. In the task tracker, row 0 was *write `task-fns.test.ts` with the three unit tests*. Written by hand. The tests were the handoff condition for row 3 before row 3 ran. The row 3 prompt included *the tests in `task-fns.test.ts` must pass*. Claude implemented, ran, iterated, reported all three passing. I read the diff and ran the tests independently. Row 3 closed in one prompt because the test was the spec and the spec ran on every iteration.
+The discipline reorders the build. The verification mechanism is row zero — the row before any Claude row that needs it. In the application tracker, row 0 was *write `app-fns.test.ts` with the three unit tests*. Written by hand. The tests were the handoff condition for row 3 before row 3 ran. The row 3 prompt included *the tests in `app-fns.test.ts` must pass*. Claude implemented, ran, iterated, reported all three passing. I read the diff and ran the tests independently. Row 3 closed in one prompt because the test was the spec and the spec ran on every iteration.
 
 This is the most important operational move in the chapter. The tests are not your final inspection; they are Claude's handoff condition. You write the test, Claude works against it, you audit. The labor stack is: human at top, defining correct; Claude in the middle, implementing; verification mechanism at the bottom, providing the binary signal. This is Deming's *quality built in, not inspected in*.
 
@@ -108,23 +109,23 @@ There is an emotional component worth naming. `/clear` feels expensive. The conv
 
 What follows is the full build session for Phase 1. Five rows, plus row 0. One rejection, one rewind, one re-specification.
 
-**Row 0** — Write the verification mechanism (Human). Before any Claude row, I wrote `task-fns.test.ts` by hand: three tests, one per function, including immutability assertions on the input arrays. Ran `npm test`. Three failures with "module not found" — `task-fns.ts` does not exist yet. Correct. Row 0 passes.
+**Row 0** — Write the verification mechanism (Human). Before any Claude row, I wrote `app-fns.test.ts` by hand: three tests, one per function, including immutability assertions on the input arrays. Ran `npm test`. Three failures with "module not found" — `app-fns.ts` does not exist yet. Correct. Row 0 passes.
 
 **Row 1** — Define the data model (Human, **[PF]**). Written by hand into `types.ts`: one interface, three fields. Handoff: file exists, one interface, fields match the SDD. Passes.
 
 **Row 2** — Scaffold the HTML page (Claude, **[TO]**). Prompt included explicit scope fence: *no inline styles, no `<style>` block; row 4 handles all styling.* Claude returned a clean `index.html` — head, root div, nothing else. Opened in the dev server. Loads clean. Passes.
 
-**Row 3** — Implement the three task functions (Claude, **[PA]**). First prompt: implement the three functions, run `npm test`. Claude returned implementations using `splice` and in-place assignment. Two immutability tests failed; one passed. Read the diff: mutations throughout. Wrong-feeling confirmed by test results.
+**Row 3** — Implement the three application functions (Claude, **[PA]**). First prompt: implement the three functions, run `npm test`. Claude returned implementations using `splice` and in-place assignment. Two immutability tests failed; one passed. Read the diff: mutations throughout. Wrong-feeling confirmed by test results.
 
 Esc-Esc. Rewind. Re-specified prompt: one sentence added — *use only immutable updates; use spread, `map`, and `filter`; do not use `push`, `splice`, or in-place property assignment.* Pasted into clean context. Claude returned spread, map, filter throughout. `npm test`: three passed. Read the diff: no mutations. Row 3 passes on the second attempt.
 
 **Row 4** — Decide visual hierarchy (Human, **[IJ]**). Written by hand: three CSS variables — `--font`, `--primary`, `--accent` — and nothing else. Handoff: three variables present before Claude writes any styles. Passes.
 
-**Row 5** — Wire localStorage with corruption guard (Claude, **[EI]**). Prompt included full behavior spec: storage key, mutation hook, parse-failure dialog, private-browsing fallback, STOP block for any change to `task-fns.ts`. Claude returned a `main.ts` with nested try/catch handling all three cases. Verified by hand: toggled ten items and refreshed; manually corrupted the stored JSON and confirmed both dialog branches. Row 5 passes.
+**Row 5** — Wire localStorage with corruption guard (Claude, **[EI]**). Prompt included full behavior spec: storage key, mutation hook, parse-failure dialog, private-browsing fallback, STOP block for any change to `app-fns.ts`. Claude returned a `main.ts` with nested try/catch handling all three cases. Verified by hand: toggled ten items and refreshed; manually corrupted the stored JSON and confirmed both dialog branches. Row 5 passes.
 
 Phase 1 closes. One rewind. One re-specification. All five Chapter 5 capacities engaged across five rows — **[PF]** at rows 0 and 1, **[TO]** at row 2, **[PA]** at row 3, **[IJ]** at row 4, **[EI]** at row 5 — in roughly two hours.
 
-What I have at the end is a small, ugly, working task tracker. Five files. About a hundred and twenty lines of code. Every line either written by me or evaluated against a written handoff condition. There is no decision Claude made without me either writing the specification for it or rejecting its first attempt. The artifact is small. The capability behind it is the chapter.
+What I have at the end is a small, ugly, working application tracker. Five files. About a hundred and twenty lines of code. Every line either written by me or evaluated against a written handoff condition. There is no decision Claude made without me either writing the specification for it or rejecting its first attempt. The artifact is small. The capability behind it is the chapter.
 
 ---
 
@@ -152,3 +153,19 @@ in, in Deming's sense, instead of inspecting it in. Show both versions.
 ---
 
 **Links:** [boondoggling.ai](https://boondoggling.ai) · [irreducibly.xyz](https://irreducibly.xyz)
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 12.1 — The build loop
+
+Build a flow diagram in D3 v7 with two rows. Top row, left to right: three rectangular nodes — `SPECIFICATION` (Row + prompt), `CLAUDE EXECUTES` (Produces diff), `HANDOFF CHECK` (Audit, not approve). Each node has a `--color-fill` ALL CAPS header strip and a body with one bold line and two `--color-secondary` body lines. The `HANDOFF CHECK` node is bordered in `--color-red`; a small `--color-fill` badge to its right reads `[PA] Plausibility Auditing governs` and is also red-bordered. Solid ink arrows connect the top row. From the bottom of the check node, a tee branches downward to a horizontal track labeled `PASS` (ink, right) and `FAIL` (red, left), each dropping into a bottom-row node — `NEXT STEP` (right, ink-bordered) and `/REWIND + RESPECIFY` (left, red-bordered). A dashed red loop-back arrow runs from `/REWIND` along the left margin back up into `SPECIFICATION`, with a small italic `loop: tighter spec` label. Hover any node or badge shows a tooltip with the longer rule. Dashed footer rule, two-line caption about the two-rewind rule.
+
+> Reference implementation: `d3/12-running-the-build-fig-01.html`

@@ -1,0 +1,57 @@
+<svg viewBox="0 0 700 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Fluency by depth: where the danger lives</title>
+  <desc id="desc">A two-axis editorial quadrant. The horizontal axis is technical fluency from low to high. The vertical axis is domain depth from low to high. The student sits in the high-fluency, low-depth quadrant — the dangerous region. The teacher sits in the low-fluency, high-depth quadrant. The safer region requires both.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="540" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 3.1 — FLUENCY × DEPTH</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Where the danger lives</text>
+
+  <!-- Chart area -->
+  <rect x="120" y="120" width="440" height="340" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+
+  <!-- Cross axes through middle -->
+  <line x1="340" y1="120" x2="340" y2="460" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+  <line x1="120" y1="290" x2="560" y2="290" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+
+  <!-- Axis arrows / labels -->
+  <line x1="120" y1="478" x2="560" y2="478" stroke="#2a1a0e" stroke-width="1" marker-end="url(#arrow)"/>
+  <text x="340" y="498" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#545454">technical fluency →</text>
+  <text x="150" y="498" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">low</text>
+  <text x="525" y="498" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">high</text>
+
+  <line x1="98" y1="460" x2="98" y2="120" stroke="#2a1a0e" stroke-width="1" marker-end="url(#arrow)"/>
+  <text x="78" y="290" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#545454" transform="rotate(-90 78 290)">domain depth →</text>
+  <text x="78" y="448" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">low</text>
+  <text x="78" y="138" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">high</text>
+
+  <!-- Quadrant captions (monospace caps) -->
+  <text x="230" y="142" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">DEPTH ONLY</text>
+  <text x="450" y="142" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">SUPERVISORY READY</text>
+  <text x="230" y="448" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">NEITHER</text>
+  <text x="450" y="448" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#C8102E">THE DANGER ZONE</text>
+
+  <!-- Teacher position: low fluency, high depth -->
+  <circle cx="200" cy="200" r="7" fill="#2a1a0e"/>
+  <text x="200" y="186" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Teacher</text>
+  <text x="200" y="226" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">behind on the tool,</text>
+  <text x="200" y="240" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">deep in the subject</text>
+
+  <!-- Student position: high fluency, low depth (red, emphasized) -->
+  <circle cx="490" cy="400" r="8" fill="#C8102E"/>
+  <text x="490" y="384" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Student</text>
+  <text x="490" y="424" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">fluent on the tool,</text>
+  <text x="490" y="438" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">shallow in the subject</text>
+
+  <!-- Target callout in supervisory-ready quadrant -->
+  <text x="450" y="206" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-style="italic" fill="#545454">build depth alongside</text>
+  <text x="450" y="220" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-style="italic" fill="#545454">the fluency you already have</text>
+
+  <!-- Footer -->
+  <text x="32" y="514" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">High fluency without depth is the configuration where confident wrong answers slip past every check you can run.</text>
+</svg>

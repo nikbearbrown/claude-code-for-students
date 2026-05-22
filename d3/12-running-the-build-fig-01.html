@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure 12.1 — The build loop</title>
+<style>
+:root {
+  --color-white: #FFFFFF;
+  --color-fill: #F5EFE8;
+  --color-ink: #2a1a0e;
+  --color-mark: #6B3520;
+  --color-red: #C8102E;
+  --color-slate: #1A3A5C;
+  --color-ochre: #C8860E;
+  --color-secondary: #545454;
+  --color-border: #D4D4D4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #111111;
+    --color-fill: #1a1612;
+    --color-ink: #F0EBE3;
+    --color-mark: #C8865E;
+    --color-red: #E8243A;
+    --color-slate: #6B8FB8;
+    --color-ochre: #D49A30;
+    --color-secondary: #A0978C;
+    --color-border: #2E2E2E;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-white); color: var(--color-ink); font-family: 'EB Garamond', Georgia, serif; padding: 24px; }
+#chart { width: 100%; min-height: 500px; }
+.tooltip { position: absolute; pointer-events: none; opacity: 0; background: var(--color-slate); color: var(--color-white); padding: 8px 12px; font-size: 12px; font-family: 'EB Garamond', Georgia, serif; max-width: 280px; line-height: 1.4; }
+text { font-family: 'EB Garamond', Georgia, serif; fill: var(--color-ink); }
+.caps { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; fill: var(--color-secondary); font-size: 10px; }
+.secondary { fill: var(--color-secondary); }
+.node-rect { fill: var(--color-white); stroke: var(--color-border); stroke-width: 1; cursor: pointer; transition: fill 120ms; }
+.node-header { fill: var(--color-fill); stroke: var(--color-border); stroke-width: 1; pointer-events: none; }
+.node-rect.highlight { stroke: var(--color-red); }
+.node-header.highlight { stroke: var(--color-red); }
+.node-rect:hover { fill: var(--color-fill); }
+.edge { stroke: var(--color-ink); stroke-width: 1.5; fill: none; }
+.edge-red { stroke: var(--color-red); stroke-width: 1.5; fill: none; }
+.edge-dashed { stroke: var(--color-red); stroke-width: 1.5; fill: none; stroke-dasharray: 4 3; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="chart" role="main"></div>
+<div class="tooltip" id="tt"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+function draw() {
+  d3.select('#chart').selectAll('*').remove();
+  const totalWidth = document.getElementById('chart').clientWidth || 700;
+  const totalHeight = 480;
+  const margin = { top: 56, right: 32, bottom: 32, left: 32 };
+  const chartWidth = totalWidth - margin.left - margin.right;
+
+  const svg = d3.select('#chart').append('svg')
+    .attr('width', totalWidth).attr('height', totalHeight)
+    .attr('role', 'img').attr('aria-labelledby', 'chart-title chart-desc');
+  svg.append('title').attr('id', 'chart-title').text('The build loop');
+  svg.append('desc').attr('id', 'chart-desc').text('Specification feeds Claude execution, output is checked against the handoff condition. Pass advances; fail rewinds and respecifies. The check step is governed by Plausibility Auditing, highlighted in red.');
+
+  // arrow defs
+  const defs = svg.append('defs');
+  defs.append('marker').attr('id','arrow').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-ink)');
+  defs.append('marker').attr('id','arrow-red').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-red)');
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+  g.append('text').attr('class','caps').attr('y',-24).text('FIGURE 12.1 — THE BUILD LOOP');
+  g.append('text').attr('y',0).attr('font-weight','bold').attr('font-size',13)
+    .text('Specification → execution → audit → next step, or /rewind and respecify');
+
+  const tt = d3.select('#tt');
+  function showTip(html){ tt.html(html).style('opacity',1); }
+  function moveTip(e){ tt.style('left',(e.pageX+12)+'px').style('top',(e.pageY-8)+'px'); }
+  function hideTip(){ tt.style('opacity',0); }
+
+  // layout coordinates relative to inner g
+  const topY = 64;
+  const boxW = Math.min(148, (chartWidth - 64) / 4);
+  const boxH = 80;
+  const gap = (chartWidth - 4*boxW) / 3; // four columns including PA badge column
+
+  // Top row positions: Spec, Claude, Check, then PA badge
+  const x0 = 0;
+  const x1 = boxW + gap;
+  const x2 = 2*(boxW+gap);
+  const xBadge = 3*(boxW+gap);
+
+  const nodes = [
+    { x:x0, y:topY, w:boxW, h:boxH, code:'SPECIFICATION', title:'Row + prompt',
+      body:['Score row, SDD section,', 'acceptance criteria.'],
+      tip:'Specification — the row + the relevant SDD section + the acceptance criteria, assembled into one prompt. The prompt is bounded by the row; skip the row, lose the bound.' },
+    { x:x1, y:topY, w:boxW, h:boxH, code:'CLAUDE EXECUTES', title:'Produces diff',
+      body:['Files, tests, output.', 'Read before running.'],
+      tip:'Claude executes — you read the diff before you run it. Two failure conditions: does the output do the row, and does it do anything other than the row? Both are caught here.' },
+    { x:x2, y:topY, w:boxW, h:boxH, code:'HANDOFF CHECK', title:'Audit, not approve',
+      body:['Condition I wrote +', 'condition I should have.'],
+      highlight: true,
+      tip:'Handoff check — governed by [PA] Plausibility Auditing. You evaluate against the condition you wrote AND the condition you should have written. The wrong-feeling output that passes the test is the move this step is for.' }
+  ];
+
+  nodes.forEach(n => {
+    g.append('rect').attr('class','node-rect' + (n.highlight?' highlight':''))
+      .attr('x',n.x).attr('y',n.y).attr('width',n.w).attr('height',n.h)
+      .on('mouseenter',()=>showTip(`<strong>${n.code} — ${n.title}</strong><br/>${n.tip}`))
+      .on('mousemove',moveTip).on('mouseleave',hideTip);
+    g.append('rect').attr('class','node-header' + (n.highlight?' highlight':''))
+      .attr('x',n.x).attr('y',n.y).attr('width',n.w).attr('height',24);
+    g.append('text').attr('class','caps').attr('x',n.x+n.w/2).attr('y',n.y+17).attr('text-anchor','middle')
+      .attr('fill', n.highlight ? 'var(--color-red)' : 'var(--color-secondary)').text(n.code);
+    g.append('text').attr('x',n.x+n.w/2).attr('y',n.y+46).attr('text-anchor','middle')
+      .attr('font-weight','bold').attr('font-size',11)
+      .attr('fill', n.highlight ? 'var(--color-red)' : 'var(--color-ink)')
+      .text(n.title).attr('pointer-events','none');
+    n.body.forEach((line, j) => {
+      g.append('text').attr('x',n.x+n.w/2).attr('y',n.y+64+j*12).attr('text-anchor','middle')
+        .attr('font-size',10).attr('class','secondary').text(line).attr('pointer-events','none');
+    });
+  });
+
+  // PA badge
+  const badgeW = Math.min(boxW, chartWidth - xBadge);
+  g.append('rect').attr('x',xBadge).attr('y',topY+12).attr('width',badgeW).attr('height',56)
+    .attr('fill','var(--color-fill)').attr('stroke','var(--color-red)').attr('stroke-width',1)
+    .on('mouseenter',()=>showTip('<strong>[PA] Plausibility Auditing</strong><br/>The capacity that hears the wrong note before tests confirm. The discipline has two halves: permission (take the feeling seriously) and investigation (turn it into a probe).'))
+    .on('mousemove',moveTip).on('mouseleave',hideTip);
+  g.append('text').attr('class','caps').attr('x',xBadge+badgeW/2).attr('y',topY+30).attr('text-anchor','middle')
+    .attr('fill','var(--color-red)').text('[PA]');
+  g.append('text').attr('x',xBadge+badgeW/2).attr('y',topY+48).attr('text-anchor','middle')
+    .attr('font-style','italic').attr('font-size',10).attr('class','secondary').text('Plausibility');
+  g.append('text').attr('x',xBadge+badgeW/2).attr('y',topY+60).attr('text-anchor','middle')
+    .attr('font-style','italic').attr('font-size',10).attr('class','secondary').text('Auditing governs');
+
+  // arrows between top row nodes
+  g.append('line').attr('class','edge').attr('x1',x0+boxW).attr('y1',topY+boxH/2).attr('x2',x1-2).attr('y2',topY+boxH/2).attr('marker-end','url(#arrow)');
+  g.append('line').attr('class','edge').attr('x1',x1+boxW).attr('y1',topY+boxH/2).attr('x2',x2-2).attr('y2',topY+boxH/2).attr('marker-end','url(#arrow)');
+  g.append('line').attr('class','edge-dashed').attr('stroke-width',1).attr('x1',xBadge).attr('y1',topY+boxH/2).attr('x2',x2+boxW+2).attr('y2',topY+boxH/2);
+
+  // Pass/Fail branching from bottom of check box
+  const checkBottomX = x2 + boxW/2;
+  const checkBottomY = topY + boxH;
+  const branchY = topY + boxH + 48;
+
+  // Bottom row layout
+  const bottomY = topY + boxH + 88;
+  const passW = boxW + 60;
+  const failW = boxW + 60;
+  const passX = chartWidth - passW;
+  const failX = 0 + 116;
+  const passCenterX = passX + passW/2;
+  const failCenterX = failX + failW/2;
+
+  // Pass path
+  g.append('path').attr('d',`M ${checkBottomX} ${checkBottomY} L ${checkBottomX} ${branchY} L ${passCenterX} ${branchY} L ${passCenterX} ${bottomY-2}`)
+    .attr('class','edge').attr('marker-end','url(#arrow)');
+  g.append('text').attr('class','caps').attr('x',(checkBottomX+passCenterX)/2).attr('y',branchY-6).attr('text-anchor','middle').text('PASS');
+
+  // Fail path
+  g.append('path').attr('d',`M ${checkBottomX} ${checkBottomY} L ${checkBottomX} ${branchY} L ${failCenterX} ${branchY} L ${failCenterX} ${bottomY-2}`)
+    .attr('class','edge-red').attr('marker-end','url(#arrow-red)');
+  g.append('text').attr('class','caps').attr('x',(checkBottomX+failCenterX)/2).attr('y',branchY-6).attr('text-anchor','middle').attr('fill','var(--color-red)').text('FAIL');
+
+  // Bottom-left: /rewind + respecify
+  g.append('rect').attr('class','node-rect highlight')
+    .attr('x',failX).attr('y',bottomY).attr('width',failW).attr('height',boxH)
+    .on('mouseenter',()=>showTip('<strong>/rewind + respecify</strong><br/>Esc-Esc rewinds the conversation and code to before the prompt. The new prompt is strictly more specified than the old one in at least one named dimension — a constraint sentence, not a complaint.'))
+    .on('mousemove',moveTip).on('mouseleave',hideTip);
+  g.append('rect').attr('class','node-header highlight').attr('x',failX).attr('y',bottomY).attr('width',failW).attr('height',24);
+  g.append('text').attr('class','caps').attr('x',failCenterX).attr('y',bottomY+17).attr('text-anchor','middle').attr('fill','var(--color-red)').text('/REWIND + RESPECIFY');
+  g.append('text').attr('x',failCenterX).attr('y',bottomY+46).attr('text-anchor','middle').attr('font-weight','bold').attr('font-size',11).text('Esc-Esc, then tighten').attr('pointer-events','none');
+  g.append('text').attr('x',failCenterX).attr('y',bottomY+64).attr('text-anchor','middle').attr('font-size',10).attr('class','secondary').text('New prompt is strictly more').attr('pointer-events','none');
+  g.append('text').attr('x',failCenterX).attr('y',bottomY+76).attr('text-anchor','middle').attr('font-size',10).attr('class','secondary').text('specified — not a complaint.').attr('pointer-events','none');
+
+  // Bottom-right: Next step
+  g.append('rect').attr('class','node-rect')
+    .attr('x',passX).attr('y',bottomY).attr('width',passW).attr('height',boxH)
+    .on('mouseenter',()=>showTip('<strong>Next step</strong><br/>Row closes when the handoff condition runs green. Advance to the next row. /clear between unrelated rows — context past a point is where quality degrades.'))
+    .on('mousemove',moveTip).on('mouseleave',hideTip);
+  g.append('rect').attr('class','node-header').attr('x',passX).attr('y',bottomY).attr('width',passW).attr('height',24);
+  g.append('text').attr('class','caps').attr('x',passCenterX).attr('y',bottomY+17).attr('text-anchor','middle').text('NEXT STEP');
+  g.append('text').attr('x',passCenterX).attr('y',bottomY+46).attr('text-anchor','middle').attr('font-weight','bold').attr('font-size',11).text('Row closes; advance').attr('pointer-events','none');
+  g.append('text').attr('x',passCenterX).attr('y',bottomY+64).attr('text-anchor','middle').attr('font-size',10).attr('class','secondary').text('Next row in the Score.').attr('pointer-events','none');
+  g.append('text').attr('x',passCenterX).attr('y',bottomY+76).attr('text-anchor','middle').attr('font-size',10).attr('class','secondary').text('/clear if unrelated.').attr('pointer-events','none');
+
+  // Loop-back dashed arrow from /rewind up to Specification
+  const loopX = 64;
+  g.append('path')
+    .attr('d',`M ${failX} ${bottomY+boxH/2} L ${loopX} ${bottomY+boxH/2} L ${loopX} ${topY+boxH/2} L ${x0-2} ${topY+boxH/2}`)
+    .attr('class','edge-dashed').attr('marker-end','url(#arrow-red)');
+  g.append('text').attr('x',loopX-50).attr('y',(topY+bottomY)/2+10).attr('font-style','italic').attr('font-size',10).attr('fill','var(--color-red)').text('loop:');
+  g.append('text').attr('x',loopX-50).attr('y',(topY+bottomY)/2+24).attr('font-style','italic').attr('font-size',10).attr('fill','var(--color-red)').text('tighter spec');
+
+  // Footer rule
+  const yFoot = bottomY + boxH + 32;
+  g.append('line').attr('x1',0).attr('y1',yFoot).attr('x2',chartWidth).attr('y2',yFoot)
+    .attr('stroke','var(--color-border)').attr('stroke-width',0.75).attr('stroke-dasharray','4 3');
+  g.append('text').attr('class','secondary').attr('y',yFoot+20).attr('font-size',10)
+    .text('Two-rewind rule — second failure on the same row for the same reason means the spec is broken, not Claude.');
+  g.append('text').attr('class','secondary').attr('y',yFoot+36).attr('font-size',10).attr('font-style','italic')
+    .text('Forward correction adds rot; rewind shortens context.');
+}
+draw();
+const ro = new ResizeObserver(() => draw());
+ro.observe(document.getElementById('chart'));
+</script>
+</body>
+</html>

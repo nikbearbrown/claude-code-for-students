@@ -1,0 +1,64 @@
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">The conductor and the orchestra</title>
+  <desc id="desc">An editorial diagram of the working relationship between human and Claude. The human, on the left, holds intent, sequences, and verifies. Claude, on the right, executes specifications and returns output. Between them sit the specification and the handoff condition.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 4.1 — CONDUCTOR / ORCHESTRA</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Who holds the piece. Who plays the parts.</text>
+
+  <!-- Human box (left) -->
+  <rect x="32" y="140" width="200" height="220" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+  <text x="132" y="164" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">HUMAN</text>
+  <text x="132" y="192" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Conductor</text>
+  <line x1="48" y1="208" x2="216" y2="208" stroke="#D4D4D4" stroke-width="0.75"/>
+  <text x="48" y="232" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— holds intent</text>
+  <text x="48" y="254" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— sequences the work</text>
+  <text x="48" y="276" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— writes the specification</text>
+  <text x="48" y="298" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— names the boundary</text>
+  <text x="48" y="320" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— verifies against the world</text>
+  <text x="48" y="342" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— decides if it ships</text>
+
+  <!-- Claude box (right) -->
+  <rect x="468" y="140" width="200" height="220" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+  <text x="568" y="164" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">CLAUDE</text>
+  <text x="568" y="192" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Orchestra</text>
+  <line x1="484" y1="208" x2="652" y2="208" stroke="#D4D4D4" stroke-width="0.75"/>
+  <text x="484" y="232" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— executes the contract</text>
+  <text x="484" y="254" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— writes the implementation</text>
+  <text x="484" y="276" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— edits the named files</text>
+  <text x="484" y="298" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— runs tests and tools</text>
+  <text x="484" y="320" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— reports the result</text>
+  <text x="484" y="342" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— holds no piece across sessions</text>
+
+  <!-- Middle: specification + handoff -->
+  <rect x="252" y="180" width="196" height="140" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+  <text x="350" y="202" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">THE INTERFACE</text>
+  <text x="350" y="228" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Specification</text>
+  <text x="350" y="244" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">invariants, scope, contract</text>
+  <line x1="280" y1="258" x2="420" y2="258" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+  <text x="350" y="282" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Handoff condition</text>
+  <text x="350" y="298" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">verb, target, success criterion</text>
+
+  <!-- Arrows: human → spec → orchestra -->
+  <line x1="232" y1="244" x2="248" y2="244" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="240" y="232" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">writes</text>
+
+  <line x1="448" y1="244" x2="464" y2="244" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="456" y="232" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">executes</text>
+
+  <!-- Return arrow: orchestra → handoff → human -->
+  <line x1="464" y1="294" x2="448" y2="294" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="456" y="312" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">returns</text>
+
+  <line x1="248" y1="294" x2="232" y2="294" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="240" y="312" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">verifies</text>
+
+  <!-- Footer -->
+  <text x="32" y="416" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">A prompt is a wish. A specification is a contract. The handoff condition is how you know the contract was kept.</text>
+</svg>

@@ -1,0 +1,75 @@
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">The fluency trap: two paths</title>
+  <desc id="desc">Path A shows struggle leading to consolidation and durable capability. Path B shows delegation leading to fluent output, no consolidation, and atrophy.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#C8102E"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 1.1 — THE FLUENCY TRAP</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Two paths from the same problem</text>
+
+  <!-- Path A label -->
+  <text x="32" y="148" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">PATH A</text>
+  <text x="80" y="148" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-style="italic" fill="#545454">— do the work the slow way</text>
+
+  <!-- Path A boxes -->
+  <g>
+    <rect x="32" y="164" width="140" height="56" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="102" y="190" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">struggle</text>
+    <text x="102" y="206" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">try → fail → adjust</text>
+
+    <line x1="172" y1="192" x2="208" y2="192" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <rect x="212" y="164" width="140" height="56" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="282" y="190" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">consolidation</text>
+    <text x="282" y="206" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">encoding event</text>
+
+    <line x1="352" y1="192" x2="388" y2="192" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <rect x="392" y="164" width="140" height="56" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="462" y="190" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">durable capability</text>
+    <text x="462" y="206" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">passes the closed-laptop test</text>
+  </g>
+
+  <!-- Divider rule -->
+  <line x1="32" y1="268" x2="668" y2="268" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+
+  <!-- Path B label -->
+  <text x="32" y="300" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">PATH B</text>
+  <text x="80" y="300" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-style="italic" fill="#545454">— delegate to the model</text>
+
+  <!-- Path B boxes -->
+  <g>
+    <rect x="32" y="316" width="140" height="56" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="102" y="342" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">delegate</text>
+    <text x="102" y="358" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">paste → copy → ship</text>
+
+    <line x1="172" y1="344" x2="208" y2="344" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <rect x="212" y="316" width="140" height="56" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="282" y="342" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">fluent output</text>
+    <text x="282" y="358" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">grade arrives, skill does not</text>
+
+    <line x1="352" y1="344" x2="388" y2="344" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    <rect x="392" y="316" width="140" height="56" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="462" y="342" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">no consolidation</text>
+    <text x="462" y="358" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">encoding event skipped</text>
+
+    <line x1="532" y1="344" x2="568" y2="344" stroke="#C8102E" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+
+    <rect x="572" y="316" width="96" height="56" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+    <text x="620" y="342" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#C8102E">atrophy</text>
+    <text x="620" y="358" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">the bill arrives later</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="32" y="432" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Both paths produce an artifact. Only one path produces a learner.</text>
+</svg>

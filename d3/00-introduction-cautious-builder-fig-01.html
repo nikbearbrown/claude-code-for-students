@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure 0.1 — From observer to practitioner</title>
+<style>
+:root {
+  --color-white: #FFFFFF;
+  --color-fill: #F5EFE8;
+  --color-ink: #2a1a0e;
+  --color-mark: #6B3520;
+  --color-red: #C8102E;
+  --color-slate: #1A3A5C;
+  --color-ochre: #C8860E;
+  --color-secondary: #545454;
+  --color-border: #D4D4D4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #111111;
+    --color-fill: #1a1612;
+    --color-ink: #F0EBE3;
+    --color-mark: #C8865E;
+    --color-red: #E8243A;
+    --color-slate: #6B8FB8;
+    --color-ochre: #D49A30;
+    --color-secondary: #A0978C;
+    --color-border: #2E2E2E;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-white); color: var(--color-ink); font-family: 'EB Garamond', Georgia, serif; padding: 24px; }
+#chart { width: 100%; min-height: 480px; }
+.tooltip { position: absolute; pointer-events: none; opacity: 0; background: var(--color-slate); color: var(--color-white); padding: 6px 10px; font-size: 12px; font-family: 'EB Garamond', Georgia, serif; }
+text { font-family: 'EB Garamond', Georgia, serif; fill: var(--color-ink); }
+.caps { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; fill: var(--color-secondary); }
+.secondary { fill: var(--color-secondary); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="chart" role="main"></div>
+<div class="tooltip" id="tt"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+function draw() {
+  d3.select('#chart').selectAll('*').remove();
+  const totalWidth = document.getElementById('chart').clientWidth || 700;
+  const totalHeight = 480;
+  const margin = { top: 56, right: 40, bottom: 56, left: 40 };
+  const chartWidth = totalWidth - margin.left - margin.right;
+  const chartHeight = totalHeight - margin.top - margin.bottom;
+
+  const svg = d3.select('#chart').append('svg')
+    .attr('width', totalWidth).attr('height', totalHeight)
+    .attr('role', 'img').attr('aria-labelledby', 'chart-title chart-desc');
+  svg.append('title').attr('id', 'chart-title').text("Seth's arc: observer to practitioner");
+  svg.append('desc').attr('id', 'chart-desc').text("A two-point timeline of the move from watching peers delegate to AI toward building disciplined practice.");
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  g.append('text').attr('class','caps').attr('x',0).attr('y',-24).text('FIGURE 0.1 — THE ARC');
+  g.append('text').attr('x',0).attr('y',0).attr('font-weight','bold').attr('font-size',13).text('From observer to practitioner');
+
+  const y = 180;
+  const xLeft = 120, xRight = 540, xMid = (xLeft+xRight)/2;
+
+  // baseline
+  g.append('line').attr('x1',xLeft).attr('y1',y).attr('x2',xRight).attr('y2',y)
+    .attr('stroke','var(--color-ink)').attr('stroke-width',1.5)
+    .attr('marker-end','url(#arrow-d3)');
+  const defs = svg.append('defs');
+  defs.append('marker').attr('id','arrow-d3').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-ink)');
+
+  // midpoint dashed mark
+  g.append('line').attr('x1',xMid).attr('y1',y-8).attr('x2',xMid).attr('y2',y+8)
+    .attr('stroke','var(--color-border)').attr('stroke-width',0.75).attr('stroke-dasharray','4 3');
+  g.append('text').attr('class','caps').attr('x',xMid).attr('y',y-30).attr('text-anchor','middle').text('THE TURN');
+  g.append('text').attr('class','secondary').attr('x',xMid).attr('y',y-58).attr('text-anchor','middle').attr('font-style','italic').attr('font-size',11).text('notice the gap between');
+  g.append('text').attr('class','secondary').attr('x',xMid).attr('y',y-44).attr('text-anchor','middle').attr('font-style','italic').attr('font-size',11).text('output and learning');
+
+  const nodes = [
+    { x: xLeft, capLabel:'BEFORE', title:'Watches friends', l1:'paste prompts, copy answers,', l2:'ship homework, fail the quiz.',
+      tip:'Output exists. Learning does not. The hours do not accrue.' },
+    { x: xRight-20, capLabel:'AFTER', title:'Builds the discipline', l1:'conducts the tool, defends', l2:'every line, keeps the skill.',
+      tip:'Built, not borrowed. The skill stays after the laptop closes.' }
+  ];
+
+  const tt = d3.select('#tt');
+  const node = g.selectAll('g.node').data(nodes).join('g').attr('class','node').attr('transform',d=>`translate(${d.x},${y})`);
+  node.append('circle').attr('r',6).attr('fill','var(--color-ink)')
+    .on('mouseenter',(e,d)=>{tt.style('opacity',1).text(d.tip);})
+    .on('mousemove',(e)=>{tt.style('left',(e.pageX+12)+'px').style('top',(e.pageY-8)+'px');})
+    .on('mouseleave',()=>tt.style('opacity',0));
+  node.append('text').attr('class','caps').attr('y',-22).attr('text-anchor','middle').text(d=>d.capLabel);
+  node.append('text').attr('y',40).attr('text-anchor','middle').attr('font-weight','bold').attr('font-size',13).text(d=>d.title);
+  node.append('text').attr('y',60).attr('text-anchor','middle').attr('font-size',11).text(d=>d.l1);
+  node.append('text').attr('y',76).attr('text-anchor','middle').attr('font-size',11).text(d=>d.l2);
+
+  g.append('text').attr('class','secondary').attr('x',0).attr('y',chartHeight-12).attr('font-size',10)
+    .text('The arc is not about more typing. It is about deciding which work stays yours.');
+}
+draw();
+const ro = new ResizeObserver(() => draw());
+ro.observe(document.getElementById('chart'));
+</script>
+</body>
+</html>

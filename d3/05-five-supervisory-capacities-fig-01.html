@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure 5.1 — The five supervisory capacities</title>
+<style>
+:root {
+  --color-white: #FFFFFF;
+  --color-fill: #F5EFE8;
+  --color-ink: #2a1a0e;
+  --color-mark: #6B3520;
+  --color-red: #C8102E;
+  --color-slate: #1A3A5C;
+  --color-ochre: #C8860E;
+  --color-secondary: #545454;
+  --color-border: #D4D4D4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #111111;
+    --color-fill: #1a1612;
+    --color-ink: #F0EBE3;
+    --color-mark: #C8865E;
+    --color-red: #E8243A;
+    --color-slate: #6B8FB8;
+    --color-ochre: #D49A30;
+    --color-secondary: #A0978C;
+    --color-border: #2E2E2E;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-white); color: var(--color-ink); font-family: 'EB Garamond', Georgia, serif; padding: 24px; }
+#chart { width: 100%; min-height: 500px; }
+.tooltip { position: absolute; pointer-events: none; opacity: 0; background: var(--color-slate); color: var(--color-white); padding: 8px 12px; font-size: 12px; font-family: 'EB Garamond', Georgia, serif; max-width: 260px; line-height: 1.4; }
+text { font-family: 'EB Garamond', Georgia, serif; fill: var(--color-ink); }
+.caps { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; fill: var(--color-secondary); font-size: 10px; }
+.secondary { fill: var(--color-secondary); }
+.col-rect { fill: var(--color-white); stroke: var(--color-border); stroke-width: 1; cursor: pointer; transition: fill 120ms; }
+.col-header { fill: var(--color-fill); stroke: var(--color-border); stroke-width: 1; pointer-events: none; }
+.col-rect.highlight { stroke: var(--color-red); }
+.col-header.highlight { stroke: var(--color-red); }
+.col-rect:hover { fill: var(--color-fill); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="chart" role="main"></div>
+<div class="tooltip" id="tt"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+function draw() {
+  d3.select('#chart').selectAll('*').remove();
+  const totalWidth = document.getElementById('chart').clientWidth || 700;
+  const totalHeight = 500;
+  const margin = { top: 56, right: 32, bottom: 64, left: 32 };
+  const chartWidth = totalWidth - margin.left - margin.right;
+
+  const svg = d3.select('#chart').append('svg')
+    .attr('width', totalWidth).attr('height', totalHeight)
+    .attr('role', 'img').attr('aria-labelledby', 'chart-title chart-desc');
+  svg.append('title').attr('id', 'chart-title').text('The five supervisory capacities');
+  svg.append('desc').attr('id', 'chart-desc').text('Five labeled columns — PF, TO, PA, IJ, EI — each a supervisory capacity the human keeps. PA is highlighted as the probe-making move.');
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+  g.append('text').attr('class','caps').attr('y',-24).text('FIGURE 5.1 — THE FIVE SUPERVISORY CAPACITIES');
+  g.append('text').attr('y',0).attr('font-weight','bold').attr('font-size',13).text('The five things you do that Claude does not');
+
+  const tt = d3.select('#tt');
+  function showTip(html){ tt.html(html).style('opacity',1); }
+  function moveTip(e){ tt.style('left',(e.pageX+12)+'px').style('top',(e.pageY-8)+'px'); }
+  function hideTip(){ tt.style('opacity',0); }
+
+  const capacities = [
+    { code:'PF', name1:'Problem', name2:'Formulation',
+      body:['Deciding what the','build is before','Claude sees it.'],
+      italic:['Wrong frame →','wrong output,','elegantly.'],
+      tip:'Problem Formulation — the four questions you ask before you type. What is the actual outcome? What would count as a wrong answer that still passes the obvious tests? What knowledge does this task require that isn\'t in the prompt? Whose problem is this?' },
+    { code:'TO', name1:'Tool', name2:'Orchestration',
+      body:['Which Claude task,','in what order, with','what trust level.'],
+      italic:['Sequencing makes','a clean diff or a','tangled one.'],
+      tip:'Tool Orchestration — which Claude move, in what order, trusted how far. Cheap-to-verify tasks run on long leash. Expensive-to-verify tasks run on short leash. Trust level is a knob, set per task.' },
+    { code:'PA', name1:'Plausibility', name2:'Auditing',
+      body:['Hearing the wrong','note in output','before tests confirm.'],
+      italic:['Connoisseurship —','trained perception,','not intuition.'],
+      highlight: true,
+      tip:'Plausibility Auditing — the move Seth made when he typed hunting and haunting. Trained perception built by exposure to many labeled cases. The capacity to hear the wrong note before the proof is ready.' },
+    { code:'IJ', name1:'Interpretive', name2:'Judgment',
+      body:['Supplying the','meaning the output','cannot carry.'],
+      italic:['What does this','number mean for','this project?'],
+      tip:'Interpretive Judgment — Schön\'s reflection-in-action. The paragraph you write under the 92%. The act of deciding what the measurement means for this project, this deadline, this user.' },
+    { code:'EI', name1:'Executive', name2:'Integration',
+      body:['Holding the whole','build toward a','single goal.'],
+      italic:['Prompt 17 quietly','undoes the choice','made at prompt 3.'],
+      tip:'Executive Integration — the act of holding the whole. Catches the drift between prompt 3 and prompt 17. The most common failure mode of human-AI collaboration is over-trust by reviewers, accepting each individual reasonable suggestion until the accumulation is an architecture no one chose.' }
+  ];
+
+  const colWidth = Math.min(120, (chartWidth - 4*8) / 5);
+  const gap = (chartWidth - colWidth*5) / 4;
+  const colHeight = 280;
+  const headerH = 36;
+  const yTop = 64;
+
+  capacities.forEach((c,i) => {
+    const x = i*(colWidth+gap);
+    const isH = c.highlight;
+    g.append('rect').attr('class', 'col-rect' + (isH?' highlight':''))
+      .attr('x',x).attr('y',yTop).attr('width',colWidth).attr('height',colHeight)
+      .on('mouseenter',()=>showTip(`<strong>${c.code} — ${c.name1} ${c.name2}</strong><br/>${c.tip}`))
+      .on('mousemove',moveTip).on('mouseleave',hideTip);
+    g.append('rect').attr('class', 'col-header' + (isH?' highlight':''))
+      .attr('x',x).attr('y',yTop).attr('width',colWidth).attr('height',headerH);
+
+    g.append('text').attr('class','caps').attr('x',x+colWidth/2).attr('y',yTop+22).attr('text-anchor','middle')
+      .attr('fill', isH ? 'var(--color-red)' : 'var(--color-ink)').text(c.code);
+
+    g.append('text').attr('x',x+colWidth/2).attr('y',yTop+58).attr('text-anchor','middle')
+      .attr('font-weight','bold').attr('font-size',11)
+      .attr('fill', isH ? 'var(--color-red)' : 'var(--color-ink)')
+      .text(c.name1).attr('pointer-events','none');
+    g.append('text').attr('x',x+colWidth/2).attr('y',yTop+74).attr('text-anchor','middle')
+      .attr('font-weight','bold').attr('font-size',11)
+      .attr('fill', isH ? 'var(--color-red)' : 'var(--color-ink)')
+      .text(c.name2).attr('pointer-events','none');
+
+    c.body.forEach((line, j) => {
+      g.append('text').attr('x',x+10).attr('y',yTop+106+j*14).attr('font-size',10)
+        .attr('class','secondary').text(line).attr('pointer-events','none');
+    });
+    c.italic.forEach((line, j) => {
+      g.append('text').attr('x',x+10).attr('y',yTop+160+j*14).attr('font-size',10).attr('font-style','italic')
+        .attr('class','secondary').text(line).attr('pointer-events','none');
+    });
+  });
+
+  // bottom rule
+  g.append('line').attr('x1',0).attr('y1',yTop+colHeight+24).attr('x2',chartWidth).attr('y2',yTop+colHeight+24)
+    .attr('stroke','var(--color-border)').attr('stroke-width',0.75).attr('stroke-dasharray','4 3');
+
+  g.append('text').attr('class','secondary').attr('y',yTop+colHeight+44).attr('font-size',10)
+    .text('All five are required. None are supplied by Claude. Hover any column for the longer definition.');
+  g.append('text').attr('class','secondary').attr('y',yTop+colHeight+60).attr('font-size',10).attr('font-style','italic')
+    .text('Highlighted: the capacity that made the hunting / haunting probe.');
+}
+draw();
+const ro = new ResizeObserver(() => draw());
+ro.observe(document.getElementById('chart'));
+</script>
+</body>
+</html>

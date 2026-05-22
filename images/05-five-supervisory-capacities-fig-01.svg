@@ -1,0 +1,97 @@
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">The five supervisory capacities</title>
+  <desc id="desc">Five labeled columns — PF, TO, PA, IJ, EI — each with a plain-language name and a one-sentence definition. The five things the human supervisor does that Claude does not.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 5.1 — THE FIVE SUPERVISORY CAPACITIES</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">The five things you do that Claude does not</text>
+
+  <!-- Five columns: each 120w, gap 8 -->
+  <!-- column 1: PF, x=32 -->
+  <g>
+    <rect x="32" y="120" width="120" height="240" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="32" y="120" width="120" height="36" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="92" y="143" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="11" letter-spacing="0.08em" fill="#2a1a0e">PF</text>
+    <text x="92" y="178" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Problem</text>
+    <text x="92" y="194" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Formulation</text>
+    <text x="42" y="226" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Deciding what the</text>
+    <text x="42" y="240" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">build is before</text>
+    <text x="42" y="254" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Claude sees it.</text>
+    <text x="42" y="280" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">Wrong frame →</text>
+    <text x="42" y="294" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">wrong output,</text>
+    <text x="42" y="308" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">elegantly.</text>
+  </g>
+
+  <!-- column 2: TO, x=160 -->
+  <g>
+    <rect x="160" y="120" width="120" height="240" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="160" y="120" width="120" height="36" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="220" y="143" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="11" letter-spacing="0.08em" fill="#2a1a0e">TO</text>
+    <text x="220" y="178" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Tool</text>
+    <text x="220" y="194" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Orchestration</text>
+    <text x="170" y="226" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Which Claude task,</text>
+    <text x="170" y="240" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">in what order, with</text>
+    <text x="170" y="254" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">what trust level.</text>
+    <text x="170" y="280" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">Sequencing makes</text>
+    <text x="170" y="294" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">a clean diff or a</text>
+    <text x="170" y="308" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">tangled one.</text>
+  </g>
+
+  <!-- column 3: PA, x=288 — highlighted (the move Seth made) -->
+  <g>
+    <rect x="288" y="120" width="120" height="240" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+    <rect x="288" y="120" width="120" height="36" fill="#F5EFE8" stroke="#C8102E" stroke-width="1"/>
+    <text x="348" y="143" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="11" letter-spacing="0.08em" fill="#C8102E">PA</text>
+    <text x="348" y="178" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#C8102E">Plausibility</text>
+    <text x="348" y="194" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#C8102E">Auditing</text>
+    <text x="298" y="226" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Hearing the wrong</text>
+    <text x="298" y="240" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">note in output</text>
+    <text x="298" y="254" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">before tests confirm.</text>
+    <text x="298" y="280" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">Connoisseurship —</text>
+    <text x="298" y="294" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">trained perception,</text>
+    <text x="298" y="308" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">not intuition.</text>
+  </g>
+
+  <!-- column 4: IJ, x=416 -->
+  <g>
+    <rect x="416" y="120" width="120" height="240" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="416" y="120" width="120" height="36" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="476" y="143" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="11" letter-spacing="0.08em" fill="#2a1a0e">IJ</text>
+    <text x="476" y="178" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Interpretive</text>
+    <text x="476" y="194" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Judgment</text>
+    <text x="426" y="226" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Supplying the</text>
+    <text x="426" y="240" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">meaning the output</text>
+    <text x="426" y="254" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">cannot carry.</text>
+    <text x="426" y="280" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">What does this</text>
+    <text x="426" y="294" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">number mean for</text>
+    <text x="426" y="308" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">this project?</text>
+  </g>
+
+  <!-- column 5: EI, x=544 -->
+  <g>
+    <rect x="544" y="120" width="120" height="240" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="544" y="120" width="120" height="36" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="604" y="143" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="11" letter-spacing="0.08em" fill="#2a1a0e">EI</text>
+    <text x="604" y="178" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Executive</text>
+    <text x="604" y="194" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Integration</text>
+    <text x="554" y="226" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Holding the whole</text>
+    <text x="554" y="240" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">build toward a</text>
+    <text x="554" y="254" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">single goal.</text>
+    <text x="554" y="280" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">Prompt 17 quietly</text>
+    <text x="554" y="294" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">undoes the choice</text>
+    <text x="554" y="308" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">made at prompt 3.</text>
+  </g>
+
+  <!-- Bottom rule + caption -->
+  <line x1="32" y1="400" x2="668" y2="400" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+  <text x="32" y="424" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">The labels are shorthand specific to this book — short because Chapter 6 turns each into a scoring axis.</text>
+  <text x="32" y="440" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">All five are required. None are supplied by Claude. The highlighted column is the one Seth's </text>
+  <text x="478" y="440" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">hunting/haunting</text>
+  <text x="567" y="440" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454"> probe made.</text>
+</svg>

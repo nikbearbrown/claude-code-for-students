@@ -12,7 +12,8 @@ The setup is short on purpose. You are going to pick a project, plan it through 
 
 There is no Seth in what follows. There is the project, the sequence, the criterion for success, and the document template. Everything else — what you build, which capacity strains hardest, which row in the score sends you back through a gate — is your decision. The book has been arguing since Chapter 0 that Claude Code is instrument, not shortcut. The next eight to twenty hours are the argument's test.
 
-<!-- → [DIAGRAM: The complete arc — a minimal timeline from Chapter 0 (Seth observes) to Chapter 14 (reader builds). Four milestones labeled: Problem named / Discipline learned / First build planned / First build verified. Editorial style.] -->
+![A minimal horizontal timeline from Chapter 0 to Chapter 14, with four milestone dots labeled Problem named, Discipline learned, First build planned, and First build verified. The first three milestones are ink — Seth's observed arc; the fourth, where the reader builds, is highlighted in red.](images/14-first-full-build-fig-01.png)
+*Figure 14.1 — The complete arc: from observation to the reader's build*
 
 ---
 
@@ -20,11 +21,17 @@ There is no Seth in what follows. There is the project, the sequence, the criter
 
 You need a project small enough to finish in eight to twenty hours of focused work, and large enough to exercise all five supervisory capacities from Chapter 5 at least once. A project that exercises three of the five is a chapter exercise. A project that needs three weeks is not what this chapter is for.
 
-**The default project: a personal homework deadline tracker.** A local web page or CLI tool that lets you add an assignment with a class and a due date, mark assignments done, list what is due in the next seven days sorted by date, and persist across refreshes or invocations. No accounts. No server. No sync. One user — you. Data lives in `localStorage` (web) or a JSON file in your home directory (CLI). Phase 1 is the add-list-toggle-persist loop.
+Four default projects sit at the front of this chapter. Pick the one that fits your life. Each one exercises all five supervisory capacities; each one has a different domain so the chapter does not collapse into one student-shape.
 
-The default is deliberately close in shape to Seth's task tracker from Chapters 11–13. You have read its planning document, its execution log, and its verification pass. You will not be copying his work — the data model is different (a homework assignment has a class and a due date; a task has neither), the display order is the user need (which means the Pass 3 trap Seth hit is staring at you from the start), and the design decisions are yours. The familiarity is scaffolding. The novelty is everything the scaffolding cannot decide for you.
+**Default 1 — Common App application tracker (extend the one in Chapters 11–13).** Take the build the previous three chapters walked through — the local web page that adds, marks submitted, and deletes college applications, with `localStorage` persistence — and extend it for Phase 2. Add per-school supplement status (a sub-list under each application), or recommender status, or fee-waiver tracking. Pick one. The familiarity with the existing code is scaffolding; the new feature is yours to spec and verify. The Pass 3 trap from Chapter 13 (display order surfacing what remains) is still in play for the new feature.
 
-If the default does not fit your situation, the following alternates each exercise all five capacities, with a note on which one will strain hardest:
+**Default 2 — Horror-game playtest log analyzer.** A CLI tool that reads a CSV of playtest events from a single Godot or Roblox project — timestamp, event type, scene, player ID — and produces a one-page report: how long players survived per scene, which scares fired most often, where players quit. No accounts, no server, no sync. Data lives in `data/playtest.csv`. Phase 1 is the parse-summarize-print loop. This is the option for students who are already game developers or who want to see what specifying a quantitative report against messy real data feels like.
+
+**Default 3 — Weighted-GPA calculator with transcript CSV input.** A local web page or CLI tool that reads a transcript CSV — course name, term, level (regular / honors / AP), grade — and produces this semester's weighted GPA, this year's weighted GPA, and the cumulative weighted GPA, with a breakdown by level. The Common App's Academic Record section asks for exactly this and most students compute it by hand under deadline. No server. Data lives in `data/transcript.csv` with the UTF-8 BOM your school's SIS export probably includes. Phase 1 is the parse-compute-report loop.
+
+**Default 4 — Custom AGENTS.md or agent prompt for one of your own projects.** Pick a project you already have — a game, a study tool, an essay habit, anything — and write the agent that would help you make it better. The agent is a Claude Project: a system prompt, a small command library, and a refusal layer. The Walker and Zelda agents in the appendix are reference implementations, not templates to copy. Yours should answer a specific need yours has that no general-purpose Claude session covers. Phase 1 is the system-prompt + three-command + one-refusal-rule loop. Verification is harder than the other defaults — *does this agent change my actual workflow* is a Pass 3 question with no `npm test` answer.
+
+If none of the four defaults fits your situation, the following alternates each exercise all five capacities, with a note on which one will strain hardest:
 
 | Alternate | Hardest capacity |
 |---|---|
@@ -41,7 +48,7 @@ Pick one before you write the /v0 sentence. Switching projects after /v0 is itse
 
 Seven stages in order. Each stage has a gate. The gates are not bureaucracy. They are the previous thirteen chapters in execution form.
 
-**Stage 1 — /v0.** One sentence. One user. One outcome. No conjunctions hiding a second project. For the default: *"A local web page that lets me add homework assignments with a class and due date, mark them done, see what is due in the next seven days, and remember them across browser refreshes."* Read your sentence aloud. If you used *and* to connect two outcomes, you have two projects; cut one. Gate 1: one sentence, one user, one outcome.
+**Stage 1 — /v0.** One sentence. One user. One outcome. No conjunctions hiding a second project. For Default 1 (the application tracker extension), the sentence might be: *"A web page that lets me add a per-school supplement under each existing application entry, mark each supplement submitted, and see at a glance which supplements still owe me work."* For Default 3 (the weighted-GPA calculator): *"A local tool that reads my school's transcript CSV and prints this semester, this year, and cumulative weighted GPA broken out by AP / honors / regular."* Read your sentence aloud. If you used *and* to connect two outcomes, you have two projects; cut one. Gate 1: one sentence, one user, one outcome.
 
 **Stage 2 — /v1.** Two short lists: in scope and out of scope. The out-of-scope list is load-bearing and must include at least five plausible features the project will not have — features you actually want. Putting them on the list is the act of defending the project against itself. Gate 2: both lists non-empty, out-of-scope at least five items you actually want.
 
@@ -144,3 +151,19 @@ Paste your post-build document underneath the prompt. The output is the bridge b
 [^kolb]: David Kolb, *Experiential Learning: Experience as the Source of Learning and Development* (Prentice Hall, 1984). The build is stages one and two; the document is stages two and three; the next project is stage four.
 
 [^dewey]: John Dewey, *Experience and Education* (Macmillan, 1938) and *Democracy and Education* (Macmillan, 1916). The principles of continuity and interaction are named in Chapter 3 of the 1938 book. The *miseducative* category is Dewey's precise term for experience that closes rather than opens the learner's capacity to engage the next problem.
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 14.1 — The complete arc
+
+Build a single-line horizontal timeline in D3 v7 spanning the chart width. Four milestone ticks sit on the line, normalized at t = 0, 0.34, 0.71, and 1.0. Above each tick, a small monospace ALL CAPS chapter code in `--color-secondary` — `CH 0`, `CH 5`, `CH 11`, `CH 14`. Above the timeline between ticks, three italic `--color-secondary` segment labels — `observation`, `instruction`, `execution`. The timeline itself is `--color-ink` for the first three segments and switches to `--color-red` with an arrowhead for the last segment leading into the Ch 14 milestone. Each milestone has a small dot — the first three open ink circles, the fourth a filled red dot at slightly larger radius. Below each tick, a bold milestone label and three lines of `--color-secondary` body text — for Ch 14 the body lines render in red italic. The four milestones are: `Problem named` (Seth almost ships the classifier), `Discipline learned` (five supervisory capacities), `First build planned` (four gates), `First build verified` (three passes — the reader's build). Hover any dot for the chapter-context tooltip. Dashed footer rule, three-line caption emphasizing that the fourth milestone is the reader's.
+
+> Reference implementation: `d3/14-first-full-build-fig-01.html`

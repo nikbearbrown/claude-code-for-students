@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure 6.1 — The Gru phase sequence</title>
+<style>
+:root {
+  --color-white: #FFFFFF;
+  --color-fill: #F5EFE8;
+  --color-ink: #2a1a0e;
+  --color-mark: #6B3520;
+  --color-red: #C8102E;
+  --color-slate: #1A3A5C;
+  --color-ochre: #C8860E;
+  --color-secondary: #545454;
+  --color-border: #D4D4D4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #111111;
+    --color-fill: #1a1612;
+    --color-ink: #F0EBE3;
+    --color-mark: #C8865E;
+    --color-red: #E8243A;
+    --color-slate: #6B8FB8;
+    --color-ochre: #D49A30;
+    --color-secondary: #A0978C;
+    --color-border: #2E2E2E;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-white); color: var(--color-ink); font-family: 'EB Garamond', Georgia, serif; padding: 24px; }
+#chart { width: 100%; min-height: 440px; }
+.tooltip { position: absolute; pointer-events: none; opacity: 0; background: var(--color-slate); color: var(--color-white); padding: 8px 12px; font-size: 12px; font-family: 'EB Garamond', Georgia, serif; max-width: 280px; line-height: 1.4; }
+text { font-family: 'EB Garamond', Georgia, serif; fill: var(--color-ink); }
+.caps { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; fill: var(--color-secondary); font-size: 10px; }
+.secondary { fill: var(--color-secondary); }
+.gate-rect { fill: var(--color-white); stroke: var(--color-border); stroke-width: 1; cursor: pointer; transition: fill 120ms; }
+.gate-rect.endpoint { fill: var(--color-fill); }
+.gate-rect:hover { fill: var(--color-fill); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="chart" role="main"></div>
+<div class="tooltip" id="tt"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+function draw() {
+  d3.select('#chart').selectAll('*').remove();
+  const totalWidth = document.getElementById('chart').clientWidth || 700;
+  const totalHeight = 440;
+  const margin = { top: 56, right: 32, bottom: 48, left: 32 };
+  const chartWidth = totalWidth - margin.left - margin.right;
+
+  const svg = d3.select('#chart').append('svg')
+    .attr('width', totalWidth).attr('height', totalHeight)
+    .attr('role', 'img').attr('aria-labelledby', 'chart-title chart-desc');
+  svg.append('title').attr('id', 'chart-title').text('The Gru phase sequence');
+  svg.append('desc').attr('id', 'chart-desc').text('Six phase gates: /v0, /v1, SDD, /claude, Boondoggle Score, Minion Brief. Each arrow is a refusal point that does not pass until a specific artifact exists.');
+
+  const defs = svg.append('defs');
+  defs.append('marker').attr('id','arrow-ink').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-ink)');
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+  g.append('text').attr('class','caps').attr('y',-24).text('FIGURE 6.1 — THE GRU PHASE SEQUENCE');
+  g.append('text').attr('y',0).attr('font-weight','bold').attr('font-size',13).text('Each arrow is a gate. No gate passes until its artifact exists.');
+
+  const tt = d3.select('#tt');
+  function showTip(html){ tt.html(html).style('opacity',1); }
+  function moveTip(e){ tt.style('left',(e.pageX+12)+'px').style('top',(e.pageY-8)+'px'); }
+  function hideTip(){ tt.style('opacity',0); }
+
+  const phases = [
+    { code:'/V0', title:'one sentence', sub:'what / who / done', annotation:'refuse the and',
+      tip:'/v0 — the elevator test. One sentence naming what the system does, for whom, and what makes it count as done. Refuses sentences with an "and" — two ands means you are building two systems.' },
+    { code:'/V1', title:'intake', sub:'Problem Summary', annotation:'name non-goals',
+      tip:'/v1 — structured intake interview. Produces a one-page Problem Summary naming user, inputs, outputs, success criterion, and explicit non-goals. The non-goals section catches the second "and."' },
+    { code:'SDD', title:'design doc', sub:'five sections, one page', annotation:'decision record',
+      tip:'SDD — Software Design Document. Five sections: Problem Statement, Architecture Principles, Core User Flows, User Needs, Component List. The decision record that prevents you from re-deciding the project under deadline pressure.' },
+    { code:'/CLAUDE', title:'audit pass', sub:'who does what', annotation:'trust per step',
+      tip:'/claude (equivalently /boondoggle) — audits the plan step-by-step. Each step is marked Claude-only, Claude-with-review, or human-only, with a justification in terms of the supervisory capacities.' },
+    { code:'SCORE', title:'Boondoggle', sub:'step-by-step plan', annotation:'numbered list',
+      tip:'Boondoggle Score — the numbered list with a what, a who, and a why for every step. If every step comes back Claude-only, you have either built something trivial or you have not been honest.' },
+    { code:'BRIEF', title:'Minion Brief', sub:'one tactical order', annotation:'paste & ship',
+      tip:'Minion Brief — the stripped-down execution prompt you paste into a fresh Claude Code session. One step, minimum context, done-condition, pointer to CLAUDE.md. The SDD is strategy; the Brief is one tactical order.',
+      endpoint:true }
+  ];
+
+  const n = phases.length;
+  const boxW = Math.min(96, (chartWidth - (n-1)*16) / n);
+  const gap = (chartWidth - boxW*n) / (n-1);
+  const boxY = 92;
+  const boxH = 72;
+
+  phases.forEach((p,i)=>{
+    const x = i*(boxW+gap);
+    const rect = g.append('rect')
+      .attr('class', 'gate-rect' + (p.endpoint?' endpoint':''))
+      .attr('x',x).attr('y',boxY).attr('width',boxW).attr('height',boxH)
+      .on('mouseenter',()=>showTip(`<strong>${p.code} — ${p.title}</strong><br/>${p.tip}`))
+      .on('mousemove',moveTip).on('mouseleave',hideTip);
+
+    g.append('text').attr('class','caps').attr('x',x+boxW/2).attr('y',boxY+20).attr('text-anchor','middle').text(p.code).attr('pointer-events','none');
+    g.append('text').attr('x',x+boxW/2).attr('y',boxY+44).attr('text-anchor','middle').attr('font-weight','bold').attr('font-size',11).text(p.title).attr('pointer-events','none');
+    g.append('text').attr('x',x+boxW/2).attr('y',boxY+60).attr('text-anchor','middle').attr('class','secondary').attr('font-size',10).text(p.sub).attr('pointer-events','none');
+
+    g.append('text').attr('x',x+boxW/2).attr('y',boxY+boxH+24).attr('text-anchor','middle').attr('class','secondary').attr('font-style','italic').attr('font-size',10).text(p.annotation);
+
+    if (i < n-1) {
+      const x1 = x+boxW;
+      const x2 = x+boxW+gap;
+      g.append('line').attr('x1',x1).attr('y1',boxY+boxH/2).attr('x2',x2-4).attr('y2',boxY+boxH/2)
+        .attr('stroke','var(--color-ink)').attr('stroke-width',1.5).attr('marker-end','url(#arrow-ink)');
+      g.append('text').attr('class','caps').attr('x',(x1+x2)/2).attr('y',boxY-8).attr('text-anchor','middle').attr('font-size',9).text(`GATE ${i+1}`);
+    }
+  });
+
+  // divider rule
+  const ruleY = boxY + boxH + 56;
+  g.append('line').attr('x1',0).attr('y1',ruleY).attr('x2',chartWidth).attr('y2',ruleY)
+    .attr('stroke','var(--color-border)').attr('stroke-width',0.75).attr('stroke-dasharray','4 3');
+
+  // role legend
+  g.append('text').attr('class','caps').attr('x',0).attr('y',ruleY+24).text('GRU ROLE');
+  g.append('text').attr('x',88).attr('y',ruleY+24).attr('font-size',11).text('— architect: refuses to advance until each artifact exists.');
+
+  g.append('text').attr('class','caps').attr('x',0).attr('y',ruleY+44).text('MINION ROLE');
+  g.append('text').attr('x',88).attr('y',ruleY+44).attr('font-size',11).text('— executor: a fresh Claude session, one scoped task from the Brief.');
+
+  g.append('text').attr('class','secondary').attr('y',ruleY+76).attr('font-size',10).text('The unhelpfulness is the feature. Each gate refuses Claude’s defaults until the human work is done in writing.');
+}
+draw();
+const ro = new ResizeObserver(() => draw());
+ro.observe(document.getElementById('chart'));
+</script>
+</body>
+</html>

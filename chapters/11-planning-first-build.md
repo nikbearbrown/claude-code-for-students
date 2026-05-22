@@ -8,15 +8,16 @@ The first time I ran a fully Boondoggled build from end to end, I sat at my desk
 
 The editor was open. The project folder existed. The cursor blinked in the input box. I did not type.
 
-What I wrote instead was one sentence in a markdown file. *"A web page that lets me add, check off, and delete tasks for one school day, and remembers them across browser refreshes."* I read it. I read it again. I deleted *one school day* and put it back. I deleted *across browser refreshes* and put it back. And then I sat with the sentence for a minute and made sure it was the project — the whole project, no smaller, no larger.
+What I wrote instead was one sentence in a markdown file. *"A web page that lets me add, mark submitted, and delete college applications for this admissions cycle, and remembers them across browser refreshes."* I read it. I read it again. I deleted *this admissions cycle* and put it back. I deleted *across browser refreshes* and put it back. And then I sat with the sentence for a minute and made sure it was the project — the whole project, no smaller, no larger.
 
-This is the part of the discipline that is hardest to teach. Forty minutes of sitting with one sentence does not feel like work. It is the most important work of the build. While I was sitting with the sentence, something changed in my head. My brain stopped narrating what I would type into Claude and started thinking about *the problem*. Whether *one school day* meant Monday through Friday or any twenty-four-hour stretch. Whether *delete* needed an undo. What I would feel like, at 11 p.m. on a Sunday, opening this page to plan the week ahead. The narrator composing prompts had been replaced, briefly, by a person actually thinking about what they were building.
+This is the part of the discipline that is hardest to teach. Forty minutes of sitting with one sentence does not feel like work. It is the most important work of the build. While I was sitting with the sentence, something changed in my head. My brain stopped narrating what I would type into Claude and started thinking about *the problem*. Whether *application* meant only the Common App or each supplement separately. Whether *delete* needed an undo, given that I had a record of which schools I was abandoning. What I would feel like, at 11 p.m. on a Sunday in November, opening this page to figure out which fee waivers were still pending. The narrator composing prompts had been replaced, briefly, by a person actually thinking about what they were building.
 
 That replacement is the chapter.
 
 Everything that follows — the SDD, the Boondoggle Score, the Minion Brief, the execution log — is mechanical. The mechanics exist to *cause* the cognitive shift that happened at minute forty, when I realized I had not been thinking about Claude for half an hour. This chapter is where you make that shift happen on purpose, before the build begins, every time.
 
-<!-- → [DIAGRAM: The planning sequence — /v0 → /v1 → SDD core sections → Boondoggle Score → Minion Brief. Phase gates labeled. What must be true before each gate opens. Editorial style.] -->
+![Five artifact boxes — /v0, /v1, SDD, Score, Minion Brief — connected by four labeled gates G1 through G4. Each gate names what must be true before it opens. The Minion Brief is highlighted in red as the gate that releases the first prompt.](images/11-planning-first-build-fig-01.png)
+*Figure 11.1 — The planning sequence: five artifacts, four gates*
 
 ---
 
@@ -24,11 +25,11 @@ Everything that follows — the SDD, the Boondoggle Score, the Minion Brief, the
 
 The planning sequence has five documents and four gates between them. The documents are evidence the gates were honored. The gates are the actual discipline.
 
-**/v0** is one sentence. One user. One outcome. No conjunctions hiding a second project. *"A task tracker that's also a calendar and a study planner"* is three projects wearing one sentence as a disguise. *"A task tracker that lets me add, check off, and delete tasks and remembers them across refreshes"* is one project — the *and* connects operations on the same data, not separate systems. The /v0 gate catches the difference. If you cannot say what you are building in one sentence, you do not yet know what you are building, and the next four documents will paper over the not-knowing in increasingly elaborate ways.
+**/v0** is one sentence. One user. One outcome. No conjunctions hiding a second project. *"An application tracker that's also a scholarship database and an essay editor"* is three projects wearing one sentence as a disguise. *"An application tracker that lets me add, mark submitted, and delete college applications and remembers them across refreshes"* is one project — the *and* connects operations on the same data, not separate systems. The /v0 gate catches the difference. If you cannot say what you are building in one sentence, you do not yet know what you are building, and the next four documents will paper over the not-knowing in increasingly elaborate ways.
 
 **/v1** is two short lists: *in scope* and *out of scope*. Both must be non-empty. The out-of-scope list is load-bearing. A /v1 without one is a /v1 that will quietly grow into something else under prompting pressure. The most painful items to write are the features you actually want but are cutting. Write them anyway. They are the ones that will try to slip back in at prompt nine when Claude offers to add them "since we're touching that anyway," and their presence on the list is the only thing that keeps the answer to that offer to *no*.
 
-**The SDD** has five sections: data model, UI states, persistence, failure modes, and out-of-scope restated. Five sections, each with at least one concrete artifact named — a file path, a data shape, a state transition, a named failure trigger. Sections that say *"we will figure out the data model later"* do not pass Gate 3. Sections that say *"one `Task` interface in `types.ts` with `id: string`, `text: string`, `done: boolean`"* do. The SDD is the document Claude will work from. It is also the document you will defend against Claude. When Claude proposes a structure that doesn't match the data model section, the data model section wins.
+**The SDD** has five sections: data model, UI states, persistence, failure modes, and out-of-scope restated. Five sections, each with at least one concrete artifact named — a file path, a data shape, a state transition, a named failure trigger. Sections that say *"we will figure out the data model later"* do not pass Gate 3. Sections that say *"one `Application` interface in `types.ts` with `id: string`, `school: string`, `program: string`, `submitted: boolean`"* do. The SDD is the document Claude will work from. It is also the document you will defend against Claude. When Claude proposes a structure that doesn't match the data model section, the data model section wins.
 
 **The Boondoggle Score** is a table with one row per step in Phase 1. Five columns: step number, phase, labor (Claude or human), supervisory capacity if the labor is human, handoff condition. The handoff condition is what must be true to call the step done. Not "Claude completes the function" — that is delegated work, not planned work. The handoff condition for a function is the name of the test file, the number of cases, and the inputs those cases cover. The condition is machine-checkable, not judgment-dependent.
 
@@ -62,9 +63,15 @@ Three scoping constraints that hold at student scale. First: one user, one devic
 
 The Boondoggle Score is not a checklist. It is a diagnostic. A honestly produced score tells you three things by inspection, before you have touched the keyboard in anger.
 
-<!-- → [TABLE: Boondoggle Score summary — columns: Step number, Phase, Labor (Claude/Human), Supervisory capacity (if human), Handoff condition. Five rows showing a Phase 1 example.] -->
+| # | Phase | Labor | Supervisory capacity | Handoff condition |
+|---|---|---|---|---|
+| 1 | Phase 1 — Data model | **Human** | Problem Formulation | `Application` interface written: `{ id, school, program, submitted: boolean, addedAt }`. Three sample objects round-trip through `JSON.parse(JSON.stringify(...))` without loss. |
+| 2 | Phase 1 — Page scaffold | **Claude** | — | `npm run dev` serves `index.html`. Page renders empty list, an input, and an Add button. No console errors. |
+| 3 | Phase 1 — Mutations | **Claude** | — | `addApplication`, `toggleSubmitted`, `deleteApplication` exported; unit tests for each pass on arrays of length 0, 1, and 3. |
+| 4 | Phase 1 — Visual hierarchy | **Human** | Interpretive Judgment | Submitted applications render with strikethrough below unsubmitted ones, in insertion order. Verified by eye against the SDD `at-a-glance` need. |
+| 5 | Phase 1 — Persistence | **Claude** | — | After ten toggles plus a browser refresh, the rendered list matches the pre-refresh state byte-for-byte. Malformed `localStorage` triggers the confirmation dialog. |
 
-*The critical path* is the sequence of rows where each handoff condition is a precondition for the next row's labor. In the task tracker Score below, rows 1 → 2 → 3 are critical: the data model must exist before the page scaffolds against it, and the page must exist before the mutation functions can be tested in it. Rows 4 and 5 are parallel paths off the spine. A critical-path row that fails its handoff condition stops the build. A parallel row that fails flags a branch.
+*The critical path* is the sequence of rows where each handoff condition is a precondition for the next row's labor. In the application tracker Score below, rows 1 → 2 → 3 are critical: the data model must exist before the page scaffolds against it, and the page must exist before the mutation functions can be tested in it. Rows 4 and 5 are parallel paths off the spine. A critical-path row that fails its handoff condition stops the build. A parallel row that fails flags a branch.
 
 *The highest-risk handoffs* are the rows where the cost of a missed condition is largest. Row 1 is almost always the highest-risk row in any build, even if it is the smallest in lines of code, because it is the row every other row inherits from. A wrong data model in row 1 produces wrong UI in row 2, wrong mutations in row 3, wrong persistence in row 5, and visual hierarchy in row 4 designed against a wrong model. What looks like one mistake at row 1 is five mistakes by the end.
 
@@ -78,7 +85,7 @@ The most common early diagnostic, and the one that feels like failure the first 
 
 The Score is telling you a section of the SDD is thin. *"The function works"* is what you write when the failure modes section was thin. *"The data is saved"* is what you write when persistence was thin. *"The page looks right"* is what you write when UI states never named the states.
 
-The response is not to write a better handoff condition. The response is to walk back through Gate 3, find the thin section, and thicken it — which means naming a concrete artifact where there was prose. *"The data is saved"* becomes *"after every mutation, the full `Task[]` is written to `localStorage['tasks-v1']` as JSON; on load, malformed JSON triggers a confirmation dialog and a reset."* Now the handoff condition can be sharp: *"refresh preserves state across 10 toggles; corrupt JSON triggers reset-with-confirm dialog."* Now it is testable.
+The response is not to write a better handoff condition. The response is to walk back through Gate 3, find the thin section, and thicken it — which means naming a concrete artifact where there was prose. *"The data is saved"* becomes *"after every mutation, the full `Application[]` is written to `localStorage['applications-v1']` as JSON; on load, malformed JSON triggers a confirmation dialog and a reset."* Now the handoff condition can be sharp: *"refresh preserves state across 10 toggles; corrupt JSON triggers reset-with-confirm dialog."* Now it is testable.
 
 The Score cannot lie. You can write a vague SDD section and convince yourself it is specific. You cannot write a vague handoff condition without hearing the vagueness. The Score is the SDD's lie detector.
 
@@ -100,7 +107,7 @@ One more note, for the case of an existing codebase. If your first Boondoggled b
 
 ---
 
-## The Task Tracker Plan
+## The Application Tracker Plan
 
 Here is the complete planning document for the build executed in Chapter 12. It fits on roughly one printed page. Two hours to write, most of them spent on the out-of-scope list and the failure modes — the two sections students most want to skip, and which catch the most bugs.
 
@@ -108,17 +115,17 @@ Here is the complete planning document for the build executed in Chapter 12. It 
 
 **`v0.md`**
 
-> A web page that lets me add, check off, and delete tasks for one school day, and remembers them across browser refreshes.
+> A web page that lets me add, mark submitted, and delete college applications for this admissions cycle, and remembers them across browser refreshes.
 
-*Gate 1 check:* One sentence, one user (*me*), one outcome (*track today's tasks across refreshes*). The *and* connects three operations on the same data — one project. Gate 1 open.
+*Gate 1 check:* One sentence, one user (*me*), one outcome (*track this cycle's applications across refreshes*). The *and* connects three operations on the same data — one project. Gate 1 open.
 
 ---
 
 **`v1.md`**
 
-*In scope:* add a task (text only), toggle done/not done, delete a task, persist across refresh on the same device, keyboard operation.
+*In scope:* add an application (school name + program name), toggle submitted/not submitted, delete an application, persist across refresh on the same device, keyboard operation.
 
-*Out of scope:* multiple days, calendars, due dates, due times; sync across devices; login, accounts; tags, priorities, sorting; mobile-specific layout; editing task text (delete and re-add instead).
+*Out of scope:* per-school supplemental essay drafts; recommender status tracking; fee-waiver request tracking; scholarship deadlines; sync across devices; login, accounts; tags, priorities, sorting; mobile-specific layout; editing school or program text (delete and re-add instead).
 
 *Gate 2 check:* Out-of-scope list has six items I actually want. Gate 2 open.
 
@@ -126,25 +133,26 @@ Here is the complete planning document for the build executed in Chapter 12. It 
 
 **`sdd.md`**
 
-*Data model.* One `Task` interface in `types.ts`:
+*Data model.* One `Application` interface in `types.ts`:
 
 ```ts
-interface Task {
-  id: string;      // crypto.randomUUID()
-  text: string;    // 1..200 chars, trimmed
-  done: boolean;   // default false
+interface Application {
+  id: string;        // crypto.randomUUID()
+  school: string;    // 1..120 chars, trimmed
+  program: string;   // 1..120 chars, trimmed
+  submitted: boolean; // default false
 }
 ```
 
-Tasks live in memory as `Task[]`, in insertion order, never resorted.
+Applications live in memory as `Application[]`, in insertion order, never resorted.
 
-*UI states.* Three: *empty* (no tasks; placeholder line), *populated* (one or more tasks; list and input visible), *all-done* (all tasks `done: true`; list plus a quiet "all done for today"). No loading state — `localStorage` reads are synchronous.
+*UI states.* Three: *empty* (no applications; placeholder line), *populated* (one or more applications; list and input visible), *all-submitted* (all applications `submitted: true`; list plus a quiet "all submitted for this cycle"). No loading state — `localStorage` reads are synchronous.
 
-*Persistence.* On every mutation (`addTask`, `toggleTask`, `deleteTask`), serialize the full `Task[]` to `localStorage['tasks-v1']` as JSON. On page load, read and attempt `JSON.parse`. On parse failure, show a confirmation dialog (*"Saved tasks are corrupted. Reset?"*); confirm clears the key and starts empty; cancel leaves the key and shows an empty list for this session.
+*Persistence.* On every mutation (`addApplication`, `toggleSubmitted`, `deleteApplication`), serialize the full `Application[]` to `localStorage['applications-v1']` as JSON. On page load, read and attempt `JSON.parse`. On parse failure, show a confirmation dialog (*"Saved applications are corrupted. Reset?"*); confirm clears the key and starts empty; cancel leaves the key and shows an empty list for this session.
 
-*Failure modes.* (1) Corrupt JSON — handled above. (2) `localStorage` unavailable (private browsing) — in-memory only; one-line banner: *"Tasks won't persist in this window."* (3) Task text over 200 chars — reject, keep focus in input, no toast.
+*Failure modes.* (1) Corrupt JSON — handled above. (2) `localStorage` unavailable (private browsing) — in-memory only; one-line banner: *"Applications won't persist in this window."* (3) School or program text over 120 chars — reject, keep focus in input, no toast.
 
-*Out of scope, restated.* No editing of task text, no due dates, no sorting beyond insertion order.
+*Out of scope, restated.* No editing of school or program text, no per-school supplements, no sorting beyond insertion order.
 
 *Gate 3 check:* Five sections, each with at least one named concrete artifact. Gate 3 open.
 
@@ -154,9 +162,9 @@ Tasks live in memory as `Task[]`, in insertion order, never resorted.
 
 | # | Phase | Step | Labor | Supervisory capacity | Handoff condition |
 |---|---|---|---|---|---|
-| 1 | Phase 1 | Define the `Task` data model | Human | Domain knowledge: what fields this app needs | Written as one TypeScript interface in `types.ts` before any UI code |
+| 1 | Phase 1 | Define the `Application` data model | Human | Domain knowledge: what fields this app needs | Written as one TypeScript interface in `types.ts` before any UI code |
 | 2 | Phase 1 | Scaffold the HTML page | Claude | — | Page loads in browser with empty root; no console errors |
-| 3 | Phase 1 | Implement `addTask`, `toggleTask`, `deleteTask` | Claude | — | Three unit tests pass on `Task[]` of length 0, 1, 3 |
+| 3 | Phase 1 | Implement `addApplication`, `toggleSubmitted`, `deleteApplication` | Claude | — | Three unit tests pass on `Application[]` of length 0, 1, 3 |
 | 4 | Phase 1 | Decide visual hierarchy | Human | Aesthetic judgment: what this app should feel like | Three CSS variables (`--font`, `--primary`, `--accent`) named in `style.css` before Claude writes styles |
 | 5 | Phase 1 | Wire `localStorage` with corruption guard | Claude | — | Refresh preserves state across 10 toggles; corrupt JSON triggers reset-with-confirm dialog |
 
@@ -164,7 +172,7 @@ Tasks live in memory as `Task[]`, in insertion order, never resorted.
 
 ---
 
-The document is short on purpose. A student SDD is not an industrial SDD. The minimum viable specification is the specification that admits no ambiguous handoff and no thinner. The planning document does not just plan the build. It *defends* the build — against Claude's helpful suggestions and against the part of your own brain that wants to add one more thing at prompt nine. When Claude proposes tags "since we're touching the data model anyway," the answer is on this page. When Claude proposes a loading spinner because `localStorage` is "async," the answer is on this page.
+The document is short on purpose. A student SDD is not an industrial SDD. The minimum viable specification is the specification that admits no ambiguous handoff and no thinner. The planning document does not just plan the build. It *defends* the build — against Claude's helpful suggestions and against the part of your own brain that wants to add one more thing at prompt nine. When Claude proposes a per-school essay tracker "since we're touching the data model anyway," the answer is on this page. When Claude proposes a loading spinner because `localStorage` is "async," the answer is on this page.
 
 The research grounding for this form is in the project-based learning literature. Chen and Wang's 2019 meta-analysis finds student-led written planning among the strongest moderators of project quality. Larmer, Mergendoller, and Boss name the Project Planning Form a non-negotiable of gold-standard PBL.[^pbl] Boondoggling adds the labor column and the handoff condition that PBL planning forms do not have, because those forms were written before the labor question had a language model in it.
 
@@ -191,3 +199,19 @@ The plan is complete. Chapter 12 executes it.
 [^pte]: *Architecting Resilient LLM Agents: A Guide to Secure Plan-then-Execute Implementations*, arXiv:2509.08646 (2025).
 
 [^pbl]: Yan Chen and Jane Wang, "Revisiting the effects of project-based learning on students' academic achievement: A meta-analysis investigating moderators," *Educational Research Review* 26 (2019); John Larmer, John Mergendoller, and Suzie Boss, *Setting the Standard for Project Based Learning* (ASCD / Buck Institute, 2015).
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 11.1 — The planning sequence
+
+Build a left-to-right pipeline in D3 v7. Five rectangular artifact cards (width about 108, height 96) connected by four arrows. Each card has a small `--color-fill` header strip (height 28) with a monospace ALL CAPS code, then a bold one-line title, then two lines of body text in `--color-secondary`. In order: `/V0` (One sentence), `/V1` (Two lists), `SDD` (Five sections), `SCORE` (Rows + gates), `MINION` (Per-row prompt). The MINION card is bordered in `--color-red` with its code and title rendered in `--color-red` — this is the highlighted gate that releases the first prompt. Between adjacent cards, draw a thin ink arrow with a small monospace ALL CAPS label `G1`, `G2`, `G3`, `G4` above it. Below the row of cards, draw a dashed horizontal rule, then a four-row gate-conditions table — bold left-aligned `G# — name`, plain right-side condition. Hover any card or gate label shows a tooltip with the longer condition. Footer caption notes the informal fifth test.
+
+> Reference implementation: `d3/11-planning-first-build-fig-01.html`

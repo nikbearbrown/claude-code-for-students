@@ -86,7 +86,8 @@ If you read Claude output in a subject and feel only fluent agreement, you do no
 
 The gap between the student's technical fluency and the teacher's domain depth is real, and nobody in the institution is currently responsible for closing it. The tool is too new, the teachers are too far behind, the policies don't exist yet. That means the closing is yours to do. The rest of this book is about how.
 
-<!-- → [DIAGRAM: Two axes — technical fluency (student high, teacher low) and domain depth (student variable, teacher high) — showing the quadrant where the danger lives: high fluency, low depth. Minimal. Editorial style. No color.] -->
+![A two-axis editorial quadrant. Horizontal axis is technical fluency from low to high. Vertical axis is domain depth from low to high. Teacher sits in the low-fluency high-depth quadrant. Student sits in the high-fluency low-depth quadrant — the danger zone — marked in red.](images/03-teacher-student-ai-gap-fig-01.png)
+*Figure 3.1 — Where the danger lives*
 
 ---
 
@@ -114,3 +115,19 @@ in her hands. Be specific about the practice, not the principle.
 ---
 
 **Links:** [boondoggling.ai](https://boondoggling.ai) · [irreducibly.xyz](https://irreducibly.xyz)
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 3.1 — Where the danger lives
+
+Build a 2x2 quadrant chart in D3 v7. Horizontal axis is "technical fluency" from low (left) to high (right); vertical axis is "domain depth" from low (bottom) to high (top). Place an outer arrow-tipped axis line below and to the left of the chart area; the chart area itself uses `--color-fill` background with `--color-border` border. Draw dashed crosshair lines (`--color-border`, dash 4 3) through the midpoint to split the area into four quadrants. Label each quadrant in monospace ALL CAPS at the top or bottom edge: top-left DEPTH ONLY, top-right SUPERVISORY READY, bottom-left NEITHER, bottom-right THE DANGER ZONE (this label uses `--color-red`). Plot two points: "Teacher" at roughly (0.2, 0.75) as an ink-colored circle radius 7 with bold label above and two-line secondary subtitle below ("behind on the tool, deep in the subject"); "Student" at roughly (0.82, 0.2) as a red circle radius 8 with bold label above and two-line subtitle below ("fluent on the tool, shallow in the subject"). In the SUPERVISORY READY quadrant, place an italic secondary-color two-line note: "build depth alongside / the fluency you already have." Hovering each point reveals a tooltip with one sentence on what that position implies for AI use. Footer caption explains why high fluency without depth is the danger configuration.
+
+> Reference implementation: `d3/03-teacher-student-ai-gap-fig-01.html`

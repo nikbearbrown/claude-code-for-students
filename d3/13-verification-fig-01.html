@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure 13.1 — The verification sequence</title>
+<style>
+:root {
+  --color-white: #FFFFFF;
+  --color-fill: #F5EFE8;
+  --color-ink: #2a1a0e;
+  --color-mark: #6B3520;
+  --color-red: #C8102E;
+  --color-slate: #1A3A5C;
+  --color-ochre: #C8860E;
+  --color-secondary: #545454;
+  --color-border: #D4D4D4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #111111;
+    --color-fill: #1a1612;
+    --color-ink: #F0EBE3;
+    --color-mark: #C8865E;
+    --color-red: #E8243A;
+    --color-slate: #6B8FB8;
+    --color-ochre: #D49A30;
+    --color-secondary: #A0978C;
+    --color-border: #2E2E2E;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-white); color: var(--color-ink); font-family: 'EB Garamond', Georgia, serif; padding: 24px; }
+#chart { width: 100%; min-height: 560px; }
+.tooltip { position: absolute; pointer-events: none; opacity: 0; background: var(--color-slate); color: var(--color-white); padding: 8px 12px; font-size: 12px; font-family: 'EB Garamond', Georgia, serif; max-width: 300px; line-height: 1.4; }
+text { font-family: 'EB Garamond', Georgia, serif; fill: var(--color-ink); }
+.caps { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; fill: var(--color-secondary); font-size: 10px; }
+.secondary { fill: var(--color-secondary); }
+.pass-rect { fill: var(--color-white); stroke: var(--color-border); stroke-width: 1; cursor: pointer; transition: fill 120ms; }
+.pass-header { fill: var(--color-fill); stroke: var(--color-border); stroke-width: 1; pointer-events: none; }
+.pass-rect.highlight { stroke: var(--color-red); }
+.pass-header.highlight { stroke: var(--color-red); }
+.pass-rect:hover { fill: var(--color-fill); }
+.edge { stroke: var(--color-ink); stroke-width: 1.5; fill: none; }
+.edge-red { stroke: var(--color-red); stroke-width: 1.5; fill: none; stroke-dasharray: 4 3; }
+.edge-red-solid { stroke: var(--color-red); stroke-width: 1.5; fill: none; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="chart" role="main"></div>
+<div class="tooltip" id="tt"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+function draw() {
+  d3.select('#chart').selectAll('*').remove();
+  const totalWidth = document.getElementById('chart').clientWidth || 700;
+  const totalHeight = 560;
+  const margin = { top: 56, right: 32, bottom: 32, left: 32 };
+  const chartWidth = totalWidth - margin.left - margin.right;
+
+  const svg = d3.select('#chart').append('svg')
+    .attr('width', totalWidth).attr('height', totalHeight)
+    .attr('role', 'img').attr('aria-labelledby', 'chart-title chart-desc');
+  svg.append('title').attr('id', 'chart-title').text('The verification sequence');
+  svg.append('desc').attr('id', 'chart-desc').text('Three verification passes in order. Pass 1 and Pass 2 are gear-icon automatable; Pass 3 carries a human eye and is not automatable. Failures on Pass 3 either fix code or amend the SDD — and amending the SDD sends the sequence back to Pass 1.');
+
+  const defs = svg.append('defs');
+  defs.append('marker').attr('id','arrow').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-ink)');
+  defs.append('marker').attr('id','arrow-red').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-red)');
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+  g.append('text').attr('class','caps').attr('y',-24).text('FIGURE 13.1 — THE VERIFICATION SEQUENCE');
+  g.append('text').attr('y',0).attr('font-weight','bold').attr('font-size',13)
+    .text('Three passes in order — each catches what the earlier passes are blind to');
+
+  const tt = d3.select('#tt');
+  function showTip(html){ tt.html(html).style('opacity',1); }
+  function moveTip(e){ tt.style('left',(e.pageX+12)+'px').style('top',(e.pageY-8)+'px'); }
+  function hideTip(){ tt.style('opacity',0); }
+
+  // Gear icon generator
+  function drawGear(parent, cx, cy, color) {
+    parent.append('circle').attr('cx',cx).attr('cy',cy).attr('r',7).attr('fill','none').attr('stroke',color).attr('stroke-width',1);
+    parent.append('circle').attr('cx',cx).attr('cy',cy).attr('r',2.5).attr('fill',color);
+    const ticks = [[0,-9,0,-7],[0,7,0,9],[-9,0,-7,0],[7,0,9,0],[-6.4,-6.4,-5,-5],[5,5,6.4,6.4],[-6.4,6.4,-5,5],[5,-5,6.4,-6.4]];
+    ticks.forEach(t => {
+      parent.append('line').attr('x1',cx+t[0]).attr('y1',cy+t[1]).attr('x2',cx+t[2]).attr('y2',cy+t[3]).attr('stroke',color).attr('stroke-width',1);
+    });
+  }
+
+  function drawEye(parent, cx, cy, color) {
+    parent.append('path').attr('d',`M ${cx-9} ${cy} Q ${cx} ${cy-7} ${cx+9} ${cy} Q ${cx} ${cy+7} ${cx-9} ${cy} Z`).attr('fill','none').attr('stroke',color).attr('stroke-width',1);
+    parent.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3).attr('fill',color);
+  }
+
+  // Column 1: pass cards (x=0, width ~196)
+  const colW = Math.min(196, (chartWidth - 32) * 0.42);
+  const passes = [
+    { code:'PASS 1 — FUNCTIONAL', y: 72, h: 120, icon:'gear',
+      titleLines:['Does it run?'],
+      body:['The happy path returns the','expected output on the','SDD\'s canonical input.'],
+      tip:'Pass 1 — Functional verification. The pass npm test or pytest is built to run. Pass means the program executes and the happy path returns the expected output on the SDD\'s canonical input. Automatable. Mars Climate Orbiter was Pass 3 dressed as Pass 1.' },
+    { code:'PASS 2 — EDGE CASE', y: 224, h: 120, icon:'gear',
+      titleLines:['Does it handle the','out-of-bounds?'],
+      body:['Empty, oversized, malformed,','adversarial — each boundary','input the SDD names.'],
+      tip:'Pass 2 — Edge case verification. Partially automatable: the boundary inputs sit in a test file. What is not automatable is what counts as an edge case — that comes from the SDD, which comes from you.' },
+    { code:'PASS 3 — SDD NEEDS', y: 376, h: 96, icon:'eye', highlight: true,
+      titleLines:['Does it do what','the user needs?'],
+      body:['Read aloud against the running build.'],
+      tip:'Pass 3 — SDD-needs verification. Not automatable. The pass Claude cannot run. Open the SDD to the User Needs section, read each sentence aloud, check the running build against it by using it. The opening of Chapter 13 is a Pass 3 failure: every test passed; the at-a-glance need failed.' }
+  ];
+
+  passes.forEach(p => {
+    g.append('rect').attr('class','pass-rect' + (p.highlight?' highlight':''))
+      .attr('x',0).attr('y',p.y).attr('width',colW).attr('height',p.h)
+      .on('mouseenter',()=>showTip(`<strong>${p.code}</strong><br/>${p.tip}`))
+      .on('mousemove',moveTip).on('mouseleave',hideTip);
+    g.append('rect').attr('class','pass-header' + (p.highlight?' highlight':''))
+      .attr('x',0).attr('y',p.y).attr('width',colW).attr('height',28);
+    g.append('text').attr('class','caps').attr('x',14).attr('y',p.y+18)
+      .attr('fill', p.highlight ? 'var(--color-red)' : 'var(--color-secondary)').text(p.code);
+
+    const iconGroup = g.append('g');
+    if (p.icon === 'gear') drawGear(iconGroup, colW-22, p.y+14, 'var(--color-secondary)');
+    else drawEye(iconGroup, colW-22, p.y+14, 'var(--color-red)');
+
+    p.titleLines.forEach((line, j) => {
+      g.append('text').attr('x',colW/2).attr('y',p.y+52+j*16).attr('text-anchor','middle')
+        .attr('font-weight','bold').attr('font-size',11)
+        .attr('fill', p.highlight ? 'var(--color-red)' : 'var(--color-ink)')
+        .text(line).attr('pointer-events','none');
+    });
+    const bodyStart = p.y + 52 + p.titleLines.length*16 + 6;
+    p.body.forEach((line, j) => {
+      g.append('text').attr('x',colW/2).attr('y',bodyStart+j*14).attr('text-anchor','middle').attr('font-size',10)
+        .attr('font-style', p.highlight ? 'italic' : 'normal')
+        .attr('class','secondary').text(line).attr('pointer-events','none');
+    });
+  });
+
+  // Vertical pass arrows between passes
+  g.append('path').attr('d',`M ${colW/2} 192 L ${colW/2} 222`).attr('class','edge').attr('marker-end','url(#arrow)');
+  g.append('text').attr('class','caps').attr('x',colW/2+8).attr('y',210).text('PASS');
+  g.append('path').attr('d',`M ${colW/2} 344 L ${colW/2} 374`).attr('class','edge').attr('marker-end','url(#arrow)');
+  g.append('text').attr('class','caps').attr('x',colW/2+8).attr('y',362).text('PASS');
+
+  // Column 2: Resolution boxes
+  const resX = colW + 32;
+  const resW = (chartWidth - resX) * 0.46;
+
+  // Resolution header
+  g.append('text').attr('class','caps').attr('x',resX).attr('y',64).text('RESOLUTION');
+
+  const resBoxes = [
+    { x: resX, y: 80, w: resW, h: 80, title:'Fix code',
+      body:['The SDD specified;','the code did not','implement it.'],
+      red: false,
+      tip:'Pass 1 failure resolution — fix the code, re-run Pass 1. Single resolution path.' },
+    { x: resX, y: 232, w: resW, h: 80, title:'Fix code',
+      body:['SDD specified;','code didn\'t handle','the boundary.'],
+      red: false,
+      tip:'Pass 2 fix-code resolution — the SDD specified a handling and the code didn\'t implement it. Fix the code, re-run from Pass 1.' },
+    { x: resX, y: 384, w: resW, h: 80, title:'Fix code',
+      body:['Need is clear;','code did not','satisfy it.'],
+      red: true,
+      tip:'Pass 3 fix-code resolution — the need is clear and good, the code did not satisfy it. The most common Pass 3 resolution. The Chapter 13 example: add display order (row 6) to surface what remains.' }
+  ];
+  resBoxes.forEach(b => {
+    g.append('rect').attr('class','pass-rect' + (b.red?' highlight':'')).attr('x',b.x).attr('y',b.y).attr('width',b.w).attr('height',b.h)
+      .on('mouseenter',()=>showTip(`<strong>${b.title}</strong><br/>${b.tip}`))
+      .on('mousemove',moveTip).on('mouseleave',hideTip);
+    g.append('text').attr('x',b.x+b.w/2).attr('y',b.y+22).attr('text-anchor','middle').attr('font-weight','bold').attr('font-size',11).text(b.title).attr('pointer-events','none');
+    b.body.forEach((line,j)=>{
+      g.append('text').attr('x',b.x+10).attr('y',b.y+44+j*14).attr('font-size',10).attr('class','secondary').text(line).attr('pointer-events','none');
+    });
+  });
+
+  // FAIL arrows from each pass to its Fix-code box
+  g.append('path').attr('d',`M ${colW} 110 L ${resX} 110`).attr('class','edge-red').attr('marker-end','url(#arrow-red)');
+  g.append('text').attr('class','caps').attr('x',colW+8).attr('y',102).attr('fill','var(--color-red)').text('FAIL');
+  g.append('path').attr('d',`M ${colW} 262 L ${resX} 262`).attr('class','edge-red').attr('marker-end','url(#arrow-red)');
+  g.append('text').attr('class','caps').attr('x',colW+8).attr('y',254).attr('fill','var(--color-red)').text('FAIL');
+  g.append('path').attr('d',`M ${colW} 414 L ${resX} 414`).attr('class','edge-red').attr('marker-end','url(#arrow-red)');
+  g.append('text').attr('class','caps').attr('x',colW+8).attr('y',406).attr('fill','var(--color-red)').text('FAIL');
+
+  // Column 3: Amend SDD boxes (for Pass 2 and Pass 3)
+  const amendX = resX + resW + 32;
+  const amendW = chartWidth - amendX;
+
+  const amendBoxes = [
+    { x: amendX, y: 232, w: amendW, h: 80, code:'AMEND SDD',
+      body:['Spec was silent.','Add the sentence.'],
+      italic:'Invalidates earlier passes.',
+      tip:'Pass 2 amend-SDD resolution — the SDD did not anticipate the edge case. Add the sentence (Chapter 13: duplicate id behavior). Amending invalidates Pass 1; loop back.' },
+    { x: amendX, y: 384, w: amendW, h: 80, code:'AMEND SDD',
+      body:['The need was wrong;','rewrite it.'],
+      italic:'Invalidates earlier passes.',
+      tip:'Pass 3 amend-SDD resolution — re-reading the need against the build, the need itself is wrong. Rewrite the SDD section. Amending invalidates Passes 1 and 2; loop back.' }
+  ];
+  amendBoxes.forEach(b => {
+    g.append('rect').attr('class','pass-rect highlight').attr('x',b.x).attr('y',b.y).attr('width',b.w).attr('height',b.h)
+      .on('mouseenter',()=>showTip(`<strong>${b.code}</strong><br/>${b.tip}`))
+      .on('mousemove',moveTip).on('mouseleave',hideTip);
+    g.append('rect').attr('class','pass-header highlight').attr('x',b.x).attr('y',b.y).attr('width',b.w).attr('height',24);
+    g.append('text').attr('class','caps').attr('x',b.x+b.w/2).attr('y',b.y+16).attr('text-anchor','middle').attr('fill','var(--color-red)').text(b.code);
+    b.body.forEach((line,j)=>{
+      g.append('text').attr('x',b.x+10).attr('y',b.y+42+j*14).attr('font-size',10).attr('class','secondary').text(line).attr('pointer-events','none');
+    });
+    g.append('text').attr('x',b.x+10).attr('y',b.y+72).attr('font-size',10).attr('font-style','italic').attr('fill','var(--color-red)').text(b.italic).attr('pointer-events','none');
+  });
+
+  // "or" connectors
+  g.append('path').attr('d',`M ${resX+resW} 262 L ${amendX} 262`).attr('class','edge-red').attr('marker-end','url(#arrow-red)');
+  g.append('text').attr('x',resX+resW+8).attr('y',258).attr('font-size',9).attr('font-style','italic').attr('fill','var(--color-red)').text('or');
+  g.append('path').attr('d',`M ${resX+resW} 414 L ${amendX} 414`).attr('class','edge-red').attr('marker-end','url(#arrow-red)');
+  g.append('text').attr('x',resX+resW+8).attr('y',410).attr('font-size',9).attr('font-style','italic').attr('fill','var(--color-red)').text('or');
+
+  // Loop-back from amend boxes back up to Pass 1
+  const loopX = amendX + amendW + 8;
+  g.append('path').attr('d',`M ${amendX+amendW} 272 L ${loopX} 272 L ${loopX} 40 L ${colW/2} 40 L ${colW/2} 70`)
+    .attr('class','edge-red').attr('marker-end','url(#arrow-red)');
+  g.append('path').attr('d',`M ${amendX+amendW} 424 L ${loopX+8} 424 L ${loopX+8} 40`).attr('class','edge-red');
+  g.append('text').attr('x',colW + 60).attr('y',32).attr('font-size',10).attr('font-style','italic').attr('fill','var(--color-red)').text('re-run from Pass 1');
+
+  // Footer
+  g.append('text').attr('class','secondary').attr('x',0).attr('y',500).attr('font-size',10)
+    .text('All three pass → build is done. Gear = automatable. Eye = not automatable.');
+  g.append('text').attr('class','secondary').attr('x',0).attr('y',516).attr('font-size',10).attr('font-style','italic')
+    .text('Hover any pass or resolution box for the longer rule.');
+}
+draw();
+const ro = new ResizeObserver(() => draw());
+ro.observe(document.getElementById('chart'));
+</script>
+</body>
+</html>

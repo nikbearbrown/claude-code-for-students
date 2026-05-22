@@ -4,19 +4,20 @@
 
 ---
 
-Seth opens his laptop on a Saturday morning. He has a one-sentence project description from the previous chapter — *a local task tracker that lets one AP CS student see today's lab steps in order without a login* — and he has, in his head, what he believes is a clear picture of what he is about to build. He opens Claude Code. He starts.
+Seth opens his laptop on a Saturday morning. He has a one-sentence project description for a small side tool — *a local flicker-cue editor that lets him design and preview the light-flicker timelines for Midnight Fuel before pasting them into the Luau scripts* — and he has, in his head, what he believes is a clear picture of what he is about to build. He opens Claude Code. He starts.
 
 Three hours later, he stops.
 
-Not because anything has crashed. The code compiles. The page loads. He can add a task. He can mark it done. There is even a stub for a calendar view, which Claude proposed in passing and which Seth accepted in passing, and which is now three files deep into the project. The thing on the screen is, by most fair measures, a task tracker. It is also, Seth realizes, not the one he set out to build.
+Not because anything has crashed. The code compiles. The page loads. He can add a cue. He can mark it ready. There is even a stub for a multi-track view, which Claude proposed in passing and which Seth accepted in passing, and which is now three files deep into the project. The thing on the screen is, by most fair measures, a flicker-cue editor. It is also, Seth realizes, not the one he set out to build.
 
-The user model slipped. Somewhere around the second hour, Claude began treating the user as plural — "users can log in," "users can share lists" — and Seth, deep in a function and not paying full attention, accepted the change without noticing. The data model slipped with it; what was supposed to be a single JSON blob in `localStorage` is now sketched as a server-backed `users` table with a foreign-key relationship to `tasks`, because at some point Claude said "you'll probably want a real backend for this" and Seth, who has built three things this semester, said yes.
+The user model slipped. Somewhere around the second hour, Claude began treating the user as plural — "users can sign in," "users can share cue libraries" — and Seth, deep in a function and not paying full attention, accepted the change without noticing. The data model slipped with it; what was supposed to be a single JSON blob in `localStorage` is now sketched as a server-backed `users` table with a foreign-key relationship to `cues`, because at some point Claude said "you'll probably want a real backend for this" and Seth, who has built three things this semester, said yes.
 
 The decision Seth needed to make was at the beginning, not the middle. He needed to write down, in advance, what the system was — and more importantly, what it was *not*. He didn't. So Claude made the decisions instead, one quiet drift at a time, each one defensible in isolation, each one wrong against the project Seth was actually trying to build.
 
 This chapter is about the document Seth didn't write.
 
-<!-- → [DIAGRAM: The SDD as decision record — five sections as labeled boxes in sequence: Problem Statement → Architecture Principles → Core User Flows → User Needs → Component List. Arrows showing dependency. Editorial style.] -->
+![Five stacked labeled boxes representing the SDD's five sections in dependency order: Problem Statement (load-bearing, highlighted in red), Architecture Principles, Core User Flows, User Needs, Component List. Black arrows point downward between each section. A red dashed arrow loops back from the Component List to the Problem Statement, labeled CONSISTENCY CHECK.](images/07-software-design-document-fig-01.png)
+*Figure 7.1 — The SDD as decision record*
 
 ---
 
@@ -42,13 +43,13 @@ The SDD has five sections. They go in order. Each constrains the next.
 
 The **Problem Statement** is the load-bearing sentence the rest of the document is built on. It says what the system does, for whom, and what makes it count as done. It is one sentence. Every other section is downstream of it; if it changes, the rest of the document changes with it.
 
-A weak Problem Statement is unspecific: "An app for productivity." It names no user, no done-condition, and cannot be refuted by any future feature, because every conceivable feature is "for productivity." A strong Problem Statement is specific enough that you can name features that *violate* it: "A local-only task list for one AP CS student to see today's class assignments without a login." The phrase *local-only* refuses a backend. The phrase *one* refuses multi-user. The phrase *without a login* refuses authentication. The phrase *today's class assignments* refuses a calendar view. Each refusal will matter later. None of them are visible in the weak version.
+A weak Problem Statement is unspecific: "An app for game cues." It names no user, no done-condition, and cannot be refuted by any future feature, because every conceivable feature is "for game cues." A strong Problem Statement is specific enough that you can name features that *violate* it: "A local-only timeline editor for one developer to design today's set of light-flicker cues for Midnight Fuel without a login." The phrase *local-only* refuses a backend. The phrase *one* refuses multi-user. The phrase *without a login* refuses authentication. The phrase *today's set of light-flicker cues* refuses a shared cue library. Each refusal will matter later. None of them are visible in the weak version.
 
 The **Architecture Principles** are the design decisions that constrain everything downstream and that, under pressure, *win*. Three is the right number at student scale; fewer than three usually means you haven't thought it through, more than five usually means you've started writing taglines.
 
 A principle is not a value. "Clean code" is a value; it is not a principle, because nothing in the project ever defends a decision by saying "actually, we want our code to be dirty here." A principle has to be able to *lose* to another principle under pressure. If two principles cannot collide under any realistic decision, at least one of them is a slogan.
 
-This is the **Principle Collision Test**, and it is the most useful diagnostic in this chapter. Take any two of your Architecture Principles. Construct a realistic situation in which they would tell you to do different things. If you can, both are real principles. If you can't, one of them is a tagline, and you should rewrite it until the collision is visible. In Seth's task tracker, *local-only storage* and *sync across devices* would collide; the SDD makes the decision in advance — local-only wins, sync loses — and that decision is not re-litigated at 11 p.m. three hours into a build. The Principle Collision Test is, in software-engineering vocabulary, an information-hiding discipline in the sense Parnas (1972) intended: the right criterion for decomposing a system is not its process flow but the decisions each component is concealing. Architecture Principles, written down, are the project-level version of that move.
+This is the **Principle Collision Test**, and it is the most useful diagnostic in this chapter. Take any two of your Architecture Principles. Construct a realistic situation in which they would tell you to do different things. If you can, both are real principles. If you can't, one of them is a tagline, and you should rewrite it until the collision is visible. In Seth's flicker-cue editor, *local-only storage* and *sync across devices* would collide; the SDD makes the decision in advance — local-only wins, sync loses — and that decision is not re-litigated at 11 p.m. three hours into a build. The Principle Collision Test is, in software-engineering vocabulary, an information-hiding discipline in the sense Parnas (1972) intended: the right criterion for decomposing a system is not its process flow but the decisions each component is concealing. Architecture Principles, written down, are the project-level version of that move.
 
 The **Core User Flows** are the verbs the user performs in order. They are not features. They are not screens. They are the path through the system, from arrival to outcome, as the user experiences it.
 
@@ -56,7 +57,7 @@ A weak Core User Flow is exhaustive: "users can add, edit, delete, archive, shar
 
 The **User Needs** section is the outcomes the user must get, written as testable conditions. This is where most student SDDs collapse, because the temptation to write feature descriptions is overwhelming and the discipline to write outcomes is unfamiliar.
 
-A weak User Need is a feature: "should have a calendar view." A weak User Need is also a value: "should be fast and easy." A strong User Need is a testable outcome: "today's tasks render in under 2 seconds on a Chromebook." It names a condition, an environment, and a threshold. It is decidable — you can sit at a Chromebook with a stopwatch and the question is answered. It is also falsifiable: if the render takes three seconds, the need has *failed*, and you have the diagnostic on the spot. Three strong User Needs is the right shape for a student SDD. They are the conditions under which the project is *good*, and they are the conditions a project's success score can be measured against. Without them, you are measuring effort against a moving target, which is to say measuring nothing useful.
+A weak User Need is a feature: "should have a multi-track view." A weak User Need is also a value: "should be fast and easy." A strong User Need is a testable outcome: "today's cue list renders in under 2 seconds on a laptop browser." It names a condition, an environment, and a threshold. It is decidable — you can sit at a laptop with a stopwatch and the question is answered. It is also falsifiable: if the render takes three seconds, the need has *failed*, and you have the diagnostic on the spot. Three strong User Needs is the right shape for a student SDD. They are the conditions under which the project is *good*, and they are the conditions a project's success score can be measured against. Without them, you are measuring effort against a moving target, which is to say measuring nothing useful.
 
 The **Component List** is the buildable parts of the system, named at the right level of granularity. It is the last section of the SDD, not the first, because every other section constrains what belongs on it.
 
@@ -64,13 +65,19 @@ A weak Component List is generic: "frontend, backend, database." These are not c
 
 The Component List is also where the SDD's consistency check fires. Walk back up the document: can these components, under these principles, supporting these flows, satisfy these User Needs, deliver this Problem Statement? If you cannot answer yes all the way up, something is wrong, and the answer is to revise upward — change the components, or discover that the upstream sections were over-promising.
 
-<!-- → [TABLE: Minimum viable SDD — section name, one-sentence description, what a weak version looks like, what a strong version looks like. Five rows.] -->
+| Section | What it does | Weak version | Strong version |
+|---|---|---|---|
+| Problem Statement | Names the one problem this build solves, for whom. | "Build a study tracker." | "A single high-school senior tracking AP-class study hours by week, on one laptop, with no syncing." |
+| Architecture Principles | Names the 2–4 invariants the build will not violate. | "Clean code." | "Local-only. No backend. localStorage as the source of truth. Fail visibly on storage corruption." |
+| Core User Flows | Names the 2–3 sequences the user actually performs. | "User uses the app." | "Add a session → see it in today's list → toggle complete → close laptop → next day, today's list resets." |
+| User Needs | Names what the user must be able to do, *at a glance*. | "Easy to use." | "See remaining sessions for today without scrolling. Recover from corrupted storage without losing prior days." |
+| Component List | Names the specific pieces (and explicit non-pieces). | "Frontend, backend, database." | "Input form, localStorage wrapper, today-filter, list renderer. *No backend. No multi-day history view in v1.*" |
 
 ---
 
 The SDD has five sections, but it has one load-bearing claim, and that claim is the Problem Statement. Everything else is downstream. If the Problem Statement is wrong — unspecific, or two-systems-disguised-as-one, or unanchored to a real user — the rest of the document inherits the wrongness, and no amount of careful work on Architecture Principles or User Needs will fix it.
 
-The structural test for whether a Problem Statement can hold the weight has three parts. Does the sentence name a single system? If there is an *and* connecting two things the system does, the sentence is two Problem Statements; pick one. Does the sentence name the user specifically? "One AP CS student" passes; "students" does not. The named user is what makes the User Needs section testable, because you can ask whether *this* user can do *this* thing under *these* conditions. Does the sentence name the done-condition? "Without a login, in under two seconds, on a Chromebook" is a done-condition; "easy to use" is not.
+The structural test for whether a Problem Statement can hold the weight has three parts. Does the sentence name a single system? If there is an *and* connecting two things the system does, the sentence is two Problem Statements; pick one. Does the sentence name the user specifically? "One Midnight Fuel developer" passes; "game developers" does not. The named user is what makes the User Needs section testable, because you can ask whether *this* user can do *this* thing under *these* conditions. Does the sentence name the done-condition? "Without a login, in under two seconds, on a laptop browser" is a done-condition; "easy to use" is not.
 
 The three tests are checkable in under a minute. Run them before writing anything else. If your sentence fails any one of them, the SDD cannot begin, because the document is one sentence elaborated five ways — Architecture Principles refine the constraints the problem statement implies; Core User Flows refine the path it promises; User Needs refine the done-condition it names; Component List refines the system it defines. The document is not five independent sections. It is one sentence, five times. If the sentence is wrong, all five elaborations are wrong from the top.
 
@@ -86,41 +93,41 @@ For a 200-line script, five sections may feel like overkill. It is not; the five
 
 ---
 
-Here is a complete minimum viable SDD for Seth's project, after the rebuild. The system is a lab step tracker — a tool an AP CS student uses during a programming lab to track which step they are on, what they've finished, and what's blocking them. This is the document that would have prevented the three-hour drift in the chapter's opening. It fits on one page.
+Here is a complete minimum viable SDD for Seth's project, after the rebuild. The system is a flicker-cue editor — a browser tool Seth uses during Midnight Fuel sound-and-lighting passes to lay out the timing of a scene's flicker cues before pasting them as a Luau table into the game. This is the document that would have prevented the three-hour drift in the chapter's opening. It fits on one page.
 
 ---
 
-**SDD: Lab Step Tracker**
+**SDD: Flicker-Cue Editor**
 
-**Problem Statement.** A local-only task list for one AP CS student to see today's lab steps in order, mark them done, and know what's blocking the next step, without a login and without leaving the browser tab.
+**Problem Statement.** A local-only timeline editor for one Midnight Fuel developer to lay out today's set of light-flicker cues in order, mark each cue ready, and copy the final timeline as a Luau table, without a login and without leaving the browser tab.
 
 **Architecture Principles.**
 1. *Local-only storage.* All data lives in `localStorage`. No server, no backend, no auth. If `localStorage` is unavailable, the app fails visibly with one sentence of explanation.
-2. *Single user.* The app assumes one person is using one browser. No accounts, no multi-device sync, no sharing.
+2. *Single user.* The app assumes one person is using one browser. No accounts, no multi-device sync, no shared cue library.
 3. *Fail visibly.* All errors render to the page as readable text. Nothing is logged silently. If the app cannot save, the user sees that on the screen within one second.
 
-**Core User Flows.** Open the page → add today's lab steps as a list → mark each step done as it completes → optionally tag a step as "blocked" with one line of text → close the tab. The next morning, open the page; yesterday's steps are gone (intentionally — the system shows *today's* steps, not history); add today's.
+**Core User Flows.** Open the page → add today's flicker cues as a list with timestamps → mark each cue ready as the timing settles → optionally tag a cue as "needs-retiming" with one line of text → close the tab. The next morning, open the page; yesterday's cues are gone (intentionally — the system shows *today's* working set, not a history); add today's.
 
 **User Needs.**
-1. The list renders in under 2 seconds on a Chromebook with 4 GB of RAM, measured from page load to first interactive input.
+1. The timeline renders in under 2 seconds on a laptop browser with 4 GB of RAM, measured from page load to first interactive input.
 2. No data is lost during a single day's session; closing and reopening the tab within the same day restores the list to the state it was in when the tab was closed.
 3. The page is usable with one hand on a phone-sized screen (375px wide); all buttons are at least 44 pixels tall and reachable by thumb.
 
-**Component List.** Input form (one text field, one add button); `localStorage` wrapper (read, write, clear-on-new-day); list renderer (renders steps with done/blocked states); today-filter (clears yesterday's data on first open after midnight); error banner (renders to the top of the page on any caught exception). No backend. No router. No build step beyond a single HTML file with inline CSS and JavaScript.
+**Component List.** Input form (one text field, one timestamp field, one add button); `localStorage` wrapper (read, write, clear-on-new-day); list renderer (renders cues with ready/needs-retiming states); today-filter (clears yesterday's data on first open after midnight); error banner (renders to the top of the page on any caught exception); Luau export (serializes today's ready cues as a Luau table string). No backend. No router. No build step beyond a single HTML file with inline CSS and JavaScript.
 
 ---
 
 Read it as a whole. Notice what's there and what's not.
 
-What's there: every decision in the document is decidable. Each Architecture Principle could collide with a tempting future feature — sync across devices, user accounts, silent retry on save failure — and the document tells you which one wins. Each User Need is a stopwatch-and-Chromebook test; no ambiguity. The Component List names five components, each at the right scale for a student build, and explicitly refuses three things — no backend, no router, no build step — that Claude would otherwise quietly propose.
+What's there: every decision in the document is decidable. Each Architecture Principle could collide with a tempting future feature — sync across devices, user accounts, silent retry on save failure — and the document tells you which one wins. Each User Need is a stopwatch-and-laptop test; no ambiguity. The Component List names six components, each at the right scale for a student build, and explicitly refuses three things — no backend, no router, no build step — that Claude would otherwise quietly propose.
 
 What's not there: a schedule, a font choice, a list of stretch features, an explanation of why this is useful, a glossary, an appendix. The document is one page, dense, decisional, re-readable in ninety seconds.
 
 Now run the Principle Collision Test. *Local-only storage* vs. *single user* — do these collide? Not really; they reinforce each other. *Local-only* vs. *fail visibly* — yes: if `localStorage` is full, *fail visibly* says show the user, but *local-only* says don't fall back to a server. The collision produces: tell the user we can't save, ask them to clear some space. *Single user* vs. *fail visibly* — yes: if the same tab opens twice with overlapping writes, the collision produces: tell the user another tab is using this data. Each pair yields a defensible decision the document has already made. The principles are real, not slogans.
 
-Now run the back-arrow consistency check. Can these five components, under these three principles, supporting this Core User Flow, deliver this Problem Statement? Open the page (input form + list renderer) → add today's lab steps (input form + `localStorage` wrapper) → mark each done (list renderer + `localStorage` wrapper) → tag blocked (input form + list renderer) → close the tab (browser does this for free) → next morning today-filter clears yesterday's data on open. The Problem Statement delivers. The User Needs are testable against this build. The document is consistent.
+Now run the back-arrow consistency check. Can these six components, under these three principles, supporting this Core User Flow, deliver this Problem Statement? Open the page (input form + list renderer) → add today's cues (input form + `localStorage` wrapper) → mark each ready (list renderer + `localStorage` wrapper) → tag needs-retiming (input form + list renderer) → export to Luau (Luau export) → close the tab (browser does this for free) → next morning today-filter clears yesterday's data on open. The Problem Statement delivers. The User Needs are testable against this build. The document is consistent.
 
-This is what Seth pastes into Claude at the top of his next session. Claude will not propose `users.email` as a column. Claude will not propose a calendar view. Claude will not propose authentication. The SDD has refused them in writing, and the model is constrained by what's on the page. The eleven minutes Seth spent writing the SDD are the most expensive eleven minutes of the build and the most cost-saving.
+This is what Seth pastes into Claude at the top of his next session. Claude will not propose `users.email` as a column. Claude will not propose a shared cue library. Claude will not propose authentication. The SDD has refused them in writing, and the model is constrained by what's on the page. The eleven minutes Seth spent writing the SDD are the most expensive eleven minutes of the build and the most cost-saving.
 
 ---
 
@@ -153,3 +160,19 @@ There is a third thing the SDD unlocks, and it is the one that matters in the lo
 - Nygard, M. T. (2011). Documenting architecture decisions. *thinkrelevance.com* (blog post, November 15, 2011).
 - Parnas, D. L. (1972). On the criteria to be used in decomposing systems into modules. *Communications of the ACM*, 15(12), 1053–1058.
 - Starke, G., & Hruschka, P. (2005–present). arc42: Template for architecture communication and documentation. *arc42.org*. Creative Commons license.
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 7.1 — The SDD as decision record
+
+Build a vertical dependency diagram in D3 v7. Five wide rectangular sections stacked top to bottom (each 52 tall, gap 22 between), in this order: Problem Statement, Architecture Principles, Core User Flows, User Needs, Component List. Each section contains a monospace ALL CAPS label on its top-left (`SECTION 1` through `SECTION 5`) and a bold section title below, with a `--color-secondary` italic-adjacent subtitle to the right of the title. The Problem Statement is rendered as load-bearing — `--color-fill` background, `--color-red` border, `--color-red` SECTION 1 label. Between each pair of sections draw a vertical arrowed segment with arrowhead pointing down, centered horizontally. From the right edge of the bottom Component List section, draw a long curved dashed path in `--color-red` (dash 4 3) that loops up the right side and ends with a red arrowhead at the right edge of the Problem Statement; label this curve with a small vertical ALL CAPS string `CONSISTENCY CHECK`. Hovering any section shows a tooltip tying it to its specific role (Problem Statement load-bearing, Architecture Principles must collide, Core User Flows the one path that matters, User Needs falsifiable conditions, Component List names what is not built). Footer caption explaining the back-arrow walks the document upward.
+
+> Reference implementation: `d3/07-software-design-document-fig-01.html`

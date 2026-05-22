@@ -1,0 +1,119 @@
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">The Gru phase sequence</title>
+  <desc id="desc">Six phase gates in linear sequence — slash v0, slash v1, SDD, slash claude, Boondoggle Score, Minion Brief. Each arrow is a gate that does not pass until a specific artifact exists.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 6.1 — THE GRU PHASE SEQUENCE</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Each arrow is a gate. No gate passes until its artifact exists.</text>
+
+  <!-- 6 boxes, each ~96w, with arrow gates between. -->
+  <!-- positions: -->
+  <!-- box1 x=32  to 128 -->
+  <!-- arrow  to 144 -->
+  <!-- box2 x=144 to 240 -->
+  <!-- arrow  to 256 -->
+  <!-- box3 x=256 to 352 -->
+  <!-- arrow  to 368 -->
+  <!-- box4 x=368 to 464 -->
+  <!-- arrow  to 480 -->
+  <!-- box5 x=480 to 576 -->
+  <!-- arrow  to 592 -->
+  <!-- box6 x=592 to 668 (terminal, slightly smaller? same w) -->
+  <!-- adjust: actually 6 boxes can't all fit at 96w with arrows. Let's use 92 width and 12 gap. 6*92 + 5*12 = 552 + 60 = 612 — fits with 32+32 margins (636 used). Good. -->
+
+  <!-- box positions -->
+  <!-- box i x = 44 + i*(92+12) for i=0..5 -->
+  <!-- y = 156, h = 72 -->
+
+  <!-- PHASE 1: /v0 -->
+  <g>
+    <rect x="44" y="156" width="92" height="72" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="90" y="178" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">/V0</text>
+    <text x="90" y="200" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">one sentence</text>
+    <text x="90" y="216" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">what / who / done</text>
+
+    <line x1="136" y1="192" x2="144" y2="192" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- PHASE 2: /v1 -->
+  <g>
+    <rect x="148" y="156" width="92" height="72" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="194" y="178" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">/V1</text>
+    <text x="194" y="200" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">intake</text>
+    <text x="194" y="216" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Problem Summary</text>
+
+    <line x1="240" y1="192" x2="248" y2="192" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- PHASE 3: SDD -->
+  <g>
+    <rect x="252" y="156" width="92" height="72" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="298" y="178" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">SDD</text>
+    <text x="298" y="200" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">design doc</text>
+    <text x="298" y="216" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">five sections, one page</text>
+
+    <line x1="344" y1="192" x2="352" y2="192" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- PHASE 4: /claude -->
+  <g>
+    <rect x="356" y="156" width="92" height="72" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="402" y="178" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">/CLAUDE</text>
+    <text x="402" y="200" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">audit pass</text>
+    <text x="402" y="216" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">who does what</text>
+
+    <line x1="448" y1="192" x2="456" y2="192" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- PHASE 5: Boondoggle Score -->
+  <g>
+    <rect x="460" y="156" width="92" height="72" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="506" y="178" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">SCORE</text>
+    <text x="506" y="200" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Boondoggle</text>
+    <text x="506" y="216" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">step-by-step plan</text>
+
+    <line x1="552" y1="192" x2="560" y2="192" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- PHASE 6: Minion Brief (terminal — fill) -->
+  <g>
+    <rect x="564" y="156" width="92" height="72" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="610" y="178" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">BRIEF</text>
+    <text x="610" y="200" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Minion Brief</text>
+    <text x="610" y="216" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">one tactical order</text>
+  </g>
+
+  <!-- gate labels above arrows (small ALL CAPS) -->
+  <text x="140" y="148" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">GATE 1</text>
+  <text x="244" y="148" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">GATE 2</text>
+  <text x="348" y="148" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">GATE 3</text>
+  <text x="452" y="148" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">GATE 4</text>
+  <text x="556" y="148" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">GATE 5</text>
+
+  <!-- Labels below boxes for what gate produces -->
+  <text x="90" y="264" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">refuse the and</text>
+  <text x="194" y="264" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">name non-goals</text>
+  <text x="298" y="264" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">decision record</text>
+  <text x="402" y="264" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">trust per step</text>
+  <text x="506" y="264" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">numbered list</text>
+  <text x="610" y="264" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">paste &amp; ship</text>
+
+  <!-- Divider rule -->
+  <line x1="32" y1="304" x2="668" y2="304" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+
+  <!-- Architect vs minions annotation -->
+  <text x="32" y="332" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">GRU ROLE</text>
+  <text x="120" y="332" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— architect: refuses to advance until each artifact exists.</text>
+
+  <text x="32" y="356" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">MINION ROLE</text>
+  <text x="120" y="356" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">— executor: a fresh Claude session given one scoped task from the Brief.</text>
+
+  <!-- Footer -->
+  <text x="32" y="396" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">The unhelpfulness is the feature. Each gate refuses Claude's defaults until the human work is done in writing.</text>
+</svg>

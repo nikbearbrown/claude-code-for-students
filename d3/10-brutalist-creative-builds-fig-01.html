@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure 10.1 — Brutalist: the three-file system</title>
+<style>
+:root {
+  --color-white: #FFFFFF;
+  --color-fill: #F5EFE8;
+  --color-ink: #2a1a0e;
+  --color-mark: #6B3520;
+  --color-red: #C8102E;
+  --color-slate: #1A3A5C;
+  --color-ochre: #C8860E;
+  --color-secondary: #545454;
+  --color-border: #D4D4D4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #111111;
+    --color-fill: #1a1612;
+    --color-ink: #F0EBE3;
+    --color-mark: #C8865E;
+    --color-red: #E8243A;
+    --color-slate: #6B8FB8;
+    --color-ochre: #D49A30;
+    --color-secondary: #A0978C;
+    --color-border: #2E2E2E;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-white); color: var(--color-ink); font-family: 'EB Garamond', Georgia, serif; padding: 24px; }
+#chart { width: 100%; min-height: 520px; }
+.tooltip { position: absolute; pointer-events: none; opacity: 0; background: var(--color-slate); color: var(--color-white); padding: 8px 12px; font-size: 12px; font-family: 'EB Garamond', Georgia, serif; max-width: 280px; line-height: 1.4; }
+text { font-family: 'EB Garamond', Georgia, serif; fill: var(--color-ink); }
+.caps { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; fill: var(--color-secondary); font-size: 10px; }
+.secondary { fill: var(--color-secondary); }
+.layer-rect { fill: var(--color-white); stroke: var(--color-border); stroke-width: 1; cursor: pointer; transition: fill 120ms, stroke-width 120ms; }
+.layer-rect.inner { fill: var(--color-fill); stroke: var(--color-red); }
+.layer-rect:hover { stroke-width: 1.5; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="chart" role="main"></div>
+<div class="tooltip" id="tt"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+function draw() {
+  d3.select('#chart').selectAll('*').remove();
+  const totalWidth = document.getElementById('chart').clientWidth || 700;
+  const totalHeight = 520;
+  const margin = { top: 56, right: 32, bottom: 48, left: 32 };
+  const chartWidth = totalWidth - margin.left - margin.right;
+
+  const svg = d3.select('#chart').append('svg')
+    .attr('width', totalWidth).attr('height', totalHeight)
+    .attr('role', 'img').attr('aria-labelledby', 'chart-title chart-desc');
+  svg.append('title').attr('id', 'chart-title').text('Brutalist: the three-file system');
+  svg.append('desc').attr('id', 'chart-desc').text('Three nested rectangles: CLAUDE.md as the outer technical constitution, DESIGN.md as the middle visual constitution, PROJECT.md as the inner project state with the Intent Layer at its core.');
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+  g.append('text').attr('class','caps').attr('y',-24).text('FIGURE 10.1 — THE BRUTALIST THREE-FILE SYSTEM');
+  g.append('text').attr('y',0).attr('font-weight','bold').attr('font-size',13).text('Maximally informed, minimally autonomous. By design.');
+
+  const tt = d3.select('#tt');
+  function showTip(html){ tt.html(html).style('opacity',1); }
+  function moveTip(e){ tt.style('left',(e.pageX+12)+'px').style('top',(e.pageY-8)+'px'); }
+  function hideTip(){ tt.style('opacity',0); }
+
+  // Three nested rectangles. Sized relative to chartWidth.
+  const outerW = chartWidth - 36;
+  const outerH = 340;
+  const outerX = 18;
+  const outerY = 32;
+
+  const midW = outerW - 160;
+  const midH = outerH - 96;
+  const midX = outerX + 80;
+  const midY = outerY + 48;
+
+  const inW = midW - 160;
+  const inH = midH - 96;
+  const inX = midX + 80;
+  const inY = midY + 48;
+
+  // Outer — CLAUDE.md
+  g.append('rect').attr('class','layer-rect').attr('x',outerX).attr('y',outerY).attr('width',outerW).attr('height',outerH)
+    .on('mouseenter',()=>showTip('<strong>CLAUDE.md — technical constitution</strong><br/>The contract about what the work is made of. Stack, dependencies, directory layout, lint and format rules, testing conventions, and the things Claude must never improvise about. The outermost layer because everything else lives inside it.'))
+    .on('mousemove',moveTip).on('mouseleave',hideTip);
+
+  g.append('text').attr('class','caps').attr('x',outerX+14).attr('y',outerY+22).text('OUTER LAYER').attr('pointer-events','none');
+  g.append('text').attr('x',outerX+14).attr('y',outerY+44).attr('font-weight','bold').attr('font-size',12).text('CLAUDE.md').attr('pointer-events','none');
+  g.append('text').attr('x',outerX+98).attr('y',outerY+44).attr('class','secondary').attr('font-style','italic').attr('font-size',11).text('— technical constitution').attr('pointer-events','none');
+  g.append('text').attr('x',outerX+14).attr('y',outerY+outerH-14).attr('class','secondary').attr('font-size',10).text('stack · directory layout · what Claude never improvises').attr('pointer-events','none');
+
+  // Middle — DESIGN.md
+  g.append('rect').attr('class','layer-rect').attr('x',midX).attr('y',midY).attr('width',midW).attr('height',midH)
+    .on('mouseenter',()=>showTip('<strong>DESIGN.md — visual constitution</strong><br/>The contract about what the work looks like. Every aesthetic decision named with a value or an explicit escalation. The file the prevailing workflow does not have. If the file is silent, Claude does not improvise — Claude asks.'))
+    .on('mousemove',moveTip).on('mouseleave',hideTip);
+
+  g.append('text').attr('class','caps').attr('x',midX+14).attr('y',midY+22).text('MIDDLE LAYER').attr('pointer-events','none');
+  g.append('text').attr('x',midX+14).attr('y',midY+44).attr('font-weight','bold').attr('font-size',12).text('DESIGN.md').attr('pointer-events','none');
+  g.append('text').attr('x',midX+98).attr('y',midY+44).attr('class','secondary').attr('font-style','italic').attr('font-size',11).text('— visual constitution').attr('pointer-events','none');
+  g.append('text').attr('x',midX+14).attr('y',midY+midH-14).attr('class','secondary').attr('font-size',10).text('palette · type scale · escalation list').attr('pointer-events','none');
+
+  // Inner — PROJECT.md
+  g.append('rect').attr('class','layer-rect inner').attr('x',inX).attr('y',inY).attr('width',inW).attr('height',inH)
+    .on('mouseenter',()=>showTip('<strong>PROJECT.md — Intent Layer, human</strong><br/>The file that holds the human. Five questions answered by the student in their own words, before any prompt, before Claude sees anything: who is this for, what is it for, what should the reader feel, what argument does it make, what does it explicitly refuse to do? The non-de-minimis human contribution.'))
+    .on('mousemove',moveTip).on('mouseleave',hideTip);
+
+  g.append('text').attr('class','caps').attr('x',inX+14).attr('y',inY+22).attr('fill','var(--color-red)').text('INNER LAYER').attr('pointer-events','none');
+  g.append('text').attr('x',inX+14).attr('y',inY+44).attr('font-weight','bold').attr('font-size',12).text('PROJECT.md').attr('pointer-events','none');
+  g.append('text').attr('x',inX+110).attr('y',inY+44).attr('font-style','italic').attr('font-size',11).attr('fill','var(--color-red)').text('— Intent Layer, human').attr('pointer-events','none');
+  g.append('text').attr('x',inX+14).attr('y',inY+66).attr('font-weight','bold').attr('font-size',11).text('who · what · feeling · argument · refusals').attr('pointer-events','none');
+  g.append('text').attr('x',inX+14).attr('y',inY+inH-12).attr('class','secondary').attr('font-style','italic').attr('font-size',10).text('the irreducibly human portion — never delegated').attr('pointer-events','none');
+
+  // Side rotated labels — what each protects
+  g.append('text').attr('class','caps').attr('font-size',9)
+    .attr('transform',`translate(${outerX-6}, ${outerY+outerH/2}) rotate(-90)`).attr('text-anchor','middle').text('MADE OF');
+  g.append('text').attr('class','caps').attr('font-size',9)
+    .attr('transform',`translate(${midX-6}, ${midY+midH/2}) rotate(-90)`).attr('text-anchor','middle').text('LOOKS LIKE');
+  g.append('text').attr('class','caps').attr('font-size',9).attr('fill','var(--color-red)')
+    .attr('transform',`translate(${inX-6}, ${inY+inH/2}) rotate(-90)`).attr('text-anchor','middle').text('IS FOR');
+
+  // Footer
+  const footY = outerY + outerH + 36;
+  g.append('line').attr('x1',0).attr('y1',footY).attr('x2',chartWidth).attr('y2',footY)
+    .attr('stroke','var(--color-border)').attr('stroke-width',0.75).attr('stroke-dasharray','4 3');
+  g.append('text').attr('class','secondary').attr('y',footY+22).attr('font-size',10)
+    .text('Each file protects a different thing. None is hidden. None is optional. The decisions show — béton brut.');
+}
+draw();
+const ro = new ResizeObserver(() => draw());
+ro.observe(document.getElementById('chart'));
+</script>
+</body>
+</html>

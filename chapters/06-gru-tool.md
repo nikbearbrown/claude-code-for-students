@@ -12,7 +12,8 @@ The second is memory. Claude has no memory between prompts. Every new chat begin
 
 The third reason is the one most students do not see until it has cost them. Every prompt you send to Claude is a decision. It is a decision about what Claude can be trusted to do at this step, with this scope, under this much supervision. *Should Claude write the function? Should Claude propose the architecture? Should Claude decide whether the y-axis is linear or log?* These look like similar prompts from the outside. They require very different amounts of you on the inside. Most people are making this decision unconsciously, prompt by prompt, by feel — which means that on a tired Wednesday at 11 p.m. the decision drifts toward Claude does more and I check less, and on a Saturday morning with coffee it drifts back, and the build is the sum of those drifts. Gru is a tool that forces the decision to be conscious by refusing to advance until you have made it in writing.
 
-<!-- → [DIAGRAM: The Gru phase sequence — /v0 → /v1 → SDD → /claude → Boondoggle Score → Minion Brief. Linear with phase gates marked. Editorial style.] -->
+![Six labeled boxes in a horizontal sequence — /v0, /v1, SDD, /claude, Boondoggle Score, Minion Brief — connected by five arrows labeled GATE 1 through GATE 5. Each box has a phase title and a one-line description; the terminal Minion Brief box is filled. Below the sequence, a two-line legend distinguishes Gru as architect from the minions as executor.](images/06-gru-tool-fig-01.png)
+*Figure 6.1 — The Gru phase sequence*
 
 Each arrow in that diagram is not a step. It is a gate — a refusal point that does not pass until a specific artifact exists. The artifacts are concrete: a sentence, a summary, a document, a score, a brief. The gates are checkable by you, on a Saturday afternoon, in front of a laptop. The point of this chapter is to walk that spine, gate by gate.
 
@@ -42,7 +43,7 @@ One honest caveat, because this book does not oversell: a 2024 study by Zheng an
 
 If you opened Gru right now and typed *hi*, here is approximately what would happen.
 
-Gru would respond positionally — not warmly, not coldly, but as an architect responds. It would not offer to help with whatever is on your mind. It would ask what you are building. If you typed back *an app for my cross-country team*, it would not begin sketching code or proposing architecture. It would ask you to put the project into one sentence — a sentence that names what the system does, for whom, and what makes it count as done. If you could not produce that sentence, it would refuse to proceed.
+Gru would respond positionally — not warmly, not coldly, but as an architect responds. It would not offer to help with whatever is on your mind. It would ask what you are building. If you typed back *an agent to help me refactor my Unity project*, it would not begin sketching code or proposing architecture. It would ask you to put the project into one sentence — a sentence that names what the system does, for whom, and what makes it count as done. If you could not produce that sentence, it would refuse to proceed.
 
 The refusal is the whole point. A plain Claude conversation is helpful by default — the model is trained to be useful, to make progress, to give the user something concrete. Gru is trained by system prompt to suspend that helpfulness at specific gates. The unhelpfulness is the feature.
 
@@ -56,7 +57,7 @@ This sounds like a small ask. It is not.
 
 The one-sentence test is famous in requirements engineering as the elevator test: if you cannot describe what the system does in the time it takes an elevator to reach the floor, you do not yet know what you are building, and any work done before you know is a guess. Barry Boehm's 1988 spiral model formalized this as anchor-point milestones — you do not advance from one phase to the next without producing the deliverable for that phase. `/v0` is Boehm's first anchor-point milestone, sized for a high-school project, enforced by a system prompt.
 
-Students at the `/v0` gate fail in a predictable way. They produce a sentence that contains an *and*. *"A flashcard scheduler and a study group matchmaker."* *"A Discord bot that does homework reminders and also moderates the server."* *"A website that tracks my mileage and shares it with my coach and ranks me against my teammates."* The `/v0` gate refuses these sentences because the *and* is a tell. Two ands and you are almost certainly building two systems. One and and you should be suspicious. The reformulation that passes is the one where the student has *chosen* — flashcard scheduler *or* study group matchmaker, not both.
+Students at the `/v0` gate fail in a predictable way. They produce a sentence that contains an *and*. *"A flashcard scheduler and a study group matchmaker."* *"A Discord bot that does homework reminders and also moderates the server."* *"An agent that refactors my Unity scripts and writes the missing tests and reviews pull requests."* The `/v0` gate refuses these sentences because the *and* is a tell. Two ands and you are almost certainly building two systems. One and and you should be suspicious. The reformulation that passes is the one where the student has *chosen* — flashcard scheduler *or* study group matchmaker, not both.
 
 The second reason the one-sentence constraint matters is conceptual integrity — Brooks's term for the property that all parts of a system reflect a single coherent design mind. The one-sentence formulation is the moment you take ownership of that integrity in writing. You are saying: *this, specifically, is the thing.* Everything Claude produces from here gets measured against that sentence. If a Claude output drifts away from the sentence, you bring it back. If it cannot be brought back, you change the sentence — but deliberately, with a new `/v0`, not by accident in the middle of a build.
 
@@ -66,9 +67,9 @@ Gru audits the sentence against three questions: Is the subject a single system,
 
 Once `/v0` passes, `/v1` begins. Where `/v0` is a single sentence, `/v1` is an intake interview. Gru asks a structured sequence of questions and produces a *Problem Summary* — a one-page document naming the project, the user, the inputs, the outputs, the success criterion, and the explicit non-goals.
 
-The questions are not arbitrary. They are drawn from the requirements elicitation tradition and sequenced so that early answers constrain later ones. A representative sequence: Who is the user, named specifically — not "people who like running" but "my cross-country coach, Coach Romero"? What does the user currently do that this replaces — even if the current workflow is "writes mileage on a clipboard"? What input does the system take, in concrete data terms? What output does it produce, again concrete? Under what condition does the user say *yes, this is what I needed*? And crucially: what is explicitly not in scope?
+The questions are not arbitrary. They are drawn from the requirements elicitation tradition and sequenced so that early answers constrain later ones. A representative sequence: Who is the user, named specifically — not "people who write Unity code" but "me, working on the *Haunt & Harvest* C# scripts I just ported from Unreal"? What does the user currently do that this replaces — even if the current workflow is "scrolls through 12,000 lines of C# remembering what needs untangling"? What input does the system take, in concrete data terms? What output does it produce, again concrete? Under what condition does the user say *yes, this is what I needed*? And crucially: what is explicitly not in scope?
 
-That last question is what catches the second and. If Coach Romero says *and could it also email the parents*, that gets logged as not in scope and filed as a future `/v0`. The non-goals section is not a polite gesture. It is a boundary drawn in ink before the build begins.
+That last question is what catches the second and. If Seth says *and could it also generate the missing unit tests*, that gets logged as not in scope and filed as a future `/v0`. The non-goals section is not a polite gesture. It is a boundary drawn in ink before the build begins.
 
 Two things about the Problem Summary deserve direct attention.
 
@@ -82,17 +83,17 @@ Once the SDD is complete — Chapter 7 builds it; here we treat it as a thing th
 
 The Boondoggle Score is a step-by-step plan in which each step has been assessed for how much of it should be Claude's and how much must be yours. The output is a numbered list. Each step has a *what*, a *who* — Claude-only, Claude-with-human-review, or human-only — and a *why*, a brief justification in terms of the supervisory capacities from Chapter 5.
 
-Here is a representative score for a small project — a script that takes a CSV of weekly mileage and returns each runner's acute-to-chronic workload ratio, a sports-science measure of injury risk:
+Here is a representative score for a small project — a script that walks a Unity project's C# scripts and returns each file's *refactor pressure*, a composite measure of how urgently the file needs restructuring before more features land on top of it:
 
 | # | Step | Who | Why |
 |---|---|---|---|
-| 1 | Parse the CSV into a DataFrame | Claude-only | Pure accidental complexity |
-| 2 | Validate input — required columns, expected types | Claude-with-review | Decisions about missing data require domain judgment |
-| 3 | Define the acute-to-chronic formula | Human-only | The choice of 7-day acute / 28-day chronic window is a decision, not a fact |
+| 1 | Walk the project directory and collect `.cs` files | Claude-only | Pure accidental complexity |
+| 2 | Validate input — required folders, expected file shapes | Claude-with-review | Decisions about which generated/vendor files to skip require domain judgment |
+| 3 | Define the refactor-pressure formula (recent-churn over baseline complexity) | Human-only | The choice of churn window and complexity proxy is a decision, not a fact |
 | 4 | Implement the formula | Claude-only | Once the formula is fixed, implementation is mechanical |
-| 5 | Set the threshold for elevated risk | Human-only | The threshold encodes a coaching judgment Claude does not have |
-| 6 | Generate the per-runner table output | Claude-only | Mechanical |
-| 7 | Sanity-check outputs against last week's known cases | Human-only | Plausibility audit requires domain memory |
+| 5 | Set the threshold for "needs refactor now" | Human-only | The threshold encodes a project judgment Claude does not have |
+| 6 | Generate the per-file table output | Claude-only | Mechanical |
+| 7 | Sanity-check outputs against last sprint's known hotspots | Human-only | Plausibility audit requires domain memory |
 
 Step 3 is human-only because the formula choice is essential complexity. Step 5 is human-only because the threshold encodes domain judgment Claude cannot supply. Everything else, Claude can do — but the human signs off on Step 2 and audits Step 7 because those are the points where Claude's confidence outruns Claude's actual coverage.
 
@@ -118,29 +119,31 @@ The most important property of CLAUDE.md is not that it is comprehensive. It is 
 
 ---
 
-It is a Tuesday in early May. Seth has decided he wants to build a thing for his cross-country team. He has been thinking about it on the drive home from practice for three days. He has not written anything down. He opens Gru.
+It is a Tuesday in early May. Seth has decided he wants to build an agent — a senior-architect persona that helps Unity developers refactor legacy C# without making it worse. He has been thinking about it on the drive home from his Pizza Ranch shift for three days. The motivating case is a Unity codebase a friend's older brother handed him to look at — twelve thousand lines of indie-game C#, partially commented, structurally tangled — but the agent he wants to build is for any Unity developer in that situation, not just for one project. He has not written anything down. He opens Gru.
 
-He types: `/v0 I want to build an app for my cross-country team.`
+He types: `/v0 I want to build an agent to help with Unity projects.`
 
 Gru refuses. The refusal is specific. All three questions failed: no single system, no named user, no done-condition. The sentence contains a gesture in the direction of a system.
 
 Seth types again.
 
-`/v0 An app that helps the cross-country team track mileage and find each other for group runs and rank against other teams.`
+`/v0 An agent that audits Unity scripts and refactors them and writes the missing tests and generates a CLAUDE.md.`
 
-Gru refuses. It flags two ands. It observes that the sentence describes three different systems — a mileage tracker, a group-run matchmaker, and a leaderboard — with different users, different inputs, and different done-conditions. It asks which one Seth is building first.
+Gru refuses. It flags two ands. It observes that the sentence describes four different systems — an auditor, a refactor agent, a test generator, and a CLAUDE.md author — with different users, different inputs, and different done-conditions. It asks which one Seth is building first.
 
-Seth has not been challenged in this specific way before. He had thought he was building one thing. He was sketching three things and calling them one because they all involved cross-country. He stares at the screen. He thinks about which of the three he actually wants. The leaderboard sounds fun, but he does not have access to other teams' data. The group-run matchmaker is a social problem dressed in code — what stops people from showing up to group runs is not lack of an app. The mileage tracker is the one Coach Romero has complained about, on the clipboard, for two seasons.
+Seth has not been challenged in this specific way before. He had thought he was building one thing. He was sketching four things and calling them one because they all involved Unity. He stares at the screen. He thinks about which of the four he actually wants. The test generator sounds fun, but the test surface depends on the refactor plan. The CLAUDE.md author is a downstream artifact — it depends on knowing the refactor plan first. The standalone refactor agent is dangerous to ship before there's a plan to audit against. The auditor is the upstream piece, and it's the one he has actually been postponing.
 
-He types: `/v0 A web page where Coach Romero pastes weekly mileage and the page returns each runner's training-load ratio compared to last week, so he can identify runners at elevated injury risk.`
+He types: `/v0 A senior-architect agent that audits a Unity developer's C# project and produces a five-phase refactor plan with named hotspots, so the developer can decide which file to restructure next.`
 
-Gru audits. One system. One user, named. One done-condition. The sentence passes.
+Gru audits. One system. One user, named (a Unity developer staring at a tangled legacy project). One done-condition. The sentence passes.
 
-The whole interaction has taken fourteen minutes. No code. No design. No prompt. One sentence, twenty-six words long. It is the most expensive sentence Seth has written this semester, in the sense that it cost fourteen minutes when he could have been typing. It is also, by a large margin, the most valuable, in the sense that it revealed he was about to build three things — did not have data for one of them, did not have a real product problem for another, and had been postponing the only one that mattered.
+The whole interaction has taken fourteen minutes. No code. No design. No prompt. One sentence, twenty-eight words long. It is the most expensive sentence Seth has written this semester, in the sense that it cost fourteen minutes when he could have been typing. It is also, by a large margin, the most valuable, in the sense that it revealed he was about to build four things — did not yet have the inputs for one of them, was building a downstream artifact for another, and had been postponing the only one that mattered.
 
-He proceeds to `/v1`. Gru begins the intake. The first question is: *Who is the user, named specifically?* Seth answers: *Coach Romero.* Gru asks the next question.
+He proceeds to `/v1`. Gru begins the intake. The first question is: *Who is the user, named specifically?* Seth answers: *a Unity developer with a legacy C# codebase they inherited or grew past, who wants a senior-architect read on what to refactor first.* Gru asks the next question.
 
-We will return to Seth in Chapter 7, where he builds the SDD around this sentence.
+The agent he is building has a name. He's calling it Walker. The Walker appendix at the back of the book documents the shipped version of the tool he and his dad eventually published at humanitarians.ai/tools.
+
+We will return to Seth in Chapter 7, where he picks up a different small project — closer to student scale — and works through the SDD that catches drift before it starts.
 
 ---
 
@@ -170,3 +173,19 @@ test whether I have done the essential work.
 ---
 
 **Links:** [humanitarians.ai/tools](https://www.humanitarians.ai/tools) · [boondoggling.ai](https://boondoggling.ai)
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 6.1 — The Gru phase sequence
+
+Build a six-node linear flow in D3 v7. Each node is a rectangle (height 72) containing a monospace ALL CAPS phase code on top, a bold phase title below, and a one-line subtitle in `--color-secondary`. The six nodes in order: `/V0` (one sentence — what / who / done), `/V1` (intake — Problem Summary), `SDD` (design doc — five sections, one page), `/CLAUDE` (audit pass — who does what), `SCORE` (Boondoggle — step-by-step plan), `BRIEF` (Minion Brief — one tactical order). The terminal BRIEF node uses `--color-fill` background. Between each pair of nodes draw a short arrowed segment with an arrowhead marker on the right; above each arrow render a tiny ALL CAPS label `GATE 1` through `GATE 5`. Below each node, an italic secondary-color annotation summarizing what that gate produces (refuse the and, name non-goals, decision record, trust per step, numbered list, paste and ship). Hovering any node shows a tooltip with one sentence tying the phase to its software-engineering precedent (Boehm's anchor-point milestone for /v0, Brooks's conceptual integrity for SDD, Suchman's situated sequencing for /claude). Dashed horizontal divider, then a two-line legend distinguishing GRU ROLE (architect) from MINION ROLE (executor). Footer caption: "The unhelpfulness is the feature."
+
+> Reference implementation: `d3/06-gru-tool-fig-01.html`

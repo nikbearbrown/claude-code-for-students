@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure 3.1 — Fluency × depth quadrant</title>
+<style>
+:root {
+  --color-white: #FFFFFF;
+  --color-fill: #F5EFE8;
+  --color-ink: #2a1a0e;
+  --color-mark: #6B3520;
+  --color-red: #C8102E;
+  --color-slate: #1A3A5C;
+  --color-ochre: #C8860E;
+  --color-secondary: #545454;
+  --color-border: #D4D4D4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #111111;
+    --color-fill: #1a1612;
+    --color-ink: #F0EBE3;
+    --color-mark: #C8865E;
+    --color-red: #E8243A;
+    --color-slate: #6B8FB8;
+    --color-ochre: #D49A30;
+    --color-secondary: #A0978C;
+    --color-border: #2E2E2E;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-white); color: var(--color-ink); font-family: 'EB Garamond', Georgia, serif; padding: 24px; }
+#chart { width: 100%; min-height: 560px; position: relative; }
+.tooltip { position: absolute; pointer-events: none; opacity: 0; background: var(--color-slate); color: var(--color-white); padding: 6px 10px; font-size: 12px; font-family: 'EB Garamond', Georgia, serif; max-width: 280px; }
+text { font-family: 'EB Garamond', Georgia, serif; fill: var(--color-ink); }
+.caps { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; font-size: 10px; fill: var(--color-secondary); }
+.caps-danger { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; font-size: 10px; fill: var(--color-red); }
+.secondary { fill: var(--color-secondary); }
+.chart-bg { fill: var(--color-fill); stroke: var(--color-border); stroke-width: 1; }
+.cross { stroke: var(--color-border); stroke-width: 0.75; stroke-dasharray: 4 3; }
+.axis { stroke: var(--color-ink); stroke-width: 1; }
+.pt { cursor: pointer; transition: r 120ms; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="chart" role="main"></div>
+<div class="tooltip" id="tt"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+function draw() {
+  d3.select('#chart').selectAll('*').remove();
+  const totalWidth = document.getElementById('chart').clientWidth || 700;
+  const totalHeight = 560;
+  const margin = { top: 88, right: 56, bottom: 88, left: 96 };
+  const chartWidth = totalWidth - margin.left - margin.right;
+  const chartHeight = totalHeight - margin.top - margin.bottom;
+
+  const svg = d3.select('#chart').append('svg')
+    .attr('width', totalWidth).attr('height', totalHeight)
+    .attr('role', 'img').attr('aria-labelledby', 'chart-title chart-desc');
+  svg.append('title').attr('id', 'chart-title').text('Fluency by depth: where the danger lives');
+  svg.append('desc').attr('id', 'chart-desc').text('Two-axis quadrant. Student sits at high fluency, low depth — the danger zone. Teacher sits at low fluency, high depth.');
+
+  const defs = svg.append('defs');
+  defs.append('marker').attr('id','arrow').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-ink)');
+
+  svg.append('text').attr('class','caps').attr('x',margin.left).attr('y',32).text('FIGURE 3.1 — FLUENCY × DEPTH');
+  svg.append('text').attr('x',margin.left).attr('y',56).attr('font-weight','bold').attr('font-size',13).text('Where the danger lives');
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+  g.append('rect').attr('class','chart-bg').attr('x',0).attr('y',0).attr('width',chartWidth).attr('height',chartHeight);
+
+  const x = d3.scaleLinear().domain([0,1]).range([0,chartWidth]);
+  const y = d3.scaleLinear().domain([0,1]).range([chartHeight,0]);
+
+  // Cross axes through middle
+  g.append('line').attr('class','cross').attr('x1',x(0.5)).attr('x2',x(0.5)).attr('y1',0).attr('y2',chartHeight);
+  g.append('line').attr('class','cross').attr('x1',0).attr('x2',chartWidth).attr('y1',y(0.5)).attr('y2',y(0.5));
+
+  // Outer axis arrows below and left
+  svg.append('line').attr('class','axis').attr('x1',margin.left).attr('y1',margin.top+chartHeight+18).attr('x2',margin.left+chartWidth).attr('y2',margin.top+chartHeight+18).attr('marker-end','url(#arrow)');
+  svg.append('text').attr('class','secondary').attr('x',margin.left+chartWidth/2).attr('y',margin.top+chartHeight+38).attr('text-anchor','middle').attr('font-size',11).text('technical fluency →');
+  svg.append('text').attr('class','secondary').attr('x',margin.left+10).attr('y',margin.top+chartHeight+38).attr('font-size',10).text('low');
+  svg.append('text').attr('class','secondary').attr('x',margin.left+chartWidth-22).attr('y',margin.top+chartHeight+38).attr('font-size',10).text('high');
+
+  svg.append('line').attr('class','axis').attr('x1',margin.left-22).attr('y1',margin.top+chartHeight).attr('x2',margin.left-22).attr('y2',margin.top).attr('marker-end','url(#arrow)');
+  svg.append('text').attr('class','secondary').attr('transform',`translate(${margin.left-44},${margin.top+chartHeight/2}) rotate(-90)`).attr('text-anchor','middle').attr('font-size',11).text('domain depth →');
+  svg.append('text').attr('class','secondary').attr('x',margin.left-36).attr('y',margin.top+chartHeight-4).attr('font-size',10).text('low');
+  svg.append('text').attr('class','secondary').attr('x',margin.left-36).attr('y',margin.top+14).attr('font-size',10).text('high');
+
+  // Quadrant captions
+  g.append('text').attr('class','caps').attr('x',x(0.25)).attr('y',24).attr('text-anchor','middle').text('DEPTH ONLY');
+  g.append('text').attr('class','caps').attr('x',x(0.75)).attr('y',24).attr('text-anchor','middle').text('SUPERVISORY READY');
+  g.append('text').attr('class','caps').attr('x',x(0.25)).attr('y',chartHeight-12).attr('text-anchor','middle').text('NEITHER');
+  g.append('text').attr('class','caps-danger').attr('x',x(0.75)).attr('y',chartHeight-12).attr('text-anchor','middle').text('THE DANGER ZONE');
+
+  const tt = d3.select('#tt');
+  function showTip(html){ tt.html(html).style('opacity',1); }
+  function moveTip(e){ tt.style('left',(e.pageX+12)+'px').style('top',(e.pageY-8)+'px'); }
+  function hideTip(){ tt.style('opacity',0); }
+
+  const points = [
+    { cx:x(0.2), cy:y(0.75), r:7, fill:'var(--color-ink)', label:'Teacher', l1:'behind on the tool,', l2:'deep in the subject', tip:'Could audit the output if she saw it. She is not in the loop.' },
+    { cx:x(0.82), cy:y(0.2), r:8, fill:'var(--color-red)', label:'Student', l1:'fluent on the tool,', l2:'shallow in the subject', tip:'Knows enough to feel confident; the error is one level deeper than her fluency.' }
+  ];
+  const pt = g.selectAll('g.pt').data(points).join('g').attr('class','pt-g');
+  pt.append('circle').attr('class','pt').attr('cx',d=>d.cx).attr('cy',d=>d.cy).attr('r',d=>d.r).attr('fill',d=>d.fill)
+    .on('mouseenter',(e,d)=>showTip(d.tip)).on('mousemove',moveTip).on('mouseleave',hideTip);
+  pt.append('text').attr('x',d=>d.cx).attr('y',d=>d.cy-14).attr('text-anchor','middle').attr('font-weight','bold').attr('font-size',11).text(d=>d.label);
+  pt.append('text').attr('x',d=>d.cx).attr('y',d=>d.cy+26).attr('text-anchor','middle').attr('font-size',10).attr('class','secondary').text(d=>d.l1);
+  pt.append('text').attr('x',d=>d.cx).attr('y',d=>d.cy+40).attr('text-anchor','middle').attr('font-size',10).attr('class','secondary').text(d=>d.l2);
+
+  // Italic target call inside supervisory-ready quadrant
+  g.append('text').attr('x',x(0.75)).attr('y',y(0.7)).attr('text-anchor','middle').attr('font-style','italic').attr('font-size',11).attr('class','secondary').text('build depth alongside');
+  g.append('text').attr('x',x(0.75)).attr('y',y(0.65)).attr('text-anchor','middle').attr('font-style','italic').attr('font-size',11).attr('class','secondary').text('the fluency you already have');
+
+  svg.append('text').attr('class','secondary').attr('x',margin.left).attr('y',totalHeight-16).attr('font-size',10)
+    .text('High fluency without depth is the configuration where confident wrong answers slip past every check you can run.');
+}
+draw();
+const ro = new ResizeObserver(() => draw());
+ro.observe(document.getElementById('chart'));
+</script>
+</body>
+</html>

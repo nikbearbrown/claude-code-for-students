@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure 7.1 — The SDD as decision record</title>
+<style>
+:root {
+  --color-white: #FFFFFF;
+  --color-fill: #F5EFE8;
+  --color-ink: #2a1a0e;
+  --color-mark: #6B3520;
+  --color-red: #C8102E;
+  --color-slate: #1A3A5C;
+  --color-ochre: #C8860E;
+  --color-secondary: #545454;
+  --color-border: #D4D4D4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #111111;
+    --color-fill: #1a1612;
+    --color-ink: #F0EBE3;
+    --color-mark: #C8865E;
+    --color-red: #E8243A;
+    --color-slate: #6B8FB8;
+    --color-ochre: #D49A30;
+    --color-secondary: #A0978C;
+    --color-border: #2E2E2E;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-white); color: var(--color-ink); font-family: 'EB Garamond', Georgia, serif; padding: 24px; }
+#chart { width: 100%; min-height: 520px; }
+.tooltip { position: absolute; pointer-events: none; opacity: 0; background: var(--color-slate); color: var(--color-white); padding: 8px 12px; font-size: 12px; font-family: 'EB Garamond', Georgia, serif; max-width: 280px; line-height: 1.4; }
+text { font-family: 'EB Garamond', Georgia, serif; fill: var(--color-ink); }
+.caps { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; fill: var(--color-secondary); font-size: 10px; }
+.secondary { fill: var(--color-secondary); }
+.section-rect { fill: var(--color-white); stroke: var(--color-border); stroke-width: 1; cursor: pointer; transition: fill 120ms; }
+.section-rect.loadbearing { fill: var(--color-fill); stroke: var(--color-red); }
+.section-rect:hover { fill: var(--color-fill); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="chart" role="main"></div>
+<div class="tooltip" id="tt"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+function draw() {
+  d3.select('#chart').selectAll('*').remove();
+  const totalWidth = document.getElementById('chart').clientWidth || 700;
+  const totalHeight = 520;
+  const margin = { top: 56, right: 80, bottom: 32, left: 112 };
+  const chartWidth = totalWidth - margin.left - margin.right;
+
+  const svg = d3.select('#chart').append('svg')
+    .attr('width', totalWidth).attr('height', totalHeight)
+    .attr('role', 'img').attr('aria-labelledby', 'chart-title chart-desc');
+  svg.append('title').attr('id', 'chart-title').text('The SDD as decision record');
+  svg.append('desc').attr('id', 'chart-desc').text('Five sections of the Software Design Document in dependency sequence with a consistency check arrow looping back from the Component List to the Problem Statement.');
+
+  const defs = svg.append('defs');
+  defs.append('marker').attr('id','arrow-ink').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-ink)');
+  defs.append('marker').attr('id','arrow-red').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-red)');
+
+  // Title outside the translated group
+  svg.append('text').attr('class','caps').attr('x',32).attr('y',32).text('FIGURE 7.1 — THE SDD AS DECISION RECORD');
+  svg.append('text').attr('x',32).attr('y',54).attr('font-weight','bold').attr('font-size',13).text('Five sections. One sentence, five times.');
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const tt = d3.select('#tt');
+  function showTip(html){ tt.html(html).style('opacity',1); }
+  function moveTip(e){ tt.style('left',(e.pageX+12)+'px').style('top',(e.pageY-8)+'px'); }
+  function hideTip(){ tt.style('opacity',0); }
+
+  const sections = [
+    { code:'SECTION 1', title:'Problem Statement', sub:'— what / who / done. One sentence. Load-bearing.',
+      loadbearing:true,
+      tip:'The load-bearing sentence the rest of the document is built on. Names what the system does, for whom, and what makes it count as done. If it changes, every other section changes with it.' },
+    { code:'SECTION 2', title:'Architecture Principles', sub:'— 2–4 invariants. Must be able to collide.',
+      tip:'The design decisions that constrain everything downstream and that, under pressure, win. A principle has to be able to lose to another principle. If two principles cannot collide, one of them is a slogan.' },
+    { code:'SECTION 3', title:'Core User Flows', sub:'— the path through the system, in order.',
+      tip:'The verbs the user performs from arrival to outcome. Not features, not screens. Most projects have exactly one core flow that, if it works, the project works.' },
+    { code:'SECTION 4', title:'User Needs', sub:'— testable outcomes with thresholds.',
+      tip:'The outcomes the user must get, written as falsifiable conditions. Names a condition, an environment, and a threshold. Decidable with a stopwatch and a laptop.' },
+    { code:'SECTION 5', title:'Component List', sub:'— buildable pieces. Names what is not built.',
+      tip:'The last section, not the first. Names the specific pieces this project needs — and explicitly names what the system is not going to have. Where the SDD\'s consistency check fires back up the document.' }
+  ];
+
+  const boxW = chartWidth;
+  const boxH = 52;
+  const gap = 22;
+  const startY = 16;
+
+  sections.forEach((s,i)=>{
+    const y = startY + i*(boxH+gap);
+    g.append('rect')
+      .attr('class', 'section-rect' + (s.loadbearing?' loadbearing':''))
+      .attr('x',0).attr('y',y).attr('width',boxW).attr('height',boxH)
+      .on('mouseenter',()=>showTip(`<strong>${s.title}</strong><br/>${s.tip}`))
+      .on('mousemove',moveTip).on('mouseleave',hideTip);
+
+    g.append('text').attr('class','caps').attr('x',12).attr('y',y+22).attr('fill', s.loadbearing?'var(--color-red)':'var(--color-secondary)').text(s.code).attr('pointer-events','none');
+    g.append('text').attr('x',12).attr('y',y+42).attr('font-weight','bold').attr('font-size',12).text(s.title).attr('pointer-events','none');
+    const titleWidth = s.title.length * 7.2 + 12;
+    g.append('text').attr('x',titleWidth+20).attr('y',y+42).attr('class','secondary').attr('font-size',11).text(s.sub).attr('pointer-events','none');
+
+    if (i < sections.length-1) {
+      const ax = boxW/2;
+      g.append('line').attr('x1',ax).attr('y1',y+boxH).attr('x2',ax).attr('y2',y+boxH+gap-4)
+        .attr('stroke','var(--color-ink)').attr('stroke-width',1.5).attr('marker-end','url(#arrow-ink)');
+    }
+  });
+
+  // Back-arrow consistency check — from right edge of section 5 looping up to right edge of section 1
+  const lastY = startY + (sections.length-1)*(boxH+gap);
+  const firstY = startY;
+  const loopX = boxW + 40;
+  const path = `M ${boxW} ${lastY+boxH-8} C ${loopX} ${lastY+boxH-8}, ${loopX} ${firstY+8}, ${boxW} ${firstY+8}`;
+  g.append('path').attr('d',path)
+    .attr('stroke','var(--color-red)').attr('stroke-width',1.5).attr('fill','none')
+    .attr('stroke-dasharray','4 3').attr('marker-end','url(#arrow-red)');
+
+  g.append('text').attr('class','caps').attr('font-size',9)
+    .attr('transform',`translate(${loopX+8}, ${(firstY+lastY)/2}) rotate(-90)`)
+    .attr('text-anchor','middle').attr('fill','var(--color-red)').text('CONSISTENCY CHECK');
+
+  // Side label for load-bearing
+  g.append('text').attr('class','caps').attr('x',-90).attr('y',firstY+18).attr('font-size',9).text('LOAD-BEARING');
+
+  // Footer description under the stack
+  g.append('text').attr('class','secondary').attr('x',0).attr('y',lastY+boxH+24).attr('font-size',10)
+    .text('Walk back up the document: can these components, under these principles, supporting these flows,');
+  g.append('text').attr('class','secondary').attr('x',0).attr('y',lastY+boxH+38).attr('font-size',10)
+    .text('satisfying these user needs, deliver this problem statement? If yes all the way up, the document is consistent.');
+}
+draw();
+const ro = new ResizeObserver(() => draw());
+ro.observe(document.getElementById('chart'));
+</script>
+</body>
+</html>

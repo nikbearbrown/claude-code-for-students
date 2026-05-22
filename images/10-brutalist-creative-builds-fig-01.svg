@@ -1,0 +1,52 @@
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Brutalist: the three-file system as nested layers</title>
+  <desc id="desc">Three nested rectangles. Outermost is CLAUDE.md, the technical constitution. Middle is DESIGN.md, the visual constitution. Innermost is PROJECT.md, project state with the Intent Layer at its center — the human portion, irreducible.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 10.1 — THE BRUTALIST THREE-FILE SYSTEM</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Maximally informed, minimally autonomous. By design.</text>
+
+  <!-- Nested rectangles, centered around x=320, y=280 -->
+  <!-- Outer: CLAUDE.md — 540 wide, 296 tall, x=50, y=120 -->
+  <!-- Middle: DESIGN.md — 380 wide, 200 tall, x=130, y=168 -->
+  <!-- Inner: PROJECT.md — 220 wide, 104 tall, x=210, y=216 -->
+
+  <!-- Outer rectangle: CLAUDE.md -->
+  <rect x="50" y="120" width="540" height="296" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+  <text x="64" y="142" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">OUTER LAYER</text>
+  <text x="64" y="162" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="12" font-weight="bold" fill="#2a1a0e">CLAUDE.md</text>
+  <text x="148" y="162" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-style="italic" fill="#545454">— technical constitution</text>
+  <text x="64" y="402" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">stack · directory layout · what Claude never improvises</text>
+
+  <!-- Middle rectangle: DESIGN.md -->
+  <rect x="130" y="168" width="380" height="200" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+  <text x="144" y="190" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">MIDDLE LAYER</text>
+  <text x="144" y="210" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="12" font-weight="bold" fill="#2a1a0e">DESIGN.md</text>
+  <text x="228" y="210" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-style="italic" fill="#545454">— visual constitution</text>
+  <text x="144" y="356" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">palette · type scale · escalation list</text>
+
+  <!-- Inner rectangle: PROJECT.md — filled, highlighted in red -->
+  <rect x="210" y="216" width="220" height="104" fill="#F5EFE8" stroke="#C8102E" stroke-width="1"/>
+  <text x="224" y="238" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#C8102E">INNER LAYER</text>
+  <text x="224" y="258" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="12" font-weight="bold" fill="#2a1a0e">PROJECT.md</text>
+  <text x="320" y="258" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-style="italic" fill="#C8102E">— Intent Layer, human</text>
+  <text x="224" y="282" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">who · what · feeling · argument · refusals</text>
+  <text x="224" y="306" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">the irreducibly human portion — never delegated</text>
+
+  <!-- Side labels: what each layer protects -->
+  <text x="32" y="240" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454" transform="rotate(-90 32 240)" text-anchor="middle">MADE OF</text>
+  <text x="120" y="288" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454" transform="rotate(-90 120 288)" text-anchor="middle">LOOKS LIKE</text>
+  <text x="200" y="276" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#C8102E" transform="rotate(-90 200 276)" text-anchor="middle">IS FOR</text>
+
+  <!-- Footer divider + caption -->
+  <line x1="32" y1="440" x2="668" y2="440" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+  <text x="32" y="462" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Each file protects a different thing. None is hidden. None is optional. The decisions show — </text>
+  <text x="496" y="462" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">béton brut</text>
+  <text x="540" y="462" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">.</text>
+</svg>

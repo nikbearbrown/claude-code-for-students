@@ -12,7 +12,8 @@ The conductor cannot play the cello part either. He is not better than the celli
 
 That is the chapter, in one paragraph. You are the conductor. Claude is the orchestra. The orchestra is excellent — better than you at the instruments, faster than you at the parts, capable of playing things you could not play in a lifetime of practice. The orchestra cannot hold the piece. You can. The gap between what you meant and what Claude understood is the entire reason this book exists.
 
-<!-- → [DIAGRAM: The conductor/orchestra model. Human = conductor (holds intent, sequences, verifies). Claude = orchestra (executes specifications, returns output). Between them: specification + handoff condition. Editorial style.] -->
+![Three-panel editorial diagram. Left panel: Human as conductor — holds intent, sequences the work, writes the specification, names the boundary, verifies, decides if it ships. Right panel: Claude as orchestra — executes the contract, writes the implementation, edits named files, runs tests, reports, holds no piece across sessions. Middle panel: the interface — Specification (invariants, scope, contract) and Handoff condition (verb, target, success criterion). Arrows show writes/executes flowing right, returns/verifies flowing back left.](images/04-conducting-not-prompting-fig-01.png)
+*Figure 4.1 — Who holds the piece. Who plays the parts.*
 
 ---
 
@@ -111,11 +112,13 @@ The **Gru Part** is what only you can do. It is the deciding. It is holding inte
 
 Notice which lane has *deciding*. Notice which lane has *typing*. The Gru lane is lighter in keystrokes and heavier in judgment. That is the trade. The conductor is on a small box, not running between desks with sheet music. Your wrists will be less tired than your head, and that is the correct distribution.
 
+What this looks like at industry scale: Seth has published a structural analysis of realism strategy in AAA game development that operates as a study of Gru-lane judgment in commercial production. The argument is that targeted realism investments reliably convert production cost into specific psychological states — presence, flow, agency, narrative transportation — and that each kind of realism (perceptual, systemic, social) supports a different monetization model. Mismatching the realism layer to the model is a structural error that no production budget can fix. *Red Dead Redemption 2* sold 82 million copies on roughly the same development cost as games that sold 10 million; the difference was not budget or talent. The difference was whether the studio held the piece across thousands of decisions. That is the Gru work scaled up: deciding which kind of investment serves which outcome, *before* any of the typing begins. The studios that get this right do not ship more polished games. They ship games whose specific polish was chosen in advance and held across the production. Conducting is the discipline that protects the decision from the typing — at student scale on a login function, and at $220-million scale on a flagship release.
+
 ---
 
 Seth is here to walk through one build step done twice. Same Claude, same model, same minute. Two completely different artifacts.
 
-The step: he is adding a login function to a small grade-tracking tool he's been building — the one from Chapter 2. He's never done auth before. Domain-shallow on authentication, which is exactly the kind of domain where the chapter's warnings apply hardest: fluent-sounding wrong output, no internal basis to evaluate it.
+The step: he is adding a login function to a Common App essay drafting tool he's been building for himself — somewhere to write supplemental drafts offline, sync them later, and keep a session token tied to the .edu account he's about to have. The Common App lets you save drafts but he wants his own copy he controls. He's never done auth before. Domain-shallow on authentication, which is exactly the kind of domain where the chapter's warnings apply hardest: fluent-sounding wrong output, no internal basis to evaluate it.
 
 **Attempt one: the prompt.**
 
@@ -131,7 +134,7 @@ If he does, he ships a function that hashes with MD5 — an algorithm considered
 
 He closes the first attempt without committing. Opens a new conversation. Takes ten minutes to do the Gru part first.
 
-What is he actually building? A login function for a single-developer tool, authenticating against SQLite. Two users at most. Demo use only, not production — but he wants the function to be correct under the assumption that it might be reused, because Claude will use his code as context for the next thing, and bad code is hereditary.
+What is he actually building? A login function for a single-user essay drafting tool, authenticating against SQLite. One user — him. Demo use only, not production — but he wants the function to be correct under the assumption that it might be reused, because Claude will use his code as context for the next thing, and bad code is hereditary.
 
 He reads the existing code. Three files: `app.py`, `db.py`, `schema.sql`. The schema defines a `users` table with columns `username TEXT UNIQUE`, `password_hash TEXT`, `last_login TEXT`. He notices — the kind of thing he would have missed without reading — that there is already a column named `password_hash`, which means past-Seth had a plan about how passwords would be stored. He notices that `db.py` already has a parameterized query helper and he should use it, not write a new one.
 
@@ -179,3 +182,19 @@ The conducting framework is Simon applied to a new instrument. You are bounded. 
 - Simon, H. A. (1947). *Administrative Behavior*. Macmillan.
 - Simon, H. A. (1957). *Models of Man: Social and Rational*. Wiley.
 - White, J., et al. (2023). A prompt pattern catalog to enhance prompt engineering with ChatGPT. *arXiv:2302.11382*, Vanderbilt University.
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 4.1 — Who holds the piece. Who plays the parts.
+
+Build a three-panel editorial diagram in D3 v7. From left to right: a Human panel (rectangle, white fill, `--color-border` stroke, width 200, height 240), an Interface panel in the middle (rectangle, `--color-fill` background, width ~196, height 160, vertically centered relative to the outer panels), and a Claude panel mirroring the Human panel on the right. Each outer panel has a monospace ALL CAPS header (HUMAN / CLAUDE), a bold serif role title underneath (Conductor / Orchestra), a horizontal hairline divider, and six bulleted body lines (size 11) listing role responsibilities — Human items emphasize deciding, specifying, verifying; Claude items emphasize executing, editing, reporting. The Interface panel contains a monospace ALL CAPS "THE INTERFACE" header, two stacked headings ("Specification" and "Handoff condition") each followed by a one-line secondary-color subtitle, separated by a dashed horizontal divider (`--color-border`, dash 4 3). Two arrows flow left-to-right across the top half (`writes` from Human to Interface, `executes` from Interface to Claude) and two arrows flow right-to-left across the bottom half (`returns` from Claude to Interface, `verifies` from Interface to Human). Each arrow has an italic secondary-color verb label. Hovering any panel shows a tooltip with one sentence elaborating that role or the interface. Footer caption: "A prompt is a wish. A specification is a contract. The handoff condition is how you know the contract was kept."
+
+> Reference implementation: `d3/04-conducting-not-prompting-fig-01.html`

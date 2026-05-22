@@ -1,0 +1,73 @@
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">The complete arc</title>
+  <desc id="desc">A minimal timeline from Chapter 0 to Chapter 14. Four milestones labeled along the line: Problem named, Discipline learned, First build planned, First build verified. The first three milestones cover Seth's arc as observed in the book; the final milestone, in red, is the reader's own build, where the arc ends and the practice begins.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#C8102E"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 14.1 — THE COMPLETE ARC</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">From Chapter 0 to Chapter 14 — Seth observes, then the reader builds</text>
+
+  <!-- Axis labels above (CH 0, CH 5, CH 11, CH 14) -->
+  <text x="80" y="148" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">CH 0</text>
+  <text x="252" y="148" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">CH 5</text>
+  <text x="448" y="148" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">CH 11</text>
+  <text x="620" y="148" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">CH 14</text>
+
+  <!-- Main timeline -->
+  <line x1="80" y1="208" x2="600" y2="208" stroke="#2a1a0e" stroke-width="1.5" fill="none"/>
+  <line x1="600" y1="208" x2="620" y2="208" stroke="#C8102E" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+
+  <!-- Milestone ticks -->
+  <line x1="80" y1="198" x2="80" y2="218" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="252" y1="198" x2="252" y2="218" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="448" y1="198" x2="448" y2="218" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="620" y1="198" x2="620" y2="218" stroke="#C8102E" stroke-width="1.5"/>
+
+  <!-- Milestone dots -->
+  <circle cx="80" cy="208" r="4" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <circle cx="252" cy="208" r="4" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <circle cx="448" cy="208" r="4" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <circle cx="620" cy="208" r="5" fill="#C8102E" stroke="#C8102E" stroke-width="1.5"/>
+
+  <!-- Milestone labels below the line -->
+  <text x="80" y="240" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Problem named</text>
+  <text x="80" y="256" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Seth almost ships a</text>
+  <text x="80" y="268" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">classifier that passes</text>
+  <text x="80" y="280" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">the wrong tests.</text>
+
+  <text x="252" y="240" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Discipline learned</text>
+  <text x="252" y="256" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Five supervisory capacities</text>
+  <text x="252" y="268" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">named — PF, TO, PA, IJ, EI.</text>
+  <text x="252" y="280" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Scoring axis arrives.</text>
+
+  <text x="448" y="240" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">First build planned</text>
+  <text x="448" y="256" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">/v0, /v1, SDD, Score,</text>
+  <text x="448" y="268" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Minion Brief — four gates</text>
+  <text x="448" y="280" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">before the first prompt.</text>
+
+  <text x="620" y="240" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#C8102E">First build verified</text>
+  <text x="620" y="256" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Three passes return green.</text>
+  <text x="620" y="268" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#C8102E">The reader builds.</text>
+  <text x="620" y="280" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#C8102E">The book has nothing else to say.</text>
+
+  <!-- Arc segment labels above timeline -->
+  <text x="166" y="188" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">observation</text>
+  <text x="350" y="188" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">instruction</text>
+  <text x="534" y="188" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">execution</text>
+
+  <!-- Bottom rule + footer -->
+  <line x1="32" y1="324" x2="668" y2="324" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+  <text x="32" y="348" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">The first three milestones are Seth's arc as observed in the book. The fourth is yours. The repository is the byproduct;</text>
+  <text x="32" y="364" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">the post-build document is the assignment. If you ship clean code and cannot write the document, you have not done</text>
+  <text x="32" y="380" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">the chapter. If you ship modest code and </text>
+  <text x="280" y="380" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">can</text>
+  <text x="294" y="380" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454"> write the document, you have.</text>
+</svg>

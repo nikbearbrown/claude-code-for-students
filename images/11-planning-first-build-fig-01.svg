@@ -1,0 +1,102 @@
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">The planning sequence</title>
+  <desc id="desc">Five planning artifacts in order — /v0, /v1, SDD core sections, Boondoggle Score, Minion Brief — connected by four gates. Each gate names what must be true before it opens. The Minion Brief is highlighted as the gate that releases the first prompt.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 11.1 — THE PLANNING SEQUENCE</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Five artifacts, four gates — what must be true before each gate opens</text>
+
+  <!-- Artifact 1: /v0 -->
+  <g>
+    <rect x="32" y="120" width="108" height="96" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="32" y="120" width="108" height="28" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="86" y="139" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#2a1a0e">/V0</text>
+    <text x="86" y="170" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">One sentence</text>
+    <text x="86" y="190" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">One user.</text>
+    <text x="86" y="204" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">One outcome.</text>
+  </g>
+
+  <!-- Gate 1 arrow + label -->
+  <line x1="140" y1="168" x2="172" y2="168" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="156" y="160" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">G1</text>
+
+  <!-- Artifact 2: /v1 -->
+  <g>
+    <rect x="172" y="120" width="108" height="96" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="172" y="120" width="108" height="28" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="226" y="139" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#2a1a0e">/V1</text>
+    <text x="226" y="170" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Two lists</text>
+    <text x="226" y="190" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">In scope.</text>
+    <text x="226" y="204" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Out of scope.</text>
+  </g>
+
+  <!-- Gate 2 arrow -->
+  <line x1="280" y1="168" x2="312" y2="168" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="296" y="160" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">G2</text>
+
+  <!-- Artifact 3: SDD -->
+  <g>
+    <rect x="312" y="120" width="108" height="96" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="312" y="120" width="108" height="28" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="366" y="139" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#2a1a0e">SDD</text>
+    <text x="366" y="170" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Five sections</text>
+    <text x="366" y="190" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Data, UI, persist,</text>
+    <text x="366" y="204" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">failures, OOS.</text>
+  </g>
+
+  <!-- Gate 3 arrow -->
+  <line x1="420" y1="168" x2="452" y2="168" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="436" y="160" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">G3</text>
+
+  <!-- Artifact 4: Boondoggle Score -->
+  <g>
+    <rect x="452" y="120" width="108" height="96" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <rect x="452" y="120" width="108" height="28" fill="#F5EFE8" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="506" y="139" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#2a1a0e">SCORE</text>
+    <text x="506" y="170" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">Rows + gates</text>
+    <text x="506" y="190" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Labor, capacity,</text>
+    <text x="506" y="204" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">handoff condition.</text>
+  </g>
+
+  <!-- Gate 4 arrow -->
+  <line x1="560" y1="168" x2="592" y2="168" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="576" y="160" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">G4</text>
+
+  <!-- Artifact 5: Minion Brief — highlighted -->
+  <g>
+    <rect x="592" y="120" width="76" height="96" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+    <rect x="592" y="120" width="76" height="28" fill="#F5EFE8" stroke="#C8102E" stroke-width="1"/>
+    <text x="630" y="139" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#C8102E">MINION</text>
+    <text x="630" y="170" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#C8102E">Per-row</text>
+    <text x="630" y="184" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#C8102E">prompt spec</text>
+    <text x="630" y="204" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">First prompt</text>
+    <text x="630" y="218" text-anchor="middle" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">permitted.</text>
+  </g>
+
+  <!-- Gate conditions table -->
+  <line x1="32" y1="260" x2="668" y2="260" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+
+  <text x="32" y="284" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">GATE CONDITIONS — WHAT MUST BE TRUE BEFORE EACH OPENS</text>
+
+  <text x="32" y="312" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">G1 — /v0 → /v1</text>
+  <text x="160" y="312" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">One sentence. Every <tspan font-style="italic">and</tspan> connects operations on the same data — not a second project.</text>
+
+  <text x="32" y="334" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">G2 — /v1 → SDD</text>
+  <text x="160" y="334" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">Both lists non-empty. Out-of-scope list contains features you actually want.</text>
+
+  <text x="32" y="356" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">G3 — SDD → Score</text>
+  <text x="160" y="356" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">Every section names at least one concrete artifact. No section defers.</text>
+
+  <text x="32" y="378" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-weight="bold" fill="#2a1a0e">G4 — Score → Brief</text>
+  <text x="160" y="378" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#2a1a0e">Every row has a sharp handoff condition. No row says <tspan font-style="italic">Claude figures it out.</tspan></text>
+
+  <line x1="32" y1="404" x2="668" y2="404" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="4 3"/>
+  <text x="32" y="428" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">Informal fifth test — you have not thought about Claude for the last ten minutes. The narrator composing prompts</text>
+  <text x="32" y="444" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" fill="#545454">has been replaced, briefly, by a person actually thinking about the problem. That disappearance is the gate.</text>
+</svg>

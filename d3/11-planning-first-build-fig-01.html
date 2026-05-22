@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure 11.1 — The planning sequence</title>
+<style>
+:root {
+  --color-white: #FFFFFF;
+  --color-fill: #F5EFE8;
+  --color-ink: #2a1a0e;
+  --color-mark: #6B3520;
+  --color-red: #C8102E;
+  --color-slate: #1A3A5C;
+  --color-ochre: #C8860E;
+  --color-secondary: #545454;
+  --color-border: #D4D4D4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #111111;
+    --color-fill: #1a1612;
+    --color-ink: #F0EBE3;
+    --color-mark: #C8865E;
+    --color-red: #E8243A;
+    --color-slate: #6B8FB8;
+    --color-ochre: #D49A30;
+    --color-secondary: #A0978C;
+    --color-border: #2E2E2E;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-white); color: var(--color-ink); font-family: 'EB Garamond', Georgia, serif; padding: 24px; }
+#chart { width: 100%; min-height: 500px; }
+.tooltip { position: absolute; pointer-events: none; opacity: 0; background: var(--color-slate); color: var(--color-white); padding: 8px 12px; font-size: 12px; font-family: 'EB Garamond', Georgia, serif; max-width: 280px; line-height: 1.4; }
+text { font-family: 'EB Garamond', Georgia, serif; fill: var(--color-ink); }
+.caps { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; fill: var(--color-secondary); font-size: 10px; }
+.secondary { fill: var(--color-secondary); }
+.artifact-rect { fill: var(--color-white); stroke: var(--color-border); stroke-width: 1; cursor: pointer; transition: fill 120ms; }
+.artifact-header { fill: var(--color-fill); stroke: var(--color-border); stroke-width: 1; pointer-events: none; }
+.artifact-rect.highlight { stroke: var(--color-red); }
+.artifact-header.highlight { stroke: var(--color-red); }
+.artifact-rect:hover { fill: var(--color-fill); }
+.gate-label { cursor: pointer; }
+.gate-line { stroke: var(--color-ink); stroke-width: 1.5; fill: none; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="chart" role="main"></div>
+<div class="tooltip" id="tt"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+function draw() {
+  d3.select('#chart').selectAll('*').remove();
+  const totalWidth = document.getElementById('chart').clientWidth || 700;
+  const totalHeight = 520;
+  const margin = { top: 56, right: 32, bottom: 32, left: 32 };
+  const chartWidth = totalWidth - margin.left - margin.right;
+
+  const svg = d3.select('#chart').append('svg')
+    .attr('width', totalWidth).attr('height', totalHeight)
+    .attr('role', 'img').attr('aria-labelledby', 'chart-title chart-desc');
+  svg.append('title').attr('id', 'chart-title').text('The planning sequence');
+  svg.append('desc').attr('id', 'chart-desc').text('Five artifacts connected by four gates. Each gate names what must be true before it opens. The Minion Brief is highlighted as the gate that releases the first prompt.');
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+  g.append('text').attr('class','caps').attr('y',-24).text('FIGURE 11.1 — THE PLANNING SEQUENCE');
+  g.append('text').attr('y',0).attr('font-weight','bold').attr('font-size',13)
+    .text('Five artifacts, four gates — what must be true before each gate opens');
+
+  const tt = d3.select('#tt');
+  function showTip(html){ tt.html(html).style('opacity',1); }
+  function moveTip(e){ tt.style('left',(e.pageX+12)+'px').style('top',(e.pageY-8)+'px'); }
+  function hideTip(){ tt.style('opacity',0); }
+
+  const artifacts = [
+    { code:'/V0', title:'One sentence', body:['One user.', 'One outcome.'],
+      tip:'/v0 — one sentence, one user, one outcome. No conjunctions hiding a second project. If you cannot say what you are building in one sentence, you do not yet know what you are building.' },
+    { code:'/V1', title:'Two lists', body:['In scope.', 'Out of scope.'],
+      tip:'/v1 — two short lists, both non-empty. The out-of-scope list is load-bearing. The most painful items to write are the features you actually want but are cutting; their presence on the list is what holds the no at prompt nine.' },
+    { code:'SDD', title:'Five sections', body:['Data, UI, persist,', 'failures, OOS.'],
+      tip:'SDD — five sections, each naming at least one concrete artifact. The document Claude works from. Also the document you defend against Claude when its proposal does not match the data model section.' },
+    { code:'SCORE', title:'Rows + gates', body:['Labor, capacity,', 'handoff condition.'],
+      tip:'Boondoggle Score — one row per step. Five columns: step, phase, labor, supervisory capacity, handoff condition. The Score is the SDD\'s lie detector. A vague handoff condition is the Score telling you the SDD section is thin.' },
+    { code:'MINION', title:'Per-row prompt', body:['First prompt', 'permitted.'], highlight: true,
+      tip:'Minion Brief — per-Claude-step prompt specification. Chapter 8\'s five-element format applied row by row. When all four gates are satisfied, the planning gate is open and the first prompt is permitted.' }
+  ];
+
+  const gates = [
+    { code:'G1', label:'/v0 → /v1', cond:'One sentence. Every and connects operations on the same data — not a second project.' },
+    { code:'G2', label:'/v1 → SDD', cond:'Both lists non-empty. Out-of-scope list contains features you actually want.' },
+    { code:'G3', label:'SDD → Score', cond:'Every section names at least one concrete artifact. No section defers.' },
+    { code:'G4', label:'Score → Brief', cond:'Every row has a sharp handoff condition. No row says Claude figures it out.' }
+  ];
+
+  const n = artifacts.length;
+  const boxW = Math.min(108, (chartWidth - 4*24) / n);
+  const boxH = 96;
+  const gap = (chartWidth - boxW*n) / (n-1);
+  const yTop = 64;
+
+  artifacts.forEach((a,i) => {
+    const x = i*(boxW+gap);
+    const isH = a.highlight;
+
+    g.append('rect').attr('class','artifact-rect' + (isH?' highlight':''))
+      .attr('x',x).attr('y',yTop).attr('width',boxW).attr('height',boxH)
+      .on('mouseenter',()=>showTip(`<strong>${a.code} — ${a.title}</strong><br/>${a.tip}`))
+      .on('mousemove',moveTip).on('mouseleave',hideTip);
+    g.append('rect').attr('class','artifact-header' + (isH?' highlight':''))
+      .attr('x',x).attr('y',yTop).attr('width',boxW).attr('height',28);
+
+    g.append('text').attr('class','caps').attr('x',x+boxW/2).attr('y',yTop+19).attr('text-anchor','middle')
+      .attr('fill', isH ? 'var(--color-red)' : 'var(--color-ink)').text(a.code);
+    g.append('text').attr('x',x+boxW/2).attr('y',yTop+50).attr('text-anchor','middle')
+      .attr('font-weight','bold').attr('font-size',11)
+      .attr('fill', isH ? 'var(--color-red)' : 'var(--color-ink)')
+      .text(a.title).attr('pointer-events','none');
+    a.body.forEach((line, j) => {
+      g.append('text').attr('x',x+boxW/2).attr('y',yTop+70+j*14).attr('text-anchor','middle')
+        .attr('font-size',10).attr('class','secondary').text(line).attr('pointer-events','none');
+    });
+
+    // Gate arrow + label between this box and the next
+    if (i < n-1) {
+      const ax1 = x+boxW;
+      const ax2 = x+boxW+gap;
+      g.append('line').attr('class','gate-line')
+        .attr('x1',ax1).attr('y1',yTop+boxH/2).attr('x2',ax2-2).attr('y2',yTop+boxH/2)
+        .attr('marker-end','url(#chart-arrow)');
+      // arrowhead via defs
+      g.append('text').attr('class','caps gate-label').attr('x',(ax1+ax2)/2).attr('y',yTop+boxH/2-8).attr('text-anchor','middle')
+        .text(gates[i].code)
+        .on('mouseenter',()=>showTip(`<strong>${gates[i].code} — ${gates[i].label}</strong><br/>${gates[i].cond}`))
+        .on('mousemove',moveTip).on('mouseleave',hideTip);
+    }
+  });
+
+  // arrow marker
+  svg.append('defs').append('marker').attr('id','chart-arrow').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-ink)');
+
+  // Dashed rule
+  const yRule = yTop + boxH + 44;
+  g.append('line').attr('x1',0).attr('y1',yRule).attr('x2',chartWidth).attr('y2',yRule)
+    .attr('stroke','var(--color-border)').attr('stroke-width',0.75).attr('stroke-dasharray','4 3');
+
+  g.append('text').attr('class','caps').attr('y',yRule+24).text('GATE CONDITIONS — WHAT MUST BE TRUE BEFORE EACH OPENS');
+
+  gates.forEach((gt, i) => {
+    const yy = yRule + 52 + i*22;
+    g.append('text').attr('x',0).attr('y',yy).attr('font-weight','bold').attr('font-size',11)
+      .text(`${gt.code} — ${gt.label}`);
+    g.append('text').attr('x',140).attr('y',yy).attr('font-size',11).text(gt.cond);
+  });
+
+  // bottom dashed
+  const yFoot = yRule + 52 + gates.length*22 + 8;
+  g.append('line').attr('x1',0).attr('y1',yFoot).attr('x2',chartWidth).attr('y2',yFoot)
+    .attr('stroke','var(--color-border)').attr('stroke-width',0.75).attr('stroke-dasharray','4 3');
+  g.append('text').attr('class','secondary').attr('y',yFoot+20).attr('font-size',10)
+    .text('Informal fifth test — you have not thought about Claude for the last ten minutes.');
+  g.append('text').attr('class','secondary').attr('y',yFoot+36).attr('font-size',10).attr('font-style','italic')
+    .text('Hover any artifact or gate label for the longer condition.');
+}
+draw();
+const ro = new ResizeObserver(() => draw());
+ro.observe(document.getElementById('chart'));
+</script>
+</body>
+</html>

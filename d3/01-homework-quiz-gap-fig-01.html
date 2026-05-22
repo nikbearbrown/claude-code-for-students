@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure 1.1 — The fluency trap</title>
+<style>
+:root {
+  --color-white: #FFFFFF;
+  --color-fill: #F5EFE8;
+  --color-ink: #2a1a0e;
+  --color-mark: #6B3520;
+  --color-red: #C8102E;
+  --color-slate: #1A3A5C;
+  --color-ochre: #C8860E;
+  --color-secondary: #545454;
+  --color-border: #D4D4D4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #111111;
+    --color-fill: #1a1612;
+    --color-ink: #F0EBE3;
+    --color-mark: #C8865E;
+    --color-red: #E8243A;
+    --color-slate: #6B8FB8;
+    --color-ochre: #D49A30;
+    --color-secondary: #A0978C;
+    --color-border: #2E2E2E;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-white); color: var(--color-ink); font-family: 'EB Garamond', Georgia, serif; padding: 24px; }
+#chart { width: 100%; min-height: 520px; }
+.tooltip { position: absolute; pointer-events: none; opacity: 0; background: var(--color-slate); color: var(--color-white); padding: 6px 10px; font-size: 12px; font-family: 'EB Garamond', Georgia, serif; max-width: 240px; }
+text { font-family: 'EB Garamond', Georgia, serif; fill: var(--color-ink); }
+.caps { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; fill: var(--color-secondary); font-size: 10px; }
+.secondary { fill: var(--color-secondary); }
+.node-rect { fill: var(--color-white); stroke: var(--color-border); stroke-width: 1; cursor: pointer; transition: fill 120ms; }
+.node-rect.endpoint { fill: var(--color-fill); }
+.node-rect.danger { stroke: var(--color-red); }
+.node-rect:hover { fill: var(--color-fill); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="chart" role="main"></div>
+<div class="tooltip" id="tt"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+function draw() {
+  d3.select('#chart').selectAll('*').remove();
+  const totalWidth = document.getElementById('chart').clientWidth || 700;
+  const totalHeight = 520;
+  const margin = { top: 56, right: 32, bottom: 48, left: 32 };
+  const chartWidth = totalWidth - margin.left - margin.right;
+
+  const svg = d3.select('#chart').append('svg')
+    .attr('width', totalWidth).attr('height', totalHeight)
+    .attr('role', 'img').attr('aria-labelledby', 'chart-title chart-desc');
+  svg.append('title').attr('id', 'chart-title').text('The fluency trap: two paths');
+  svg.append('desc').attr('id', 'chart-desc').text('Two parallel paths. Path A: struggle, consolidation, durable capability. Path B: delegate, fluent output, no consolidation, atrophy.');
+
+  const defs = svg.append('defs');
+  defs.append('marker').attr('id','arrow-ink').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-ink)');
+  defs.append('marker').attr('id','arrow-red').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-red)');
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+  g.append('text').attr('class','caps').attr('y',-24).text('FIGURE 1.1 — THE FLUENCY TRAP');
+  g.append('text').attr('y',0).attr('font-weight','bold').attr('font-size',13).text('Two paths from the same problem');
+
+  const tt = d3.select('#tt');
+  function showTip(html){ tt.html(html).style('opacity',1); }
+  function moveTip(e){ tt.style('left',(e.pageX+12)+'px').style('top',(e.pageY-8)+'px'); }
+  function hideTip(){ tt.style('opacity',0); }
+
+  function renderPath(yOff, label, sub, nodes, dangerLast) {
+    const row = g.append('g').attr('transform',`translate(0,${yOff})`);
+    row.append('text').attr('class','caps').attr('y',0).text(label);
+    row.append('text').attr('class','secondary').attr('x',56).attr('y',0).attr('font-style','italic').attr('font-size',11).text(sub);
+    nodes.forEach((n,i)=>{
+      const rect = row.append('rect')
+        .attr('class','node-rect' + (n.endpoint?' endpoint':'') + (dangerLast && i===nodes.length-1?' danger':''))
+        .attr('x',n.x).attr('y',16).attr('width',n.w).attr('height',56)
+        .on('mouseenter',()=>showTip(n.tip))
+        .on('mousemove',moveTip)
+        .on('mouseleave',hideTip);
+      row.append('text').attr('x',n.x+n.w/2).attr('y',44).attr('text-anchor','middle').attr('font-size',11)
+        .attr('font-weight', n.endpoint||n.danger?'bold':'normal')
+        .attr('fill', n.danger?'var(--color-red)':'var(--color-ink)')
+        .text(n.title).attr('pointer-events','none');
+      row.append('text').attr('x',n.x+n.w/2).attr('y',60).attr('text-anchor','middle').attr('font-size',10).attr('class','secondary')
+        .text(n.sub).attr('pointer-events','none');
+      if (i < nodes.length-1) {
+        const next = nodes[i+1];
+        const x1 = n.x+n.w, x2 = next.x;
+        const useRed = dangerLast && i===nodes.length-2;
+        row.append('line').attr('x1',x1).attr('y1',44).attr('x2',x2-4).attr('y2',44)
+          .attr('stroke', useRed?'var(--color-red)':'var(--color-ink)').attr('stroke-width',1.5)
+          .attr('marker-end', useRed?'url(#arrow-red)':'url(#arrow-ink)');
+      }
+    });
+  }
+
+  const pathA = [
+    { x:0,   w:160, title:'struggle',      sub:'try → fail → adjust',     tip:'The brain changes when it struggles. Every failed attempt is an encoding event.' },
+    { x:184, w:160, title:'consolidation', sub:'encoding event',          tip:'Retrieval and generation strengthen the trace — the Bjork desirable difficulties.' },
+    { x:368, w:172, title:'durable capability', sub:'passes the closed-laptop test', endpoint:true, tip:'The skill lives in you. It survives the quiz.' }
+  ];
+  const pathB = [
+    { x:0,   w:130, title:'delegate',         sub:'paste → copy → ship',          tip:'The model produces the artifact. Your attention does not engage the problem.' },
+    { x:150, w:130, title:'fluent output',    sub:'grade arrives, skill does not', tip:'Comprehension feels identical to competence. It is not.' },
+    { x:300, w:150, title:'no consolidation', sub:'encoding event skipped',       tip:'Following correct code is not the same cognitive act as writing wrong code and fixing it.' },
+    { x:470, w:108, title:'atrophy',          sub:'the bill arrives later',       danger:true, tip:'Closed-laptop test fails. Bastani et al. measured −17 points on the unassisted exam.' }
+  ];
+
+  renderPath(90, 'PATH A', '— do the work the slow way', pathA, false);
+  // divider
+  g.append('line').attr('x1',0).attr('y1',208).attr('x2',chartWidth).attr('y2',208)
+    .attr('stroke','var(--color-border)').attr('stroke-width',0.75).attr('stroke-dasharray','4 3');
+  renderPath(244, 'PATH B', '— delegate to the model', pathB, true);
+
+  g.append('text').attr('class','secondary').attr('y',totalHeight-margin.top-margin.bottom-8).attr('font-size',10)
+    .text('Both paths produce an artifact. Only one path produces a learner.');
+}
+draw();
+const ro = new ResizeObserver(() => draw());
+ro.observe(document.getElementById('chart'));
+</script>
+</body>
+</html>

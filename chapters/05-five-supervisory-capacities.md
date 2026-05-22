@@ -6,21 +6,22 @@
 
 Seth is forty minutes into a build and the code in front of him compiles.
 
-It is a Friday in late April. He's building a short-answer quiz grader for his AP Biology study site — a Python function that takes a student's typed answer and an answer key and returns a score between zero and one. He has been working with Claude for half an hour. He has a function. He has twelve test pairs, and on those twelve pairs the function returns 85% accuracy. The tests pass. The code is clean. The function uses `difflib.SequenceMatcher` with a 0.7 ratio threshold, which Claude has explained in a comment Seth has read twice.
+It is a Friday in late April. He's building an NPC behavior classifier for *Haunt & Harvest* — a Python function that takes an event-log tag for one ghost's current state and an intended category and returns a similarity score between zero and one. He needs it because his event log has accumulated, across the Unreal-to-Godot migration, a mess of tag variants for the same underlying state: `hunting`, `hunting_aggressive`, `is_hunting`, `HUNTING`, `hunt_player`. He wants to roll them up to one category before he tunes the AI director. He has been working with Claude for half an hour. He has a function. He has twelve test pairs, and on those twelve pairs the function returns 85% accuracy. The tests pass. The code is clean. The function uses `difflib.SequenceMatcher` with a 0.7 ratio threshold, which Claude has explained in a comment Seth has read twice.
 
 He almost ships it.
 
-What stops him is not a test failure. What stops him is an itch — a small, specific, hard-to-articulate wrongness located somewhere between his eye and the screen. He stares at the test pairs. They all involve things like *mitochondria* versus *mitochondria*, or *the powerhouse of the cell* versus *the powerhouse of the cell*. Sensible things. Things that look like what the function is supposed to handle.
+What stops him is not a test failure. What stops him is an itch — a small, specific, hard-to-articulate wrongness located somewhere between his eye and the screen. He stares at the test pairs. They all involve things like *hunting* versus *hunting*, or *patrolling* versus *patrolling*. Sensible things. Things that look like what the function is supposed to handle.
 
-He types a new pair into the test file by hand. `("Paris", "Parris")`. The function returns 0.91.
+He types a new pair into the test file by hand. `("hunting", "haunting")`. The function returns 0.93.
 
-*Paris* and *Parris* are not the same answer. One is a city. The other is a character from *The Crucible*, which he read in October. The function is doing string similarity. What Seth needed was semantic equivalence. Those are not the same problem. Claude wrote tests for the problem the function solves, not for the problem Seth was trying to solve. He almost shipped string similarity disguised as grading.
+*hunting* and *haunting* are not the same NPC state. One means the ghost is actively chasing a player. The other is the ambient-presence tag for when the ghost is unseen but pressuring the audio mix. The function is doing string similarity. What Seth needed was semantic equivalence over a fixed taxonomy. Those are not the same problem. Claude wrote tests for the problem the function solves, not for the problem Seth was trying to solve. He almost shipped string similarity disguised as state classification.
 
 He doesn't ship it.
 
 This chapter is about what to call the move he just made — and the four other moves that competent supervisors make on the way to a clean build. Together these five moves are *the things you do that Claude does not do*. They have always existed; this chapter just gives them names.
 
-<!-- → [DIAGRAM: The five supervisory capacities as a pentagon or five-column layout. Each: label (PA, PF, TO, IJ, EI), plain-language name, one-sentence definition. Editorial style. No color.] -->
+![Five labeled columns — PF Problem Formulation, TO Tool Orchestration, PA Plausibility Auditing, IJ Interpretive Judgment, EI Executive Integration — each with a one-sentence definition. PA is highlighted in red as the capacity Seth's hunting / haunting probe enacted.](images/05-five-supervisory-capacities-fig-01.png)
+*Figure 5.1 — The five supervisory capacities*
 
 ---
 
@@ -42,15 +43,21 @@ The labels — **PA, PF, TO, IJ, EI** — are shorthand specific to this book. T
 
 One word I will use that deserves a flag: *currently*. Every time the question comes up of whether some future model will do one of these for you, the honest sentence is: we don't know the schedule. Harry Collins, in *Tacit and Explicit Knowledge* (Collins, 2010), divides tacit knowledge into kinds — some codifiable in principle, some only sometimes, some irreducibly social. Some of the five capacities are probably the first kind. Others probably aren't. What I can tell you with confidence is that *currently*, in 2026, all five require you. That is the claim this chapter is making.
 
-<!-- → [TABLE: Five supervisory capacities — three columns: Label / Plain name / What it catches. Five rows. No color.] -->
+| Label | Plain name | What it catches |
+|---|---|---|
+| **PF** | Problem Formulation | The frame Claude was optimizing inside was the wrong frame. |
+| **TO** | Tool Orchestration | The right task was given to the wrong Claude move in the wrong order. |
+| **PA** | Plausibility Auditing | The output is fluent, the tests pass, and something is still off. |
+| **IJ** | Interpretive Judgment | The number is correct, but its meaning for this project is different. |
+| **EI** | Executive Integration | Prompt 17 quietly undid the decision made at prompt 3. |
 
 ---
 
 ## [PF] Problem Formulation
 
-Seth's quiz grader is a textbook **[PF]** failure that almost shipped.
+Seth's NPC classifier is a textbook **[PF]** failure that almost shipped.
 
-The frame he gave Claude was: *write a function that scores a student's answer against an answer key.* Claude returned a function that scores a student's answer against an answer key. The output is excellent *inside that frame*. Outside that frame — in the world where students write *Paris* when the answer is *Parris*, where the error mode is semantic substitution rather than spelling drift — the frame is the wrong question.
+The frame he gave Claude was: *write a function that scores a state tag against a category name.* Claude returned a function that scores a state tag against a category name. The output is excellent *inside that frame*. Outside that frame — in the world where the event log says *haunting* when the category is *hunting*, where the error mode is semantic substitution rather than spelling drift — the frame is the wrong question.
 
 Claude is, in a deep and well-documented way, an optimizer within a frame. You hand it a specification and it produces the cleanest output it can for that specification. The orchestra plays the piece you handed them. If you handed them the wrong piece, what you get back is not a mistake — it is *the wrong piece, played beautifully*. The error is upstream of the output and invisible in it.
 
@@ -78,7 +85,7 @@ The temptation students give in to once — and then never again — is to deleg
 
 ## [PA] Plausibility Auditing
 
-The move Seth made when he typed *Paris* and *Parris* — before any formal verification, before the test runner confirmed anything — is **[PA] Plausibility Auditing**. It is the capacity to hear the wrong note before the proof is ready.
+The move Seth made when he typed *hunting* and *haunting* — before any formal verification, before the test runner confirmed anything — is **[PA] Plausibility Auditing**. It is the capacity to hear the wrong note before the proof is ready.
 
 Michael Polanyi, who was a physical chemist before he became a philosopher, built a career on a single sentence: *we can know more than we can tell* (Polanyi, 1966). His evidence was connoisseurship — the trained perceptual capacity of an expert to recognize quality, error, or wrongness in their domain before they can articulate the rule that was violated. The wine taster who knows the year. The radiologist who sees the shadow. The student who reads a generated function and knows something is off before they know *what* is off. Polanyi's claim, which sixty years of expert-performance research has not displaced, is that this is real knowledge. Not gut feeling. Knowledge built by exposure to many cases, especially labeled wrong cases.
 
@@ -88,15 +95,17 @@ The headline failure mode that **[PA]** prevents is package hallucination. Sprac
 
 At student scale, plausibility auditing looks like reading the imports at the top of a generated file and asking, of each one, *have I seen that before? Does that sound like something that exists?* It looks like noticing a constant — `0.7`, `512`, `"v2"` — and asking *where did that number come from, is it justified or is it vibes?* It looks like the itch that a function is doing extra work, or not enough work, or the right work on the wrong thing. None of those moves are verification. All of them are *perception trained by exposure*.
 
-The training of **[PA]** is the part no chapter can do for you. You build connoisseurship by looking at many Claude outputs and noticing what was right and what was wrong — especially what was *plausibly* wrong. The case studies and worked examples in this book are training data for your own perception. Seth's *Paris*/*Parris* probe was not luck. It was the correct application of domain knowledge — *what are the hardest cases for a string-similarity scorer on short answers?* — to a function that had passed every test in front of it.
+The training of **[PA]** is the part no chapter can do for you. You build connoisseurship by looking at many Claude outputs and noticing what was right and what was wrong — especially what was *plausibly* wrong. The case studies and worked examples in this book are training data for your own perception. Seth's *hunting*/*haunting* probe was not luck. It was the correct application of domain knowledge — *what are the hardest cases for a string-similarity scorer on short state tags?* — to a function that had passed every test in front of it.
 
 Plausibility auditing fails in exactly one way: when you delegate it. The version Seth almost committed at the top of this chapter — *the tests passed, so it must be right* — is the complete failure mode. Tests are downstream verification. They do not replace upstream perception. If the wrong note in the score is *the tests are testing the wrong thing*, the test runner cannot hear it. Only you can.
+
+Seth has written about the same asymmetry at the scale of an industry. In his published review of Paul Roberts' *Artificial Intelligence in Games* — a textbook on classical game-AI (A*, finite state machines, behavior trees, fuzzy logic) — he names the distinction the field is built on: academic AI pursues *actual* intelligence; game AI pursues *the illusion of* intelligence. Game-AI behavior is calibrated to the player's perceptual frame, not to a ground truth, because believability at 60 frames per second is what the product is selling. The same calibration runs in Claude Code's output. Claude is engineered to produce code that reads as competent — code that passes the perceptual test of *this looks like a working function*. Whether the function solves the problem you posed is a different question, and only you can answer it. The *hunting*/*haunting* probe was Seth refusing the perceptual test on his own behalf. Plausibility auditing is the move that names which test the system was secretly running and substitutes the test you actually need.
 
 ---
 
 ## [IJ] Interpretive Judgment
 
-Suppose Seth's new grader reports 92% accuracy on a fresh test set of 200 graded answers.
+Suppose Seth's new classifier reports 92% accuracy on a fresh test set of 200 labeled NPC state tags.
 
 What does that mean?
 
@@ -104,11 +113,11 @@ On its own: not enough to make any decision. 92% is a number. It does not say wh
 
 Donald Schön called this *reflection-in-action* (Schön, 1983). Watching architects, doctors, engineers, and therapists work, his central observation was that experts adjust during the task, not after — meaning the interpretation of what they are seeing arrives in the same act as seeing. The radiologist sees the scan; the meaning for *this patient* with *this history* arrives in the same moment. The expert's knowledge and the expert's situation are not separated. The professional's duty, Schön argued, is to surface that interpretation explicitly enough that it can be argued with.
 
-For a student working with Claude, **[IJ]** is the paragraph you write under the number. Not "the model is 92% accurate," but: of the 8% error, how many are spelling drift and how many are semantic substitution? What are the worst-case failures? Is 92% good enough for multi-word answers but not for single-word concepts where the error mode is dangerous? Would I be comfortable with my name on this if the 8% turned out to be systematic? That paragraph is interpretive judgment. Nothing in it can be produced by Claude alone — not because Claude cannot write paragraphs about numbers, but because the interpretation depends on the specific project, the specific deadline, and the acceptability threshold you carry in your head and have not written down anywhere.
+For a student working with Claude, **[IJ]** is the paragraph you write under the number. Not "the classifier is 92% accurate," but: of the 8% error, how many are spelling drift and how many are semantic substitution? What are the worst-case failures? Is 92% good enough for ambient tags like *patrolling* but not for the *hunting* category where misclassification would let an active-chase state slip past the AI director? Would I be comfortable with my name on this if the 8% turned out to be systematic? That paragraph is interpretive judgment. Nothing in it can be produced by Claude alone — not because Claude cannot write paragraphs about numbers, but because the interpretation depends on the specific project, the specific deadline, and the acceptability threshold you carry in your head and have not written down anywhere.
 
 Claude has the number. You have the situation. **[IJ]** is what happens where they meet.
 
-The failure mode is shipping the number without the paragraph. Reporting *the model is 92% accurate* without the distribution of error, the acceptability threshold, or the decision that follows. The number is the first act. The decision is the second act. They are performed by different agents. Claude performs the first. You perform the second.
+The failure mode is shipping the number without the paragraph. Reporting *the classifier is 92% accurate* without the distribution of error, the acceptability threshold, or the decision that follows. The number is the first act. The decision is the second act. They are performed by different agents. Claude performs the first. You perform the second.
 
 ---
 
@@ -134,7 +143,7 @@ Spurr, Vasilescu, and colleagues, in a 2025 field study of LLM-assisted code rev
 
 Here is the full arc of Seth's forty minutes, with every capacity named where it appeared.
 
-He starts before he opens Claude. He spends two minutes writing down what *correct* means for his grader: spelling drift is acceptable, semantic substitution is not, wrong answers go to a review queue rather than auto-failing. He writes this as a comment block in an empty file. That is **[PF]**. The frame is on the page in his words before Claude sees the task.
+He starts before he opens Claude. He spends two minutes writing down what *correct* means for his classifier: spelling drift is acceptable, semantic substitution is not, ambiguous tags go to a review queue rather than getting auto-rolled into a category. He writes this as a comment block in an empty file. That is **[PF]**. The frame is on the page in his words before Claude sees the task.
 
 He decides to build in three Claude tasks — signature and test plan, then function, then review queue — committing between each. That is **[TO]**. Small, reviewable steps.
 
@@ -142,13 +151,13 @@ Claude returns a function using `difflib.SequenceMatcher`. Seth reads it, says "
 
 He runs the tests. Twelve pairs, 85% accuracy, all pass. **[PA] has not yet engaged.** The output is plausible. He almost accepts it.
 
-He pauses. He cannot say what's wrong. He types `("Paris", "Parris")`. The function returns 0.91. That is **[PA]** — connoisseurship producing a probe, the probe producing confirmation, the wrong note caught before any test was ready to flag it.
+He pauses. He cannot say what's wrong. He types `("hunting", "haunting")`. The function returns 0.93. That is **[PA]** — connoisseurship producing a probe, the probe producing confirmation, the wrong note caught before any test was ready to flag it.
 
-He identifies the failure: *string similarity is not semantic equivalence.* He could ship the 85% number. He doesn't, because he asks what 85% means for *this* use case — single-word biology concepts, a study site where wrong-marking a right answer is the worst possible UX, a student population prone to spelling drift but not to synonym substitution. The interpretation kills the ship. That is **[IJ]**.
+He identifies the failure: *string similarity is not semantic equivalence.* He could ship the 85% number. He doesn't, because he asks what 85% means for *this* use case — short state tags in a horror game, where misclassifying *haunting* as *hunting* would let an active-chase state slip into the ambient-presence bucket and break the AI director's pacing. The interpretation kills the ship. That is **[IJ]**.
 
-He re-prompts with a new frame: exact-match against a curated variants list, with normalized-string secondary check, routing ambiguous cases to a review queue rather than auto-grading. Same Claude. Different formulation. **[PF]** again, this time correct.
+He re-prompts with a new frame: exact-match against a curated variants list, with normalized-string secondary check, routing ambiguous cases to a review queue rather than auto-classifying. Same Claude. Different formulation. **[PF]** again, this time correct.
 
-Midway through the new implementation, Claude offers an improvement: a module-level cache to speed up rubric loading. Seth looks at his original comment block. It says the rubric will be edited by teachers in production and the system should pick up changes within a minute. A module-level cache breaks that constraint. He declines the improvement and re-prompts with the constraint stated. That is **[EI]** — a backward reference to a prior decision, a rejection of local optimization at the cost of the global constraint.
+Midway through the new implementation, Claude offers an improvement: a module-level cache to speed up variants-list loading. Seth looks at his original comment block. It says the variants list will be edited as the game's behavior tree grows and the system should pick up changes within a minute. A module-level cache breaks that constraint. He declines the improvement and re-prompts with the constraint stated. That is **[EI]** — a backward reference to a prior decision, a rejection of local optimization at the cost of the global constraint.
 
 All five capacities appeared in forty minutes. **[PA]** caught the near-failure. **[PF]** reformulated the frame. **[TO]** kept the diffs reviewable. **[IJ]** decided what the number meant. **[EI]** rejected an architectural drift. No one of them was sufficient. All five were needed.
 
@@ -167,3 +176,19 @@ The lesson is not the sequence. The sequence will differ every build. The lesson
 ## Bridge
 
 The reader knows the five capacities. Chapter 6 introduces the tool that makes exercising them systematic: Gru.
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 5.1 — The five supervisory capacities
+
+Build a five-column layout in D3 v7. Each column is a tall rectangular card (width about 120, height 280) with a small `--color-fill` header strip (height 36) containing a monospace ALL CAPS label and a larger body containing two-line bold title, three lines of plain-text definition in `--color-secondary`, then three italic lines of failure-mode summary also in `--color-secondary`. The five columns in order: PF Problem Formulation, TO Tool Orchestration, PA Plausibility Auditing, IJ Interpretive Judgment, EI Executive Integration. The PA column is bordered in `--color-red` and its label and title rendered in `--color-red` — this is the highlighted capacity, the one Seth's hunting / haunting probe enacted. Hovering any column shows a tooltip with the longer definition tying the capacity back to its named precedent (Suchman, Polanyi, Schön, Brooks). Dashed horizontal divider under the cards, then a two-line footer caption noting that all five are required and that the highlighted column is the probe-making move.
+
+> Reference implementation: `d3/05-five-supervisory-capacities-fig-01.html`

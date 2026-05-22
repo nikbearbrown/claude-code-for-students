@@ -1,0 +1,82 @@
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">The SDD as decision record</title>
+  <desc id="desc">Five sections of the Software Design Document in dependency sequence — Problem Statement, Architecture Principles, Core User Flows, User Needs, Component List. The Problem Statement is the load-bearing section; every other section is downstream of it. A consistency arrow loops back from the Component List.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#C8102E"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <text x="32" y="56" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">FIGURE 7.1 — THE SDD AS DECISION RECORD</text>
+  <text x="32" y="88" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="13" font-weight="bold" fill="#2a1a0e">Five sections. One sentence, five times.</text>
+
+  <!-- Five stacked boxes with downward arrows.  Each box w=476, h=52. -->
+  <!-- x = 112 (centered-ish, leaving room for side label) -->
+  <!-- positions y: 124, 196, 268, 340, 412 — gap 72 (box+gap = 124) -->
+  <!-- arrow between: from y+52 to next y -->
+
+  <!-- Section 1: Problem Statement — load-bearing, highlighted -->
+  <g>
+    <rect x="112" y="124" width="476" height="52" fill="#F5EFE8" stroke="#C8102E" stroke-width="1"/>
+    <text x="124" y="146" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#C8102E">SECTION 1</text>
+    <text x="124" y="166" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="12" font-weight="bold" fill="#2a1a0e">Problem Statement</text>
+    <text x="312" y="166" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#545454">— what / who / done. One sentence. Load-bearing.</text>
+
+    <line x1="350" y1="176" x2="350" y2="194" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- Section 2: Architecture Principles -->
+  <g>
+    <rect x="112" y="198" width="476" height="52" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="124" y="220" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">SECTION 2</text>
+    <text x="124" y="240" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="12" font-weight="bold" fill="#2a1a0e">Architecture Principles</text>
+    <text x="332" y="240" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#545454">— 2–4 invariants. Must be able to collide.</text>
+
+    <line x1="350" y1="250" x2="350" y2="268" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- Section 3: Core User Flows -->
+  <g>
+    <rect x="112" y="272" width="476" height="52" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="124" y="294" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">SECTION 3</text>
+    <text x="124" y="314" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="12" font-weight="bold" fill="#2a1a0e">Core User Flows</text>
+    <text x="296" y="314" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#545454">— the path through the system, in order.</text>
+
+    <line x1="350" y1="324" x2="350" y2="342" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- Section 4: User Needs -->
+  <g>
+    <rect x="112" y="346" width="476" height="52" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="124" y="368" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">SECTION 4</text>
+    <text x="124" y="388" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="12" font-weight="bold" fill="#2a1a0e">User Needs</text>
+    <text x="252" y="388" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#545454">— testable outcomes with thresholds.</text>
+
+    <line x1="350" y1="398" x2="350" y2="416" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- Section 5: Component List -->
+  <g>
+    <rect x="112" y="420" width="476" height="48" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="124" y="442" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" letter-spacing="0.08em" fill="#545454">SECTION 5</text>
+    <text x="124" y="460" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="12" font-weight="bold" fill="#2a1a0e">Component List</text>
+    <text x="266" y="460" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#545454">— buildable pieces. Names what is </text>
+    <text x="494" y="460" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" font-style="italic" fill="#545454">not</text>
+    <text x="503" y="460" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="11" fill="#545454"> built.</text>
+  </g>
+
+  <!-- Back-arrow consistency check: from right side of Section 5 looping up to right side of Section 1 -->
+  <path d="M 588 444 C 644 444, 644 150, 588 150" stroke="#C8102E" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)" stroke-dasharray="4 3"/>
+  <text x="612" y="296" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#C8102E" transform="rotate(-90 612 296)">CONSISTENCY CHECK</text>
+
+  <!-- Left-side labels -->
+  <text x="36" y="156" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="9" letter-spacing="0.08em" fill="#545454">LOAD-BEARING</text>
+  <text x="36" y="380" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">downstream of</text>
+  <text x="36" y="394" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">the sentence</text>
+  <text x="36" y="408" font-family="'EB Garamond', Georgia, 'Times New Roman', serif" font-size="10" font-style="italic" fill="#545454">above</text>
+</svg>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figure 14.1 — The complete arc</title>
+<style>
+:root {
+  --color-white: #FFFFFF;
+  --color-fill: #F5EFE8;
+  --color-ink: #2a1a0e;
+  --color-mark: #6B3520;
+  --color-red: #C8102E;
+  --color-slate: #1A3A5C;
+  --color-ochre: #C8860E;
+  --color-secondary: #545454;
+  --color-border: #D4D4D4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #111111;
+    --color-fill: #1a1612;
+    --color-ink: #F0EBE3;
+    --color-mark: #C8865E;
+    --color-red: #E8243A;
+    --color-slate: #6B8FB8;
+    --color-ochre: #D49A30;
+    --color-secondary: #A0978C;
+    --color-border: #2E2E2E;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--color-white); color: var(--color-ink); font-family: 'EB Garamond', Georgia, serif; padding: 24px; }
+#chart { width: 100%; min-height: 440px; }
+.tooltip { position: absolute; pointer-events: none; opacity: 0; background: var(--color-slate); color: var(--color-white); padding: 8px 12px; font-size: 12px; font-family: 'EB Garamond', Georgia, serif; max-width: 280px; line-height: 1.4; }
+text { font-family: 'EB Garamond', Georgia, serif; fill: var(--color-ink); }
+.caps { font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace; letter-spacing: 0.08em; fill: var(--color-secondary); font-size: 10px; }
+.secondary { fill: var(--color-secondary); }
+.timeline { stroke: var(--color-ink); stroke-width: 1.5; fill: none; }
+.timeline-end { stroke: var(--color-red); stroke-width: 1.5; fill: none; }
+.tick { stroke: var(--color-ink); stroke-width: 1.5; }
+.tick.highlight { stroke: var(--color-red); }
+.dot { fill: var(--color-white); stroke: var(--color-ink); stroke-width: 1.5; cursor: pointer; transition: r 120ms; }
+.dot.highlight { fill: var(--color-red); stroke: var(--color-red); }
+.dot:hover { r: 6; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="chart" role="main"></div>
+<div class="tooltip" id="tt"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+function draw() {
+  d3.select('#chart').selectAll('*').remove();
+  const totalWidth = document.getElementById('chart').clientWidth || 700;
+  const totalHeight = 420;
+  const margin = { top: 56, right: 48, bottom: 32, left: 48 };
+  const chartWidth = totalWidth - margin.left - margin.right;
+
+  const svg = d3.select('#chart').append('svg')
+    .attr('width', totalWidth).attr('height', totalHeight)
+    .attr('role', 'img').attr('aria-labelledby', 'chart-title chart-desc');
+  svg.append('title').attr('id', 'chart-title').text('The complete arc');
+  svg.append('desc').attr('id', 'chart-desc').text('A minimal timeline from Chapter 0 to Chapter 14. Four milestones: Problem named, Discipline learned, First build planned, First build verified. The first three are Seth\'s arc as observed; the fourth, in red, is the reader\'s own build.');
+
+  const defs = svg.append('defs');
+  defs.append('marker').attr('id','arrow-red').attr('markerWidth',8).attr('markerHeight',6).attr('refX',7).attr('refY',3).attr('orient','auto')
+    .append('polygon').attr('points','0 0, 8 3, 0 6').attr('fill','var(--color-red)');
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+  g.append('text').attr('class','caps').attr('y',-24).text('FIGURE 14.1 — THE COMPLETE ARC');
+  g.append('text').attr('y',0).attr('font-weight','bold').attr('font-size',13)
+    .text('From Chapter 0 to Chapter 14 — Seth observes, then the reader builds');
+
+  const tt = d3.select('#tt');
+  function showTip(html){ tt.html(html).style('opacity',1); }
+  function moveTip(e){ tt.style('left',(e.pageX+12)+'px').style('top',(e.pageY-8)+'px'); }
+  function hideTip(){ tt.style('opacity',0); }
+
+  // Milestones
+  const milestones = [
+    { ch:'CH 0', t:0.0, title:'Problem named',
+      body:['Seth almost ships a','classifier that passes','the wrong tests.'],
+      tip:'Chapter 0 — Seth observes. He almost ships a string-similarity function disguised as state classification. The book begins where the perception problem becomes visible.' },
+    { ch:'CH 5', t:0.34, title:'Discipline learned',
+      body:['Five supervisory capacities','named — PF, TO, PA, IJ, EI.','Scoring axis arrives.'],
+      tip:'Chapter 5 — Five Supervisory Capacities. The five things you do that Claude does not. Chapter 6 turns each into a scoring axis. By Chapter 10 the discipline is fluent.' },
+    { ch:'CH 11', t:0.71, title:'First build planned',
+      body:['/v0, /v1, SDD, Score,','Minion Brief — four gates','before the first prompt.'],
+      tip:'Chapter 11 — Planning Your First Boondoggled Build. Five artifacts, four gates. The Minion Brief is the last gate; the first prompt is permitted only when it opens.' },
+    { ch:'CH 14', t:1.0, title:'First build verified', highlight: true,
+      body:['Three passes return green.','The reader builds.','The book has nothing else to say.'],
+      tip:'Chapter 14 — Your First Full Build. The arc ends and the practice begins. The repository is the byproduct; the post-build document is the assignment. Where Seth\'s arc ends is where yours begins.' }
+  ];
+
+  const yLine = 152;
+  const xLeft = 40;
+  const xRight = chartWidth - 40;
+  const lineWidth = xRight - xLeft;
+
+  // Arc-segment italic labels above timeline
+  const segments = [
+    { t1:0.0, t2:0.34, label:'observation' },
+    { t1:0.34, t2:0.71, label:'instruction' },
+    { t1:0.71, t2:1.0, label:'execution' }
+  ];
+  segments.forEach(s => {
+    const x = xLeft + lineWidth*((s.t1+s.t2)/2);
+    g.append('text').attr('x',x).attr('y',yLine-20).attr('text-anchor','middle').attr('font-size',10).attr('font-style','italic').attr('class','secondary').text(s.label);
+  });
+
+  // Chapter codes above ticks
+  milestones.forEach(m => {
+    const x = xLeft + lineWidth*m.t;
+    g.append('text').attr('class','caps').attr('x',x).attr('y',yLine-60).attr('text-anchor','middle')
+      .attr('fill', m.highlight ? 'var(--color-red)' : 'var(--color-secondary)').text(m.ch);
+  });
+
+  // Timeline line: main portion ink, last 30px before final dot in red as arrow
+  const xLast = xLeft + lineWidth*milestones[2].t;
+  const xFinal = xLeft + lineWidth*1.0;
+  g.append('line').attr('class','timeline').attr('x1',xLeft).attr('y1',yLine).attr('x2',xFinal-20).attr('y2',yLine);
+  g.append('line').attr('class','timeline-end').attr('x1',xFinal-20).attr('y1',yLine).attr('x2',xFinal).attr('y2',yLine).attr('marker-end','url(#arrow-red)');
+
+  // Ticks + dots
+  milestones.forEach(m => {
+    const x = xLeft + lineWidth*m.t;
+    g.append('line').attr('class','tick' + (m.highlight?' highlight':'')).attr('x1',x).attr('y1',yLine-10).attr('x2',x).attr('y2',yLine+10);
+    g.append('circle').attr('class','dot' + (m.highlight?' highlight':'')).attr('cx',x).attr('cy',yLine).attr('r',m.highlight ? 5 : 4)
+      .on('mouseenter',()=>showTip(`<strong>${m.ch} — ${m.title}</strong><br/>${m.tip}`))
+      .on('mousemove',moveTip).on('mouseleave',hideTip);
+  });
+
+  // Milestone labels below
+  milestones.forEach(m => {
+    const x = xLeft + lineWidth*m.t;
+    g.append('text').attr('x',x).attr('y',yLine+32).attr('text-anchor','middle').attr('font-weight','bold').attr('font-size',11)
+      .attr('fill', m.highlight ? 'var(--color-red)' : 'var(--color-ink)').text(m.title).attr('pointer-events','none');
+    m.body.forEach((line, j) => {
+      g.append('text').attr('x',x).attr('y',yLine+48+j*12).attr('text-anchor','middle').attr('font-size',10)
+        .attr('font-style', (m.highlight && j > 0) ? 'italic' : 'normal')
+        .attr('fill', (m.highlight && j > 0) ? 'var(--color-red)' : 'var(--color-secondary)')
+        .text(line).attr('pointer-events','none');
+    });
+  });
+
+  // Footer
+  const yFoot = yLine + 116;
+  g.append('line').attr('x1',-margin.left+32).attr('y1',yFoot).attr('x2',chartWidth+margin.right-32).attr('y2',yFoot)
+    .attr('stroke','var(--color-border)').attr('stroke-width',0.75).attr('stroke-dasharray','4 3');
+  g.append('text').attr('class','secondary').attr('x',0).attr('y',yFoot+24).attr('font-size',10)
+    .text('The first three milestones are Seth\'s arc as observed in the book. The fourth is yours.');
+  g.append('text').attr('class','secondary').attr('x',0).attr('y',yFoot+40).attr('font-size',10)
+    .text('The repository is the byproduct; the post-build document is the assignment.');
+  g.append('text').attr('class','secondary').attr('x',0).attr('y',yFoot+56).attr('font-size',10).attr('font-style','italic')
+    .text('Hover any milestone for the chapter it sits over.');
+}
+draw();
+const ro = new ResizeObserver(() => draw());
+ro.observe(document.getElementById('chart'));
+</script>
+</body>
+</html>

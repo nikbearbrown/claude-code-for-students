@@ -14,7 +14,13 @@ Everyone took the same unassisted exam on the same material.
 
 The group that had done 48% better during practice — the AI group, the group whose homework scores looked spectacular — scored 17 percentage points *lower* on the exam than the kids who had done it on paper with no help at all. Not 17% lower in some relative sense. Seventeen full points on the test. The effect size was *Cohen's d* ≈ 0.738, which is what statisticians call moderate-to-large — the kind of number that, in a drug trial, would get the drug approved. The probability it was a fluke was about one in a hundred (Bastani et al., 2025).
 
-<!-- → [TABLE: Bastani RCT results — two columns: AI-Assisted group vs. Hand-Coding group. Rows: practice score, exam score, score gap, Cohen's d, p-value. No color. Editorial style.] -->
+| Measure | AI-assisted group | Hand-coding group |
+|---|---|---|
+| Practice score (with AI access) | 48% above control | At control baseline |
+| Unassisted exam score | 17 points below control | At control baseline |
+| Score gap (practice → exam) | −65 points | ~0 |
+| Cohen's *d* (effect size) | 0.738 | — |
+| *p* value | 0.01 | — |
 
 Same students. Same material. Same week. The tool that made their practice look better made them measurably worse when the tool was gone.
 
@@ -58,7 +64,8 @@ But the sensation of following is not the act of producing. Your brain encodes t
 
 I'll call this **the fluency trap**. The trap is that the fluent path — the path where Claude gives you a clean solution — genuinely feels better than the effortful path. It is not just faster. It is more pleasant. The brain reports "I am learning" while the cognitive events that constitute learning are not happening. Bjork and Bjork call this the **illusion of competence** (Bjork & Bjork, 2011). You feel competent because the output in front of you is competent. The output's competence belongs to the model. Your competence will be measured when the screen is closed.
 
-<!-- → [DIAGRAM: The fluency trap — a simple two-path diagram. Path A: struggle → consolidation → durable capability. Path B: delegate → fluent output → no consolidation → atrophy. Editorial style. No color.] -->
+![Two parallel paths. Path A moves from struggle to consolidation to durable capability. Path B moves from delegation through fluent output and no consolidation to atrophy.](images/01-homework-quiz-gap-fig-01.png)
+*Figure 1.1 — The fluency trap*
 
 ---
 
@@ -160,3 +167,19 @@ One paragraph.
 - James, W. (1890). *The Principles of Psychology*, Vol. I, Chapter IV: Habit. New York: Henry Holt.
 - Kosmyna, N., et al. (2025). Your brain on ChatGPT: Accumulation of cognitive debt when using an AI assistant for essay writing task. *arXiv:2506.08872* (preprint, not peer-reviewed).
 - Shen, J. H., & Tamkin, A. (2026). How AI impacts skill formation. *arXiv:2601.20245*, Anthropic (preprint, not peer-reviewed).
+
+---
+
+## Prompts
+
+Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
+
+**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
+
+---
+
+### Figure 1.1 — The fluency trap
+
+Build a two-row flow diagram in D3 v7. Each row is a horizontal sequence of rectangular nodes (height 56) connected by short arrowed segments with an arrowhead marker on the right. The top row is PATH A with three nodes: "struggle" (subtitle "try → fail → adjust"), "consolidation" (subtitle "encoding event"), and "durable capability" (subtitle "passes the closed-laptop test"). The terminal Path A node uses `--color-fill` background to mark it as the endpoint. The bottom row is PATH B with four nodes: "delegate", "fluent output", "no consolidation", and "atrophy". The final Path B node is bordered in `--color-red` and its title rendered in `--color-red`; the segment arrow leading into it also uses `--color-red`. Between the two rows draw a dashed horizontal divider (`--color-border`, dash 4 3). Each row begins with a monospace ALL CAPS label (PATH A / PATH B) followed by an italic secondary-color subtitle. Hovering any node shows a tooltip with one sentence explaining that stage in cognitive terms. Footer caption: "Both paths produce an artifact. Only one path produces a learner."
+
+> Reference implementation: `d3/01-homework-quiz-gap-fig-01.html`
