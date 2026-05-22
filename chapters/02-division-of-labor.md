@@ -1,137 +1,162 @@
-# Chapter 2 — What You're Actually Good At (And What Claude Is Better At)
+# Chapter 1 — The Homework/Quiz Gap: What's Actually Happening
 
-*Pattern recognition is Claude's domain. Supervisory intelligence is yours. Knowing which is which is the whole game.*
-
----
-
-Here is something that happened to me on a Saturday afternoon.
-
-I was building a grade-tracking tool — something small, for myself — and I needed a function that would take a list of student records and return the top three by GPA, breaking ties alphabetically by last name. I asked Claude. Eleven seconds later I had a clean little function with a tuple key: sort by GPA descending, then by last name ascending. I ran my tests. Three students, all different GPAs, came back in the right order. I was about to move on.
-
-I don't know exactly why I looked at the test data one more time. Some itch. I added a row — two students tied at 3.92, last names *Bell* and *Adams*. I ran the tests again.
-
-Bell came back first.
-
-The spec said alphabetical by last name. Adams before Bell. Claude's sort hadn't done that. The tuple key was `(-gpa, last_name)`, which looks right, but Python's sort is stable, and on my original test set — all unique GPAs — the stability had been silently doing the work that the second key was *supposed* to do. The tie exposed it. The code had been correct for my test set and silently wrong for the real requirement, and the gap between those two things was invisible until I happened to add one more row.
-
-I almost didn't add the row.
-
-That near-miss is the whole chapter. Not because it's a hard bug — it's a sorting bug, the most embarrassing kind. The chapter is that gap: between *it compiled and passed my tests* and *it did what I actually needed*. Claude couldn't see the gap. The same statistical machinery that wrote the function was the only machinery available to audit it, and the audit said: looks good. The requirement that Bell-before-Adams was wrong lived in the spec I had written down somewhere else, in my head, nowhere in the prompt. Claude had no access to it.
-
-Let's figure out what that means.
+*Students who use AI freely during practice score dramatically lower on unassisted tests — and feel like they learned more, not less.*
 
 ---
 
-## Where Claude is Better Than You
+Here is a fact that should bother you.
 
-I want to be honest about this first, because the rest of the chapter is going to be about what Claude isn't, and if I lead with the limits I'll sound like someone who thinks the internet is a fad.
+A thousand Turkish high school students were split into groups. One group did their math practice the normal way — on paper, by hand, no help. Another group had unrestricted access to GPT-4. They could ask it anything, including "just give me the answer," and it would. At the end of each practice session, both groups had their work recorded.
 
-Claude is better than you at pattern completion. That sentence is uncomfortable for a high school senior to write — or for anyone — but it is true in a measurable way, and pretending otherwise would make this book useless. Claude has read more code than you will read in your lifetime. It has seen the standard binary search written ten thousand times. Every common sorting algorithm, every React skeleton, every Flask boilerplate, every Python `argparse` setup — Claude has seen those patterns so many times that producing a clean version of any one of them is effortless in a way that is genuinely not effortless for you. A 2023 study by Brynjolfsson, Li, and Raymond tracked around five thousand customer-support agents and found that AI assistance raised average worker productivity by 14%, with the biggest gains — around 34% — going to novices on routine tasks (Brynjolfsson, Li, & Raymond, 2025). The gains are largest where the task is most pattern-like. That's the signature of something doing pattern work well.
+Then the laptops went away.
 
-What counts as pattern work? Boilerplate. Idiomatic translation — you wrote a thing in Python, you want it in TypeScript. Syntax recall — is it `==` or `===`, does the comma go inside or outside, what's the import path for `defaultdict`. Standard-library lookup: there are around two hundred modules in the Python standard library and you know maybe twenty of them well; Claude knows all of them. First-draft file structure for a new project. Summarizing test output. These are all, at root, the same thing: completing a known pattern from a large distribution of examples. Claude does all of them faster and, on average, more correctly than you do on a first pass.
+Everyone took the same unassisted exam on the same material.
 
-Daniel Kahneman called the fast, associative, pattern-completing mode of human cognition *System 1* — the part of your brain that recognizes a friend's face across a crowded room before you've consciously decided to look. The defining property of System 1, the one Kahneman hammers on for hundreds of pages in *Thinking, Fast and Slow*, is that it cannot help itself (Kahneman, 2011). It completes the pattern whether or not the pattern is appropriate. Confidence is what System 1 *is for*; it doesn't have an uncertainty mode. Claude is not literally System 1 — Claude is a transformer running on a server somewhere — but Claude's outputs *arrive in your mind* as System 1 candidates. They are fluent, completed-feeling, plausible. They land before you've audited them. They pattern-match to correct, and your brain goes: yes, this, moving on.
+The group that had done 48% better during practice — the AI group, the group whose homework scores looked spectacular — scored 17 percentage points *lower* on the exam than the kids who had done it on paper with no help at all. Not 17% lower in some relative sense. Seventeen full points on the test. The effect size was *Cohen's d* ≈ 0.738, which is what statisticians call moderate-to-large — the kind of number that, in a drug trial, would get the drug approved. The probability it was a fluke was about one in a hundred (Bastani et al., 2025).
 
-The only defense against this is to route Claude's outputs, deliberately, into your own System 2 before you act on them. The whole chapter is about how.
+<!-- → [TABLE: Bastani RCT results — two columns: AI-Assisted group vs. Hand-Coding group. Rows: practice score, exam score, score gap, Cohen's d, p-value. No color. Editorial style.] -->
 
-<!-- → [TABLE: Division of labor — two columns: Claude does / Human does. Rows: pattern completion, code generation, syntax resolution, test execution (Claude) vs. plausibility auditing, problem formulation, interpretive judgment, tool orchestration, executive integration (Human). No color.] -->
+Same students. Same material. Same week. The tool that made their practice look better made them measurably worse when the tool was gone.
 
----
-
-## Where You Are Better Than Claude
-
-There is a class of work Claude is, currently and structurally, weak at. The word "currently" matters — I'll come back to it. The class goes under the name *supervisory intelligence*, and it breaks into five things I want to name here, not formally define. The formal definitions are Chapter 5. Right now the names are enough.
-
-**Plausibility auditing.** When the code comes back, the question isn't *does it run* but *does the output match the world I'm building it for*. My GPA bug was a plausibility-auditing miss. The code ran. The output looked right. The mismatch was between Claude's output and the spec living in my head. Claude couldn't see the spec, so the implicit audit — the small *yes, this looks right* before it printed the function — had nothing real to check against.
-
-**Problem formulation.** Before you ask Claude to solve, somebody has to decide what the problem actually is. This sounds trivial until you watch someone paste a graph problem with negative edge weights into Claude and get back a textbook Dijkstra implementation. Dijkstra is the dominant pattern in the training distribution for graph problems. Dijkstra is also wrong for negative weights. The formulation step — *this graph has negative edges, so Dijkstra fails* — sits upstream of anything Claude can do. If you don't do it, Claude won't flag it. It will produce confident output for whatever question you asked, which may not be the question you needed to ask.
-
-**Interpretive judgment.** Claude returns a function. The function returns `0.7142857142857143`. Is that a probability? An accuracy? A ratio? A bug — should it have been an integer? Interpretation is the work of mapping an output back to the domain it came from. Claude can describe the number. Claude cannot tell you whether the number is *right for what you're doing*, because what you're doing is the part that lives outside Claude's window.
-
-**Tool orchestration.** A real build is rarely one prompt to one model. It's a prompt to Claude Code, which runs a script, which writes a file, which gets committed to git, which triggers a test, which produces a log, which goes back to Claude. The question of *which tool, in which order, on which input* is currently yours. Claude can run a tool when you ask it to. Claude does not reliably decide which tool was the right one, and even when it does, it's choosing inside the menu you set up. If your menu is wrong, Claude's choice is wrong.
-
-**Executive integration.** This one is the hardest to see because it doesn't sit at any one step — it sits across all of them. You are building a thing. At step seven you are debugging a subroutine. The question *does this subroutine still fit the design we sketched at step one* is not a question that step seven contains. Somebody has to hold the design in mind across the whole build. That somebody is you. Claude has a context window; you have a project. The context window forgets the design when it scrolls off. You, in principle, don't.
+That is the thing I want to explain.
 
 ---
 
-## Why This Division Isn't Arbitrary
+Before I explain it, let me make sure the experiment is clear in your mind, because the details matter.
 
-Here is where I want to be careful, because this is the part that, if I overstate it, becomes the kind of confident wrong claim this book is supposed to teach you to spot.
+Hamsa Bastani and her colleagues at Wharton ran this as an RCT — a randomized controlled trial (Bastani et al., 2025). That means the students weren't self-selecting into groups based on their own habits or confidence. They were randomly assigned. Random assignment is what makes the comparison honest: on average, the students in one group are identical to the students in the other, except for what the researchers did to them. When you see a big difference in outcomes between randomly assigned groups, you can't explain it away by saying "well, the weaker students ended up in one group." They didn't. The coin flip saw to that.
 
-Claude is structurally weak at supervising its own output because, in the most literal sense, the same weights that produced the output are the only weights available to do the audit. When Claude reads its own function and says *looks good*, that judgment is computed by the very statistical machine that just wrote the function. The audit is not an independent check. It is the same process, running again, with slightly different framing. If the production step was confidently wrong, the audit step will, on average, be confidently wrong in the same direction.
+There was also a third group — a GPT Tutor arm, where the same GPT-4 model had been prompted to behave like a tutor instead of an answer machine: it would scaffold, ask leading questions, refuse to hand over solutions outright. That group scored 127% better during practice — even more spectacular-looking than the unrestricted group — and ended up roughly *equal* to the paper kids on the exam. Not better than control. But not worse. Just level.
 
-The empirical signature is consistent across the literature. Pearce and colleagues, in a paper usually cited as "Asleep at the Keyboard," generated 1,689 programs using GitHub Copilot across scenarios drawn from MITRE's list of the top twenty-five most dangerous software weaknesses. Roughly 40% of the generated programs contained the very vulnerability the scenario was designed to elicit (Pearce et al., 2022). The code compiled. The code passed basic tests. The code was exploitable. Copilot did not flag it, because Copilot wrote it, and "this is exploitable" is not a pattern that overrides "this completes the user's request" in Copilot's weights.
+Let me put that side by side. Two groups with access to the same model. One group: 48% better on practice, 17 points worse on the exam. Other group: 127% better on practice, no difference on the exam. The only thing that varied was whether the model would hand over the answer.
 
-Liu and colleagues' 2024 hallucination taxonomy identified two failure modes that turn out to be the same architectural fact in different clothes: *task-requirement-conflicting* outputs, where the function does something close to but not exactly what was asked, and *knowledge-conflicting* outputs, where the function references a library or API signature that doesn't exist (Liu et al., 2024). In both cases, the model cannot detect the conflict because detection requires checking against something the model doesn't have — your actual requirement, or the actual API of the actual library.
-
-The package-hallucination version is particularly clean. A meaningful fraction of packages imported in Claude-generated code — different studies put it at roughly one in five for some scenarios — don't exist on PyPI or npm. Claude is not lying. It has correctly identified that a package *of approximately that shape and name* would solve the problem, and produced the import statement that would import it if the package existed. The audit step — *does this package exist* — cannot be performed without leaving Claude's window, and Claude has no reliable mechanism for leaving its window unprompted.
-
-The careful version of this claim: *currently*, a model whose architecture is statistical completion cannot reliably audit its own output, because audit and production are the same operation. This is not a metaphysical claim about machines forever. It is an empirical claim about 2026. Retrieval augmentation might shrink part of the gap. Better tool use might shrink more. The contested question — and you should know it is genuinely contested — is whether all five supervisory capacities eventually reduce to better tooling, or whether some of them (problem formulation and executive integration look most stubborn) are structurally outside what statistical completion can do. The honest answer is that nobody knows. This chapter is teaching you the division of labor as it stands today, because that division determines whether your function ships with a GPA bug in it.
+The machine was the same machine. The discipline imposed on the machine was different. That single design decision — would the model require the student to do some of the work, or not — was the entire difference between learning and not learning.
 
 ---
 
-## The Asymmetry That Matters
+Now, why?
 
-There is a corollary worth drawing out, because it sets the shape of the whole student-Claude relationship.
+When you sit with a problem you don't know how to solve, something specific happens. Your brain pulls up fragments of related things it already knows — a technique that might apply, an example that's similar in shape, the general architecture of how this class of problem tends to go — and tries to combine them. Most attempts fail. You notice they fail, discard them, try something else. Each cycle of *try → fail → adjust* is a small event: your brain is generating candidate answers, checking them against what it knows, revising the model.
 
-Claude's solve speed is rising fast. It has been rising fast for three years and there is no public evidence the rise is slowing. Every model generation gets faster, gets more accurate on standard benchmarks, handles more context. Your verification speed — how quickly you can check whether the candidate solution is correct against the domain you're working in — is approximately constant. You can train it; a year of serious programming work measurably improves your verification on the code you write. But it does not improve at the rate Claude's solve speed improves, and it cannot, because verification is bottlenecked on a human cognitive process Claude is not subject to.
+That cycle is uncomfortable. It is also the event that does the work.
 
-<!-- → [DIAGRAM: The solve-verify asymmetry — simple timeline. Claude's solve speed increasing over time. Human verification capacity stable. The gap widens. The human's job is not to solve faster but to verify better.] -->
+Cognitive psychologists have a name for the counterintuitive version of this: **desirable difficulties** (Bjork & Bjork, 2011). A desirable difficulty is a challenge that feels like it's slowing you down while actually speeding up retention. The two best-documented examples are the **testing effect** — retrieving a fact from memory strengthens the memory more than rereading it — and the **generation effect** — producing an answer yourself consolidates it more than reading the correct answer written by someone else. Both effects feel worse in the moment and pay off later. Both depend on the learner doing the work that, with an AI in the room, can be skipped.
 
-Two lines. One rising. One roughly flat. The gap between them is widening.
+Robert and Elizabeth Bjork put the general principle plainly: short-term performance and long-term learning are not the same thing, and often they are negatively correlated (Bjork & Bjork, 2011). Make practice easier, and you usually make learning worse. You remove friction that the brain was using to encode. The struggle is not an obstacle to the encoding event. The struggle *is* the encoding event.
 
-The temptation, when you see those two lines, is to try to close the gap by delegating the verification too — to use Claude to check Claude. The architectural argument is a direct argument against this. Audit by Claude has the same structural limitation as production by Claude. You can run a second pass; you can ask a second model; you cannot get an independent check by handing the check to the same kind of system that did the work. The verification has to land on a process that has access to what Claude doesn't see — your spec, your test data, your actual graph with its actual edge weights, the lab machine with its fixed Python install. That process is you.
-
-So here is the version worth memorizing: **your job is not to solve faster. Your job is to verify better.** Claude has the solve side. You have the verify side. If you compete on the solve side you lose, and you should — the same way you should lose at long division to a calculator. If you abandon the verify side, the build ships with whatever Claude got wrong, and you won't know until something in the world tells you.
+This was not invented by cognitive scientists. William James said it in 1890, in plain English, in *The Principles of Psychology*. He wrote that the nervous system is a plastic material — one that physically reshapes itself through repeated effort. What you do twenty times with attention becomes what you can do once without it. The mechanism James described in 1890 is the mechanism Bastani measured in 2025. The novelty is only the tool that lets you skip the struggle and still produce the artifact.
 
 ---
 
-## The Dangerous Middle
+So here is what happens when you paste the problem into Claude.
 
-I have been circling a third category for the whole chapter. Let me name it now.
+Claude produces a clean solution. You read it. It makes sense — it really does. You follow the logic step by step. You nod. You paste it in. You move on.
 
-*Claude work* — pure pattern completion — is honest and safe. You ask, it answers, the stakes are low. *Human work* — explicit supervisory judgment — you'll usually catch yourself doing, because it feels like work. *The dangerous middle* is the category of tasks that **look** like Claude work and **are** actually human work in disguise.
+What your brain is reporting to you in that moment is *comprehension* — the warm sensation of following a well-explained argument. And that report is honest: you did follow it. The logic was sound, you tracked it, you understood it in the moment the way you understand a YouTube explanation while it's playing.
 
-The sorting function I opened with was a dangerous-middle task. It looked like boilerplate. It presented as the kind of thing you delegate without thinking. On inspection, it required a plausibility audit against a spec that lived only in my head.
+But the sensation of following is not the act of producing. Your brain encodes the two events differently. Following correct code is an experience of comprehension. Writing wrong code and fixing it is an encoding event. The first gives you the feeling of having the skill. The second builds the skill. The outputs on the screen are nearly identical — two versions of working code. The invisible output, the version of you that exists six weeks later, is not identical at all.
 
-The SQL-injection vulnerabilities in the Pearce paper are dangerous-middle tasks. They look like *build me a string and run it as a query* — that is a pattern Claude completes in its sleep. The correct completion requires that somebody know prepared statements exist, that the codebase already uses them, that string-concatenated SQL is the canonical example of *the pattern Claude completes confidently and you must override*. Roughly 40% of Copilot's completions in those scenarios were vulnerable (Pearce et al., 2022). Not because Copilot is bad. Because the surface task is pattern work and the actual task is judgment.
+I'll call this **the fluency trap**. The trap is that the fluent path — the path where Claude gives you a clean solution — genuinely feels better than the effortful path. It is not just faster. It is more pleasant. The brain reports "I am learning" while the cognitive events that constitute learning are not happening. Bjork and Bjork call this the **illusion of competence** (Bjork & Bjork, 2011). You feel competent because the output in front of you is competent. The output's competence belongs to the model. Your competence will be measured when the screen is closed.
 
-The Dijkstra-on-negative-weights failure is a dangerous-middle task. The student pasted a graph problem; Claude returned the dominant graph-problem pattern; the supervisory move — problem formulation — required recognizing the structure of the actual problem before delegating it.
-
-The hallucinated library is a dangerous-middle task. Claude imported `from quickstats import bootstrap`; no such package exists on PyPI; the code failed on the lab machine; the supervisory move — executive integration — required keeping the ground-truth environment in mind across the whole build, including the boring fact that the lab machine has a fixed Python install.
-
-Notice the shape. In every case the task *presents* as pattern work: write a sort, build a query, pick an algorithm, import a library. Each one, on inspection, requires a supervisory capacity that Claude cannot supply because the input Claude would need lives outside Claude's window. The dangerous middle is not a fixed list of bug categories. It is the entire region where surface-pattern fluency overrides the need for judgment. It is most of the bugs you will ever ship.
-
-The countermove is easier to name than to do. Before accepting a Claude output, name the supervisory capacity the step requires. Out loud, in your head, in a comment — anywhere. If you can name it, you'll exercise it. If you can't name it, you're in the middle and you don't see the middle.
-
-Bondi-Kelly and colleagues, in a 2,784-participant study published in *Harvard Data Science Review* (2025), found that the dominant predictor of whether someone accepted a wrong AI suggestion was not domain knowledge and not task difficulty. It was attitude toward the tool. People favorable to automation accepted incorrect suggestions at significantly higher rates than skeptics. The result is uncomfortable. It means that how you feel about Claude *before you start* changes whether you'll catch its mistakes. The chapter can't make you a skeptic. It can ask you to be one in this specific way: when a task feels like pattern work, raise the suspicion that it might be middle work in disguise.
+<!-- → [DIAGRAM: The fluency trap — a simple two-path diagram. Path A: struggle → consolidation → durable capability. Path B: delegate → fluent output → no consolidation → atrophy. Editorial style. No color.] -->
 
 ---
 
-## The Same Function, Run Twice
+Nataliya Kosmyna's team at the MIT Media Lab ran 54 college students through essay-writing sessions with EEG caps — 32-channel sensors measuring the electrical activity of the brain through the scalp (Kosmyna et al., 2025). Three groups: writing from their own heads, writing with a search engine, writing with ChatGPT.
 
-**Run one.** I open Claude, paste the spec, accept the output. The function compiles. I run it on my test set — three students, all different GPAs, the right three come back in the right order. I move on. Two days later, with real data containing a tie, the function silently returns the wrong order. The bug propagates through everything downstream. I find it because a friend tells me her sister's name is in the wrong spot on a leaderboard.
+EEG can't tell you what someone is thinking. It can tell you, in real time, how synchronized different brain regions are with each other — what neuroscientists call **functional connectivity**, roughly the degree to which different parts of the brain are communicating while a task is being performed. More connectivity in the frequency bands associated with effortful cognition is, very approximately, the EEG signature of "this brain is working on the problem."
 
-**Run two.** Before I paste anything, I do *problem formulation*: the spec explicitly mentions ties, which means my test set needs a tie or I'm not testing the spec. I add one. I paste the spec. Claude returns the tuple-key sort. I do *plausibility auditing*: I look at the key — `(-gpa, last_name)` — and ask whether it handles the tie case correctly. I run it on the new test set. Bell comes back before Adams. Wrong. I do *interpretive judgment*: I read the output as a domain result — which student is listed first — not just as a syntax-correct return value, and I see the mismatch. I do *tool orchestration*: instead of asking Claude to "fix it," I describe the specific failure — *Bell came back before Adams; spec requires Adams first on a GPA tie* — and ask for a corrected key. I run it again. The tie comes out right. I do *executive integration*: I add the tie case to my permanent test file, so future versions of this function will be checked against the same case.
+The ChatGPT-assisted writers showed up to a 55% reduction in neural connectivity compared to the brain-only writers. That's the maximum reduction across regions, not the average, but the pattern is consistent. The brain doing the writing with ChatGPT was substantially less internally coordinated than the brain doing the writing without it.
 
-Same Claude. Same starting output. Five small moves and the bug doesn't ship.
+Two other findings land harder than the connectivity number. First: 83% of ChatGPT users could not accurately quote a sentence from their own essay minutes after submitting it. Their hands had typed those words, more or less. The encoding event didn't happen. The sentence wasn't theirs in the way memory normally makes a thing yours. Second: when the ChatGPT users wrote a fourth essay *without* the assistant, the reduced connectivity persisted. The brain didn't immediately revert to its unassisted patterns. Whatever engagement pattern they had learned to use with the tool in the loop, they kept doing without it.
 
-The difference between the two runs is not effort. Run two cost me maybe four extra minutes. The difference is that run two contained five small acts of supervision and run one contained zero. Each act is small enough to feel trivial. Each one is a habit. Once they're habits, the four-minute overhead becomes the way you work — and the silent-failure path becomes the thing that happens to other people.
+A necessary caution: this is a preprint, not yet peer-reviewed (Kosmyna et al., 2025). The mechanism is suggestive, not proven. Kosmyna's team has not demonstrated that the connectivity drop *causes* the kind of exam gap Bastani measured. What they've shown is that, on a brain-activity measure correlated with cognitive engagement, the AI-assisted brain is doing measurably less work. That is a plausible mechanism for the Bastani result. It is not a confirmed one. The study that would confirm it has not yet been run. I'm putting both papers here because they point the same direction, not because one explains the other.
 
-The model is fine. The supervision is missing.
+---
+
+In January 2026, Jane Hsieh Shen and Alex Tamkin published an RCT with 52 junior Python engineers, learning a library called Trio — an asynchronous library none of them had used before (Shen & Tamkin, 2026). Some engineers used Claude during the learning tasks. Some did not. Afterwards, everyone took a comprehension assessment with no AI. The headline: AI-assisted engineers scored about 17% lower on comprehension than the unaided coders, even though they'd finished tasks slightly faster. Same pattern as Bastani. Different domain. Different population. Convergent result.
+
+This is also a preprint, not yet peer-reviewed, which I'm flagging for the same reason as the Kosmyna paper.
+
+What makes the Anthropic paper useful beyond replication is that the researchers transcribed the interactions and identified patterns. The engineers who scored worst — average comprehension below 40% — clustered into three distinct behaviors. The engineers who scored best — above 65% — did not.
+
+**AI Delegation.** The engineer hands the whole task to Claude, reads the output, and moves on. No interrogation. No "why did you do it this way?" Just paste and ship.
+
+**Progressive AI Reliance.** The engineer starts on their own, hits difficulty, asks for help, and from that point the assistant is doing most of the cognitive work. The reliance grows — each subsequent problem begins with "let me just ask Claude" — without the engineer noticing the accumulation.
+
+**Iterative AI Debugging.** The engineer writes code, doesn't know why it's broken, pastes the error into Claude, accepts the fix, runs it again, pastes the next error. The loop eventually produces working code. It does not produce a person who can debug. The engineer forms a model of which error messages Claude can handle. They never form a model of why the code was broken.
+
+All three patterns share a structure: the engineer never has to build an internal model of the system. Claude builds it for them. Or rather — and this is the important thing — Claude produces outputs that make an internal model *unnecessary in the moment*, which means no internal model gets built.
+
+The contrast group — the engineers who scored above 65% — used the assistant differently. The Anthropic researchers called the pattern **conceptual inquiry**. Those engineers asked questions about the library *before* asking it to write code in the library. They used the model as a tutor, or a colleague who had read the documentation. They wrote their own implementation first and then asked Claude to critique it. The window looked the same. The moves were different.
+
+---
+
+The largest performance gap between the AI-assisted engineers and the unaided ones was not on production tasks — "write code that does X." It was on **diagnostic** tasks: why is this code behaving this way? What would change if we removed this line?
+
+This is the thing that should make you stop.
+
+Production tasks, you can fake. Ask Claude to build the thing; Claude builds the thing. The output is indistinguishable from the output of someone who built it themselves. Diagnostic tasks, you cannot fake, because diagnostic tasks require an internal model — a picture of what the system is supposed to be doing and where that picture diverges from what the system is actually doing — and that internal model is exactly what delegation doesn't build. You can ask Claude to write a function. You cannot ask Claude to have your mental model of the function, because Claude doesn't have your mental model. It only has the code.
+
+Borrowed capability is invisible until the tool is gone. Diagnostic tasks make it visible. They are the test that distinguishes the version of you that knows the thing from the version of you that has seen the thing.
+
+---
+
+Two students. Same AP CS class. Same database project: design a schema for a small library inventory system. Books, authors, checkouts, due dates. Both submit working schemas. Both get an A.
+
+*This is a composite, drawn from what I've observed and what the Bastani and Anthropic papers describe. The pattern is documented.*
+
+Student A starts with a notebook. She writes down entities: books, authors, checkouts. She draws arrows. She gets it wrong — authors as a column on the books table, which makes co-authored books impossible. She notices the problem when she tries to imagine adding a Pratchett-Gaiman collaboration and realizes she'd need two rows for one book. She rewrites it. She types the SQL by hand. The first migration fails because she forgot a foreign key. She finds the missing key, fixes it, runs it again. She submits.
+
+Student B opens Claude. He pastes the assignment. Claude produces a clean schema — books table, authors table, join table, foreign keys, indexes on the columns you'd expect. Student B reads it. It looks reasonable. He pastes it into his SQL editor. The migration runs first try because Claude already accounted for the foreign keys. He submits.
+
+Both get an A. Claude's schema is probably slightly better, actually — it includes a soft-delete column Student A didn't think of.
+
+Six weeks later, the quiz. Design the schema for a small social-media-style application.
+
+Student A reaches for the habit. She writes down entities. Users, posts, comments. She thinks about whether a comment is a post — for now she'll keep them separate. She thinks about likes. A like is a relationship between a user and a post, so it's a join table. She is doing, on a different domain, the same *moves* she did six weeks ago. The library project didn't give her the schema she needed for the quiz. It gave her the habit of producing schemas.
+
+Student B reads the question. He knows what a schema looks like — a bunch of tables with foreign keys between them. He writes "Users table, Posts table" and stops. He doesn't know whether comments should be a separate table or a column. He doesn't have a model of *when you make something a table* versus *when you make it a column*. He saw the output of that decision six weeks ago. He never made the decision. The quiz ends with two words on his page.
+
+Same final grade six weeks prior. Different person now. The Anthropic researchers would call what Student B did AI Delegation. Bjork would call the missing thing the generation effect. James would say the pathway was never traversed, so it was never grooved. Bastani would say: this is what the exam measures, and we measured it.
+
+---
+
+Here is the practical move, and I am putting it at the end because the rest of the chapter earned it.
+
+Before you ask Claude to *build* something in a domain, ask Claude *questions* about the domain. Ten minutes — by the clock. Ask: what does this class do? What does this function expect? What are three ways someone could mess this up? What would change if I removed this dependency? You are not asking Claude to write anything. You are using Claude as the documentation it half-is.
+
+Two things happen when you do this. First, you start building an internal model of the territory before any code gets written. That is the move the Anthropic conceptual-inquiry group made, and it is exactly what the delegation, progressive-reliance, and iterative-debugging groups skipped. Second, you discover the boundary: what Claude knows accurately and what it confabulates; where it's reliable and where you should check. That boundary knowledge doesn't come from generic advice about prompting. You only learn it by asking and checking, which means you have to ask.
+
+The discipline is: questions before code. Every time. For ten minutes. Even when you're certain you know what you want — especially then. The reps in the questions phase are the reps Bjork was describing. They are the practice the Bastani control group was getting without knowing it was practice. They are the encoding events that show up, six weeks later, when the screen is closed and the quiz begins.
+
+This is not the whole argument. The whole argument is the rest of the book. But this is the first move, and you can start doing it tomorrow.
 
 ---
 
 ## 🕰️ AI Wayback Machine
 
-**Frederick Winslow Taylor** (1856–1915) is the person who first tried to write down, on paper, which cognitive work belongs to the human and which to the system. *The Principles of Scientific Management*, published in 1911, contains the line that gives this chapter its bones: "the work of every workman is fully planned out by the management at least one day in advance" (Taylor, 1911). Taylor's move was to separate *planning* — judgment, formulation, evaluation — from *execution* — repeatable procedural pattern — and to study each separately. It is the same move this chapter performs, transposed: separate pattern work from supervisory work, and analyze each.
+**William James (1842–1910)** was the founding figure of American psychology and the author, in 1890, of *The Principles of Psychology*, a two-volume textbook so well-written it is still on philosophy syllabi. The chapter that matters for this book is Chapter IV, "Habit." James argued that the nervous system is a plastic material that physically reshapes itself in response to repeated effort: what you do twenty times with attention becomes, eventually, what you can do once without it. Habit, for James, is the mechanism by which struggle now becomes capability later — a 19th-century, jargon-free description of consolidation, eight decades before anyone could measure it with an MRI. He warned against breaking new habits, against half-attention, against acting as if the cost of a single shortcut were paid only once. His advice — *make our nervous system our ally instead of our enemy* — is the advice this chapter is restating in the language of randomized controlled trials. Bastani measured the exam scores of students whose nervous systems were not made allies. James named the mechanism in 1890. The mechanism has not changed (James, 1890).
 
-I want to be honest about Taylor, because he is famous and he is controversial and the controversy is earned. The version of scientific management Taylor implemented in steel mills stripped craft workers of judgment, handed it to a managerial class, and produced both real productivity gains and real dehumanization. The historical record on his selective data and on the human cost of his system is not flattering. This chapter borrows Taylor's *question* — which cognitive work belongs where — while rejecting his answer that the worker's judgment is residue. In this book, supervisory intelligence is not what's left over after the machine takes the good parts. It is the load-bearing capacity. The student, not Claude, is the engineer in Taylor's sense; Claude is the part Taylor would have studied for time and motion.
+**Run this:**
 
-**Run this:** *"You are Frederick Winslow Taylor in 1911, writing a memo to a 2026 high school student building a project with Claude Code. Using the planning-versus-execution framework from* The Principles of Scientific Management, *but updating it for a worker whose 'machine' is a large language model, write a one-page memo telling the student which work belongs to her and which belongs to Claude. Be specific. Then, in a second page, critique the memo from the perspective of a 2026 reader who has read the historical record on the human cost of Taylorism. What does this division of labor get right? What does it dehumanize?"*
+```text
+In the voice of William James, circa 1890, explain to a
+high-school AP CS student why doing the work yourself —
+even badly, even slowly — makes a more permanent change
+than reading correct code Claude produced. Use the language
+of habit and the nervous system. Do not mention computers.
+One paragraph.
+```
 
 ---
 
-## Bridge
+**Links:** [boondoggling.ai](https://boondoggling.ai) · [irreducibly.xyz](https://irreducibly.xyz)
 
-The reader can name the five capacities. Chapter 3 explains why school isn't teaching them — and why the student is on their own.
+**References (in-chapter citations):**
+
+- Bastani, H., Bastani, O., Sungu, A., Ge, H., Kabakcı, Ö., & Mariman, R. (2025). Generative AI without guardrails can harm learning: Evidence from high school mathematics. *Proceedings of the National Academy of Sciences*, 122. (See 2025 correction, PubMed 40833419.)
+- Bjork, E. L., & Bjork, R. A. (2011). Making things hard on yourself, but in a good way: Creating desirable difficulties to enhance learning. In M. A. Gernsbacher et al. (Eds.), *Psychology and the Real World*. Worth.
+- James, W. (1890). *The Principles of Psychology*, Vol. I, Chapter IV: Habit. New York: Henry Holt.
+- Kosmyna, N., et al. (2025). Your brain on ChatGPT: Accumulation of cognitive debt when using an AI assistant for essay writing task. *arXiv:2506.08872* (preprint, not peer-reviewed).
+- Shen, J. H., & Tamkin, A. (2026). How AI impacts skill formation. *arXiv:2601.20245*, Anthropic (preprint, not peer-reviewed).
