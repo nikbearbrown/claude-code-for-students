@@ -1,0 +1,16 @@
+date,book,chapter_slug,word_count,sources_count,verify_flag_count,pantry_notes_found,pantry_lib_files_used,thin_pantry,mechanism_explained,contested_claims_flagged
+2026-05-21,claude-code-for-students,00-introduction-cautious-builder,3024,0,0,yes,0,no,Felt cost before framework: observation primes the need for the discipline.,0
+2026-05-21,claude-code-for-students,01-homework-quiz-gap,4934,0,0,yes,0,no,Consolidation requires struggle; AI-assisted practice removes the struggle and therefore the consolidation.,0
+2026-05-21,claude-code-for-students,02-division-of-labor,5055,0,0,yes,0,no,Pattern recognition is Claude's strength; supervisory judgment is currently irreducibly human.,0
+2026-05-21,claude-code-for-students,03-teacher-student-ai-gap,4499,0,2,yes,0,no,Technical fluency without domain depth is the specific danger zone — counter-productivity at the institutional level.,0
+2026-05-21,claude-code-for-students,04-conducting-not-prompting,6049,0,0,yes,0,no,Specifications + handoff conditions = explicit interface between human intent and Claude execution.,0
+2026-05-21,claude-code-for-students,05-five-supervisory-capacities,5693,0,0,yes,0,no,"PA, PF, TO, IJ, EI — the five things the model cannot supply because its own weights produced the output.",0
+2026-05-21,claude-code-for-students,06-gru-tool,5617,0,0,yes,0,no,Tooling makes the discipline operational: phase gates institutionalize the cognitive work the human must do first.,0
+2026-05-21,claude-code-for-students,07-software-design-document,5252,0,0,yes,0,no,Decisions written down once cannot be silently swapped under deadline pressure; the SDD is the immutable record.,0
+2026-05-21,claude-code-for-students,08-prompts-as-specifications,5263,0,0,yes,0,no,Five-element specification format makes the human's task definition machine-actionable.,0
+2026-05-21,claude-code-for-students,09-handoff-conditions-dangerous-middle,6498,9,0,yes,0,no,Plausible-but-wrong output passes surface checks; only domain-grounded testable conditions catch the dangerous middle.,0
+2026-05-21,claude-code-for-students,10-brutalist-creative-builds,5853,10,0,yes,0,no,Three-file constitution separates aesthetic intent (human) from technical execution (Claude); refusal is the safety mechanism.,0
+2026-05-21,claude-code-for-students,11-planning-first-build,5550,6,1,yes,0,no,/v0 gate forces problem formulation before any prompt is written; the Boondoggle Score sequences the rest.,0
+2026-05-21,claude-code-for-students,12-running-the-build,6541,8,0,yes,0,no,PDCA at student scale: every step has a handoff condition; /rewind not forward-correction; /clear when context is polluted.,0
+2026-05-21,claude-code-for-students,13-verification,5533,11,0,yes,0,no,Three-pass verification against SDD needs (not just tests); the post-build document is the proof of capability.,0
+2026-05-21,claude-code-for-students,14-first-full-build,5088,5,0,yes,0,no,Learning is transformation of the learner through purposeful experience; the post-build document records that transformation.,0
