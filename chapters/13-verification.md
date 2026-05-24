@@ -214,17 +214,3 @@ Paste your SDD's *User Needs* section underneath the prompt. The output is your 
 - Mars Climate Orbiter Mishap Investigation Board (1999). *Phase I Report*. NASA.
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 13.1 — The verification sequence
-
-Build a three-column flowchart in D3 v7. Column 1, left side, stacks three vertical pass cards top to bottom — `PASS 1 — FUNCTIONAL`, `PASS 2 — EDGE CASE`, `PASS 3 — SDD NEEDS`. Each card has a `--color-fill` ALL CAPS header, an icon in the top-right of the header strip (gear for Pass 1 and Pass 2, eye for Pass 3), and a body with a bold two-line question and a `--color-secondary` body paragraph. The Pass 3 card is bordered, headed, and titled in `--color-red`. Vertical ink arrows labeled `PASS` connect Pass 1 to Pass 2 to Pass 3. Column 2, middle, holds three `Fix code` resolution boxes, one per pass; the Pass-3 fix-code box is red-bordered. Column 3, right, holds two `AMEND SDD` boxes — one for Pass 2, one for Pass 3 — both red-bordered with a `--color-fill` ALL CAPS header strip and an italic `Invalidates earlier passes.` line in red. Red dashed `FAIL` arrows go from each pass card to its Fix-code box; red dashed `or` arrows connect Fix-code to Amend-SDD on Pass 2 and Pass 3. A red dashed loop-back arrow runs from both Amend-SDD boxes along the right margin back up to the top of Pass 1 with an italic `re-run from Pass 1` label. Hover any card or box for the longer rule. Footer caption explains the gear-versus-eye convention.
-
-> Reference implementation: `d3/13-verification-fig-01.html`

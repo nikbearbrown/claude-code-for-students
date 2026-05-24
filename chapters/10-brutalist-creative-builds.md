@@ -194,17 +194,3 @@ Run this:**
 - U.S. Copyright Office Review Board (September 5, 2023). *Re: Second Request for Reconsideration for Refusal to Register "Théâtre D'opéra Spatial."*
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 10.1 — The Brutalist three-file system
-
-Build a nested-rectangle diagram in D3 v7. Three concentric rectangles, each smaller than the one before it, centered horizontally on the canvas. Outermost rectangle: CLAUDE.md, the technical constitution. Middle rectangle (offset 80 left/right, 48 top/bottom from outer): DESIGN.md, the visual constitution. Innermost rectangle (same offset from middle): PROJECT.md, with `--color-fill` background and `--color-red` border. Each rectangle carries, in its top-left corner: a monospace ALL CAPS layer label (OUTER LAYER / MIDDLE LAYER / INNER LAYER), a bold filename below it, and an italic `--color-secondary` subtitle to the right of the filename. The innermost rectangle additionally shows, in bold, "who · what · feeling · argument · refusals" — the five Intent Layer questions — and an italic secondary line under that: "the irreducibly human portion — never delegated." On the left exterior of each rectangle, a rotated ALL CAPS label perpendicular to the side: MADE OF (outer), LOOKS LIKE (middle), IS FOR (inner, rendered in `--color-red`). Hovering any layer shows a tooltip explaining what that file protects against. Dashed footer rule with a caption ending in "béton brut" in italic.
-
-> Reference implementation: `d3/10-brutalist-creative-builds-fig-01.html`

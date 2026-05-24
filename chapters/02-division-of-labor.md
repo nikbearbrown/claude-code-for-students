@@ -149,17 +149,3 @@ Run this:** *"You are John Dewey in 1911, writing a memo to a 2026 high school s
 The reader can name the five capacities. Chapter 3 explains why school isn't teaching them — and why the student is on their own.
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 2.1 — The solve-verify asymmetry
-
-Build a two-series line chart in D3 v7 with time on the x-axis (labeled 2022, 2023, 2024, 2025, 2026 →) and relative capacity on the y-axis (label rotated 90°, no numeric scale). The chart area uses `--color-fill` background with `--color-border` border. Series 1 ("Claude solves") rises steeply along an accelerating curve from low-left to high-right — approximately `0.05 + t^2.1 * 0.92` for `t ∈ [0,1]`. Series 2 ("Human verifies") moves almost flat with a small positive slope — `0.18 + 0.08 * t`. Both series use `--color-ink` stroke at width 1.5 with a Catmull-Rom curve. At three sample times (≈ 0.4, 0.65, 0.9), draw a dashed vertical hairline (`--color-border`, dash 4 3) between the two curves to make the gap visible. Place a monospace ALL CAPS "THE WIDENING GAP" label inside the gap region. End-of-line labels (right of the plot area) name each series in bold serif with a secondary-color subtitle below. Hovering either line shows a tooltip with one sentence about that trajectory. Footer caption: "Your job is not to solve faster. Your job is to verify better."
-
-> Reference implementation: `d3/02-division-of-labor-fig-01.html`

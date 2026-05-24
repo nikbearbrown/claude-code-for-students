@@ -134,17 +134,3 @@ to use it. Tell me what to notice.
 **Links:** [boondoggling.ai](https://boondoggling.ai) · [irreducibly.xyz](https://irreducibly.xyz)
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 0.1 — From observer to practitioner
-
-Build a single-row editorial timeline in D3 v7 with two endpoint nodes connected by a left-to-right arrow on a horizontal baseline. Place the baseline at y ≈ 180 across the chart width with 120px inset on the left and right. Render the two endpoints as filled circles (radius 6) using `--color-ink`. Above each circle, a small ALL CAPS monospace label: BEFORE on the left, AFTER on the right. Below each circle, a serif bold title — "Watches friends" left, "Builds the discipline" right — followed by two lines of body text (size 11) describing the behavior at that point. At the horizontal midpoint, draw a short vertical dashed tick (`--color-border`, dash 4 3) with a monospace "THE TURN" caption above it and a two-line italic secondary-color note about noticing the gap between output and learning. Single arrow marker at the right end of the baseline. No legend, no color accent — pure ink-on-warm-white editorial style. Hovering a circle reveals a tooltip with one sentence elaborating that endpoint.
-
-> Reference implementation: `d3/00-introduction-cautious-builder-fig-01.html`

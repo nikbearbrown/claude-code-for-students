@@ -206,17 +206,3 @@ The plan is complete. Chapter 12 executes it.
 [^pbl]: Yan Chen and Jane Wang, "Revisiting the effects of project-based learning on students' academic achievement: A meta-analysis investigating moderators," *Educational Research Review* 26 (2019); John Larmer, John Mergendoller, and Suzie Boss, *Setting the Standard for Project Based Learning* (ASCD / Buck Institute, 2015).
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 11.1 — The planning sequence
-
-Build a left-to-right pipeline in D3 v7. Five rectangular artifact cards (width about 108, height 96) connected by four arrows. Each card has a small `--color-fill` header strip (height 28) with a monospace ALL CAPS code, then a bold one-line title, then two lines of body text in `--color-secondary`. In order: `/V0` (One sentence), `/V1` (Two lists), `SDD` (Five sections), `SCORE` (Rows + gates), `MINION` (Per-row prompt). The MINION card is bordered in `--color-red` with its code and title rendered in `--color-red` — this is the highlighted gate that releases the first prompt. Between adjacent cards, draw a thin ink arrow with a small monospace ALL CAPS label `G1`, `G2`, `G3`, `G4` above it. Below the row of cards, draw a dashed horizontal rule, then a four-row gate-conditions table — bold left-aligned `G# — name`, plain right-side condition. Hover any card or gate label shows a tooltip with the longer condition. Footer caption notes the informal fifth test.
-
-> Reference implementation: `d3/11-planning-first-build-fig-01.html`

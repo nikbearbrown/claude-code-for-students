@@ -160,17 +160,3 @@ in, in Deming's sense, instead of inspecting it in. Show both versions.
 **Links:** [boondoggling.ai](https://boondoggling.ai) · [irreducibly.xyz](https://irreducibly.xyz)
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 12.1 — The build loop
-
-Build a flow diagram in D3 v7 with two rows. Top row, left to right: three rectangular nodes — `SPECIFICATION` (Row + prompt), `CLAUDE EXECUTES` (Produces diff), `HANDOFF CHECK` (Audit, not approve). Each node has a `--color-fill` ALL CAPS header strip and a body with one bold line and two `--color-secondary` body lines. The `HANDOFF CHECK` node is bordered in `--color-red`; a small `--color-fill` badge to its right reads `[PA] Plausibility Auditing governs` and is also red-bordered. Solid ink arrows connect the top row. From the bottom of the check node, a tee branches downward to a horizontal track labeled `PASS` (ink, right) and `FAIL` (red, left), each dropping into a bottom-row node — `NEXT STEP` (right, ink-bordered) and `/REWIND + RESPECIFY` (left, red-bordered). A dashed red loop-back arrow runs from `/REWIND` along the left margin back up into `SPECIFICATION`, with a small italic `loop: tighter spec` label. Hover any node or badge shows a tooltip with the longer rule. Dashed footer rule, two-line caption about the two-rewind rule.
-
-> Reference implementation: `d3/12-running-the-build-fig-01.html`

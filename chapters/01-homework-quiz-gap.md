@@ -174,17 +174,3 @@ One paragraph.
 - Shen, J. H., & Tamkin, A. (2026). How AI impacts skill formation. *arXiv:2601.20245*, Anthropic (preprint, not peer-reviewed).
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 1.1 — The fluency trap
-
-Build a two-row flow diagram in D3 v7. Each row is a horizontal sequence of rectangular nodes (height 56) connected by short arrowed segments with an arrowhead marker on the right. The top row is PATH A with three nodes: "struggle" (subtitle "try → fail → adjust"), "consolidation" (subtitle "encoding event"), and "durable capability" (subtitle "passes the closed-laptop test"). The terminal Path A node uses `--color-fill` background to mark it as the endpoint. The bottom row is PATH B with four nodes: "delegate", "fluent output", "no consolidation", and "atrophy". The final Path B node is bordered in `--color-red` and its title rendered in `--color-red`; the segment arrow leading into it also uses `--color-red`. Between the two rows draw a dashed horizontal divider (`--color-border`, dash 4 3). Each row begins with a monospace ALL CAPS label (PATH A / PATH B) followed by an italic secondary-color subtitle. Hovering any node shows a tooltip with one sentence explaining that stage in cognitive terms. Footer caption: "Both paths produce an artifact. Only one path produces a learner."
-
-> Reference implementation: `d3/01-homework-quiz-gap-fig-01.html`

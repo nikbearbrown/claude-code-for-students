@@ -189,17 +189,3 @@ Run this:** *Apply Simon's bounded rationality to a 16-year-old using Claude Cod
 - White, J., et al. (2023). A prompt pattern catalog to enhance prompt engineering with ChatGPT. *arXiv:2302.11382*, Vanderbilt University.
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 4.1 — Who holds the piece. Who plays the parts.
-
-Build a three-panel editorial diagram in D3 v7. From left to right: a Human panel (rectangle, white fill, `--color-border` stroke, width 200, height 240), an Interface panel in the middle (rectangle, `--color-fill` background, width ~196, height 160, vertically centered relative to the outer panels), and a Claude panel mirroring the Human panel on the right. Each outer panel has a monospace ALL CAPS header (HUMAN / CLAUDE), a bold serif role title underneath (Conductor / Orchestra), a horizontal hairline divider, and six bulleted body lines (size 11) listing role responsibilities — Human items emphasize deciding, specifying, verifying; Claude items emphasize executing, editing, reporting. The Interface panel contains a monospace ALL CAPS "THE INTERFACE" header, two stacked headings ("Specification" and "Handoff condition") each followed by a one-line secondary-color subtitle, separated by a dashed horizontal divider (`--color-border`, dash 4 3). Two arrows flow left-to-right across the top half (`writes` from Human to Interface, `executes` from Interface to Claude) and two arrows flow right-to-left across the bottom half (`returns` from Claude to Interface, `verifies` from Interface to Human). Each arrow has an italic secondary-color verb label. Hovering any panel shows a tooltip with one sentence elaborating that role or the interface. Footer caption: "A prompt is a wish. A specification is a contract. The handoff condition is how you know the contract was kept."
-
-> Reference implementation: `d3/04-conducting-not-prompting-fig-01.html`

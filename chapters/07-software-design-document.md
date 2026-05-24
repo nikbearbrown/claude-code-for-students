@@ -167,17 +167,3 @@ Run this:** Paste this prompt into Claude. *"Read EWD249, section 1, from the E.
 - Starke, G., & Hruschka, P. (2005–present). arc42: Template for architecture communication and documentation. *arc42.org*. Creative Commons license.
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 7.1 — The SDD as decision record
-
-Build a vertical dependency diagram in D3 v7. Five wide rectangular sections stacked top to bottom (each 52 tall, gap 22 between), in this order: Problem Statement, Architecture Principles, Core User Flows, User Needs, Component List. Each section contains a monospace ALL CAPS label on its top-left (`SECTION 1` through `SECTION 5`) and a bold section title below, with a `--color-secondary` italic-adjacent subtitle to the right of the title. The Problem Statement is rendered as load-bearing — `--color-fill` background, `--color-red` border, `--color-red` SECTION 1 label. Between each pair of sections draw a vertical arrowed segment with arrowhead pointing down, centered horizontally. From the right edge of the bottom Component List section, draw a long curved dashed path in `--color-red` (dash 4 3) that loops up the right side and ends with a red arrowhead at the right edge of the Problem Statement; label this curve with a small vertical ALL CAPS string `CONSISTENCY CHECK`. Hovering any section shows a tooltip tying it to its specific role (Problem Statement load-bearing, Architecture Principles must collide, Core User Flows the one path that matters, User Needs falsifiable conditions, Component List names what is not built). Footer caption explaining the back-arrow walks the document upward.
-
-> Reference implementation: `d3/07-software-design-document-fig-01.html`

@@ -183,17 +183,3 @@ Run this:** *"Read pages 1–15 of Engelbart's 1962 SRI report* Augmenting Human
 The reader knows the five capacities. Chapter 6 introduces the tool that makes exercising them systematic: Gru.
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 5.1 — The five supervisory capacities
-
-Build a five-column layout in D3 v7. Each column is a tall rectangular card (width about 120, height 280) with a small `--color-fill` header strip (height 36) containing a monospace ALL CAPS label and a larger body containing two-line bold title, three lines of plain-text definition in `--color-secondary`, then three italic lines of failure-mode summary also in `--color-secondary`. The five columns in order: PF Problem Formulation, TO Tool Orchestration, PA Plausibility Auditing, IJ Interpretive Judgment, EI Executive Integration. The PA column is bordered in `--color-red` and its label and title rendered in `--color-red` — this is the highlighted capacity, the one Seth's hunting / haunting probe enacted. Hovering any column shows a tooltip with the longer definition tying the capacity back to its named precedent (Suchman, Polanyi, Schön, Brooks). Dashed horizontal divider under the cards, then a two-line footer caption noting that all five are required and that the highlighted column is the probe-making move.
-
-> Reference implementation: `d3/05-five-supervisory-capacities-fig-01.html`

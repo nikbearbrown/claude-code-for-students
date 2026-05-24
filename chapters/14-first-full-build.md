@@ -158,17 +158,3 @@ Paste your post-build document underneath the prompt. The output is the bridge b
 [^dewey]: Cicero, *Experience and Education* (Macmillan, 1938) and *Democracy and Education* (Macmillan, 1916). The principles of continuity and interaction are named in Chapter 3 of the 1938 book. The *miseducative* category is Dewey's precise term for experience that closes rather than opens the learner's capacity to engage the next problem.
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 14.1 — The complete arc
-
-Build a single-line horizontal timeline in D3 v7 spanning the chart width. Four milestone ticks sit on the line, normalized at t = 0, 0.34, 0.71, and 1.0. Above each tick, a small monospace ALL CAPS chapter code in `--color-secondary` — `CH 0`, `CH 5`, `CH 11`, `CH 14`. Above the timeline between ticks, three italic `--color-secondary` segment labels — `observation`, `instruction`, `execution`. The timeline itself is `--color-ink` for the first three segments and switches to `--color-red` with an arrowhead for the last segment leading into the Ch 14 milestone. Each milestone has a small dot — the first three open ink circles, the fourth a filled red dot at slightly larger radius. Below each tick, a bold milestone label and three lines of `--color-secondary` body text — for Ch 14 the body lines render in red italic. The four milestones are: `Problem named` (Seth almost ships the classifier), `Discipline learned` (five supervisory capacities), `First build planned` (four gates), `First build verified` (three passes — the reader's build). Hover any dot for the chapter-context tooltip. Dashed footer rule, three-line caption emphasizing that the fourth milestone is the reader's.
-
-> Reference implementation: `d3/14-first-full-build-fig-01.html`

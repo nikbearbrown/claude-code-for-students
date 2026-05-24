@@ -180,17 +180,3 @@ test whether I have done the essential work.
 **Links:** [humanitarians.ai/tools](https://www.humanitarians.ai/tools) · [boondoggling.ai](https://boondoggling.ai)
 
 ---
-
-## Prompts
-
-Use these prompts with Claude to generate interactive D3 v7 versions of the figures in this chapter. Each produces a standalone HTML file you can open in a browser and modify freely.
-
-**Prerequisites:** Load `brutalist/CLAUDE.md` and `brutalist/DESIGN.md` into your Claude project context before using these prompts. They define the stack, naming conventions, color system, and typography the figures use.
-
----
-
-### Figure 6.1 — The Gru phase sequence
-
-Build a six-node linear flow in D3 v7. Each node is a rectangle (height 72) containing a monospace ALL CAPS phase code on top, a bold phase title below, and a one-line subtitle in `--color-secondary`. The six nodes in order: `/V0` (one sentence — what / who / done), `/V1` (intake — Problem Summary), `SDD` (design doc — five sections, one page), `/CLAUDE` (audit pass — who does what), `SCORE` (Boondoggle — step-by-step plan), `BRIEF` (Minion Brief — one tactical order). The terminal BRIEF node uses `--color-fill` background. Between each pair of nodes draw a short arrowed segment with an arrowhead marker on the right; above each arrow render a tiny ALL CAPS label `GATE 1` through `GATE 5`. Below each node, an italic secondary-color annotation summarizing what that gate produces (refuse the and, name non-goals, decision record, trust per step, numbered list, paste and ship). Hovering any node shows a tooltip with one sentence tying the phase to its software-engineering precedent (Boehm's anchor-point milestone for /v0, Brooks's conceptual integrity for SDD, Suchman's situated sequencing for /claude). Dashed horizontal divider, then a two-line legend distinguishing GRU ROLE (architect) from MINION ROLE (executor). Footer caption: "The unhelpfulness is the feature."
-
-> Reference implementation: `d3/06-gru-tool-fig-01.html`
