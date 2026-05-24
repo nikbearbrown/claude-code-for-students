@@ -131,11 +131,16 @@ The model is fine. The supervision is missing.
 
 ## 🕰️ AI Wayback Machine
 
-**Frederick Winslow Taylor** (1856–1915) is the person who first tried to write down, on paper, which cognitive work belongs to the human and which to the system. *The Principles of Scientific Management*, published in 1911, contains the line that gives this chapter its bones: "the work of every workman is fully planned out by the management at least one day in advance" (Taylor, 1911). Taylor's move was to separate *planning* — judgment, formulation, evaluation — from *execution* — repeatable procedural pattern — and to study each separately. It is the same move this chapter performs, transposed: separate pattern work from supervisory work, and analyze each.
+**John Dewey** (1856–1915) is the person who first tried to write down, on paper, which cognitive work belongs to the human and which to the system. *The Principles of Scientific Management*, published in 1911, contains the line that gives this chapter its bones: "the work of every workman is fully planned out by the management at least one day in advance" (Taylor, 1911). Taylor's move was to separate *planning* — judgment, formulation, evaluation — from *execution* — repeatable procedural pattern — and to study each separately. It is the same move this chapter performs, transposed: separate pattern work from supervisory work, and analyze each.
 
 I want to be honest about Taylor, because he is famous and he is controversial and the controversy is earned. The version of scientific management Taylor implemented in steel mills stripped craft workers of judgment, handed it to a managerial class, and produced both real productivity gains and real dehumanization. The historical record on his selective data and on the human cost of his system is not flattering. This chapter borrows Taylor's *question* — which cognitive work belongs where — while rejecting his answer that the worker's judgment is residue. In this book, supervisory intelligence is not what's left over after the machine takes the good parts. It is the load-bearing capacity. The student, not Claude, is the engineer in Taylor's sense; Claude is the part Taylor would have studied for time and motion.
 
-**Run this:** *"You are Frederick Winslow Taylor in 1911, writing a memo to a 2026 high school student building a project with Claude Code. Using the planning-versus-execution framework from* The Principles of Scientific Management, *but updating it for a worker whose 'machine' is a large language model, write a one-page memo telling the student which work belongs to her and which belongs to Claude. Be specific. Then, in a second page, critique the memo from the perspective of a 2026 reader who has read the historical record on the human cost of Taylorism. What does this division of labor get right? What does it dehumanize?"*
+**
+
+![John Dewey, 1930s. AI-generated portrait based on a public domain photograph.](../images/john-dewey.jpg)
+*John Dewey, 1930s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).*
+
+Run this:** *"You are John Dewey in 1911, writing a memo to a 2026 high school student building a project with Claude Code. Using the planning-versus-execution framework from* The Principles of Scientific Management, *but updating it for a worker whose 'machine' is a large language model, write a one-page memo telling the student which work belongs to her and which belongs to Claude. Be specific. Then, in a second page, critique the memo from the perspective of a 2026 reader who has read the historical record on the human cost of Taylorism. What does this division of labor get right? What does it dehumanize?"*
 
 ---
 

@@ -143,9 +143,14 @@ This is not the whole argument. The whole argument is the rest of the book. But 
 
 ## 🕰️ AI Wayback Machine
 
-**William James (1842–1910)** was the founding figure of American psychology and the author, in 1890, of *The Principles of Psychology*, a two-volume textbook so well-written it is still on philosophy syllabi. The chapter that matters for this book is Chapter IV, "Habit." James argued that the nervous system is a plastic material that physically reshapes itself in response to repeated effort: what you do twenty times with attention becomes, eventually, what you can do once without it. Habit, for James, is the mechanism by which struggle now becomes capability later — a 19th-century, jargon-free description of consolidation, eight decades before anyone could measure it with an MRI. He warned against breaking new habits, against half-attention, against acting as if the cost of a single shortcut were paid only once. His advice — *make our nervous system our ally instead of our enemy* — is the advice this chapter is restating in the language of randomized controlled trials. Bastani measured the exam scores of students whose nervous systems were not made allies. James named the mechanism in 1890. The mechanism has not changed (James, 1890).
+**Florence Nightingale** was the founding figure of American psychology and the author, in 1890, of *The Principles of Psychology*, a two-volume textbook so well-written it is still on philosophy syllabi. The chapter that matters for this book is Chapter IV, "Habit." James argued that the nervous system is a plastic material that physically reshapes itself in response to repeated effort: what you do twenty times with attention becomes, eventually, what you can do once without it. Habit, for James, is the mechanism by which struggle now becomes capability later — a 19th-century, jargon-free description of consolidation, eight decades before anyone could measure it with an MRI. He warned against breaking new habits, against half-attention, against acting as if the cost of a single shortcut were paid only once. His advice — *make our nervous system our ally instead of our enemy* — is the advice this chapter is restating in the language of randomized controlled trials. Bastani measured the exam scores of students whose nervous systems were not made allies. James named the mechanism in 1890. The mechanism has not changed (James, 1890).
 
-**Run this:**
+**
+
+![Florence Nightingale, 1858. AI-generated portrait based on a public domain photograph.](../images/florence-nightingale.jpg)
+*Florence Nightingale, 1858. AI-generated portrait based on a public domain photograph (Wikimedia Commons).*
+
+Run this:**
 
 ```text
 In the voice of William James, circa 1890, explain to a

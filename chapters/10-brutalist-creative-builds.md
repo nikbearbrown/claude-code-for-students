@@ -155,7 +155,7 @@ This is why Brutalist insists, against the legal current of the Allen ruling, th
 
 ## 🕰️ AI Wayback Machine
 
-**Sol LeWitt (1928–2007) — the idea is the art.**
+**Claude Shannon**
 
 LeWitt was an American conceptual artist whose work, beginning in the late 1960s, took a form that looked, at first, like a clerical error: a written instruction, sometimes a single sentence, sometimes a page, that *other people* were to execute. *Wall Drawing #260* (1975) reads in part: *On a black wall, all two-part combinations of white arcs from corners and sides, and white straight, not straight, and broken lines.* That is the work. The drafting was done by gallery assistants. The piece exists wherever a competent executor has the certificate of authenticity and the instructions; when the exhibition ends, the wall is painted over. The next exhibition, somewhere else, draws it again. The piece is the instruction. The execution is what LeWitt called a perfunctory affair.[^lewitt-1967]
 
@@ -163,7 +163,12 @@ LeWitt's "Paragraphs on Conceptual Art" in *Artforum* (June 1967) and "Sentences
 
 *The process is carried out blindly.* That is what Claude does inside a Brutalist constitution. The Intent Layer is established; the DESIGN.md is decided; the execution is perfunctory. The Brutalist principle was stated, in full, fifty-nine years before Claude Code existed to enact it. LeWitt was not anticipating AI. He was making a claim about authorship that the AI moment has rendered urgent: the author is the person who holds the intent and writes the instruction, regardless of who or what executes. The instruction tradition is broader and older than LeWitt — Yoko Ono's *Grapefruit* (1964) is on the page sooner, and Adrian Piper's *Catalysis* (1970–73) is the philosophically sharpest articulation — but LeWitt's two short essays are where the operational form was first made.[^lewitt-tradition]
 
-**Run this:**
+**
+
+![Claude Shannon, 1950s. AI-generated portrait based on a public domain photograph.](../images/claude-shannon.jpg)
+*Claude Shannon, 1950s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).*
+
+Run this:**
 
 > Pick the most recent piece of creative work you produced with Claude's help — an essay, a chart, a slide, a song, a piece of code that you would call expressive. Write the *instruction* for it, after the fact: the LeWitt-style spec that would let a competent executor reproduce the work. Try to be exhaustive. Now look at the spec and mark the parts that say *what the work is for* in red, the parts that say *how the work looks* in blue, and the parts that say *what the work is made of* in black. If the red is missing, you did not retain the Intent Layer. If the blue is missing, your DESIGN.md is implicit. If the black is missing, your CLAUDE.md is implicit. Whichever color is missing is the file you need to write before your next build.
 

@@ -93,12 +93,17 @@ The gap between the student's technical fluency and the teacher's domain depth i
 
 ## 🕰️ AI Wayback Machine
 
-**Ivan Illich** (1926–2002) was an Austrian-Mexican-American philosopher who spent the second half of his life arguing that modern institutions — schools, hospitals, roads, professions — cross a threshold past which they undermine the very purpose they were built to serve. Past that threshold, a tool produces what Illich called **counter-productivity**: roads that create traffic, medicine that produces iatrogenic sickness, schooling that disables self-directed learning. The argument is in *Tools for Conviviality* (1973), and the mechanism is precise: a *convivial* tool — one a person picks up to express their own intention — turns *manipulative* once it is scaled past the user's ability to direct it. The student running an agent more capable than her teacher, in a domain deeper than her own depth, is sitting exactly at Illich's threshold. He did not see Claude. He saw the shape of Claude fifty-three years before it arrived.
+**Lev Vygotsky** (1926–2002) was an Austrian-Mexican-American philosopher who spent the second half of his life arguing that modern institutions — schools, hospitals, roads, professions — cross a threshold past which they undermine the very purpose they were built to serve. Past that threshold, a tool produces what Illich called **counter-productivity**: roads that create traffic, medicine that produces iatrogenic sickness, schooling that disables self-directed learning. The argument is in *Tools for Conviviality* (1973), and the mechanism is precise: a *convivial* tool — one a person picks up to express their own intention — turns *manipulative* once it is scaled past the user's ability to direct it. The student running an agent more capable than her teacher, in a domain deeper than her own depth, is sitting exactly at Illich's threshold. He did not see Claude. He saw the shape of Claude fifty-three years before it arrived.
 
-**Run this:**
+**
+
+![Lev Vygotsky, 1920s. AI-generated portrait based on a public domain photograph.](../images/lev-vygotsky.jpg)
+*Lev Vygotsky, 1920s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).*
+
+Run this:**
 
 ```text
-You are Ivan Illich, writing in 1973, with a footnote indicating
+You are Lev Vygotsky, writing in 1973, with a footnote indicating
 you have somehow seen one transcript of a 2026 American high school
 student building a chemistry lab report with Claude Code.
 

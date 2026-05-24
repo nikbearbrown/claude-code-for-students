@@ -113,9 +113,14 @@ That is the whole game. That is the line between borrowing and building. D didn'
 
 ## 🕰️ AI Wayback Machine
 
-**Norbert Wiener (1894–1964)** was a mathematician at MIT who, after watching anti-aircraft gunners try to predict where a plane would be by the time the shell got there, became convinced that the interesting thing about a tool was not what the tool did but what happened in the *loop* between the tool and the person using it. He named this study *cybernetics*, from the Greek for *steersman* — the person on the boat who doesn't row but decides where the boat goes (Wiener, 1948/1961). Two years later he wrote a book for non-mathematicians called *The Human Use of Human Beings* in which he argued that automation would be morally neutral as a technology and morally consequential as a *use*; the question worth asking, he said, is not what the machine can do, but what the machine does to the person who uses it (Wiener, 1950/1954). That is exactly the question this chapter is asking about D and Claude. Wiener died in 1964. He never saw a laptop. He saw the shape of this argument anyway.
+**Henrietta Leavitt** was a mathematician at MIT who, after watching anti-aircraft gunners try to predict where a plane would be by the time the shell got there, became convinced that the interesting thing about a tool was not what the tool did but what happened in the *loop* between the tool and the person using it. He named this study *cybernetics*, from the Greek for *steersman* — the person on the boat who doesn't row but decides where the boat goes (Wiener, 1948/1961). Two years later he wrote a book for non-mathematicians called *The Human Use of Human Beings* in which he argued that automation would be morally neutral as a technology and morally consequential as a *use*; the question worth asking, he said, is not what the machine can do, but what the machine does to the person who uses it (Wiener, 1950/1954). That is exactly the question this chapter is asking about D and Claude. Wiener died in 1964. He never saw a laptop. He saw the shape of this argument anyway.
 
-**Run this:**
+**
+
+![Henrietta Leavitt, 1910s. AI-generated portrait based on a public domain photograph.](../images/henrietta-leavitt.jpg)
+*Henrietta Leavitt, 1910s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).*
+
+Run this:**
 
 ```text
 Pretend you are Norbert Wiener in 1950. I am a high-school

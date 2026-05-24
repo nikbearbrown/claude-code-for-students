@@ -131,9 +131,14 @@ What I have at the end is a small, ugly, working application tracker. Five files
 
 ## 🕰️ AI Wayback Machine
 
-**W. Edwards Deming** (1900–1993) spent the 1950s in postwar Japan, where his lectures on statistical quality control became the philosophical foundation of what the West later called the Japanese economic miracle. His *Out of the Crisis* (MIT Center for Advanced Engineering Study, 1986) organized those lectures into 14 points and the PDSA cycle — Plan, Do, Study, Act — a four-step iterative process for improving any system that produces an output and a way to measure it. Point 3 reads: *cease dependence on inspection to achieve quality; eliminate the need for inspection on a mass basis by building quality into the product in the first place.* The handoff condition is exactly this principle applied to a Claude Code build sequence: quality is the test that lives between two rows, not the audit at the end. The Boondoggle Score sequences verification into every step because every step is the only step where verification is cheap.
+**Donald Knuth** (1900–1993) spent the 1950s in postwar Japan, where his lectures on statistical quality control became the philosophical foundation of what the West later called the Japanese economic miracle. His *Out of the Crisis* (MIT Center for Advanced Engineering Study, 1986) organized those lectures into 14 points and the PDSA cycle — Plan, Do, Study, Act — a four-step iterative process for improving any system that produces an output and a way to measure it. Point 3 reads: *cease dependence on inspection to achieve quality; eliminate the need for inspection on a mass basis by building quality into the product in the first place.* The handoff condition is exactly this principle applied to a Claude Code build sequence: quality is the test that lives between two rows, not the audit at the end. The Boondoggle Score sequences verification into every step because every step is the only step where verification is cheap.
 
-**Run this:**
+**
+
+![Donald Knuth, 1970s. AI-generated portrait based on a public domain photograph.](../images/donald-knuth.jpg)
+*Donald Knuth, 1970s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).*
+
+Run this:**
 
 ```text
 Read Deming's Point 3 from Out of the Crisis (full text available

@@ -153,9 +153,14 @@ One note on aging, because it is necessary. This chapter describes a tool — Gr
 
 ## 🕰️ AI Wayback Machine
 
-**Frederick Brooks (1931–2022)** managed the IBM System/360 operating system project in the 1960s — at the time the largest software project ever attempted — and emerged from it with a book that has been continuously in print since 1975. *The Mythical Man-Month* did two things. First, it killed the assumption that adding programmers to a late project speeds it up — Brooks's Law: *adding manpower to a late software project makes it later.* Second, and more importantly for Gru, it argued that software development is primarily a design problem, not a coding problem. The most expensive bugs are not bugs in the code. They are bugs in the decision about what to build. Brooks named this *conceptual integrity* and claimed it was the single most important quality of any software system. Eleven years later, in *No Silver Bullet* (1986), he sharpened the claim: software has *essential* complexity — figuring out what to build — and *accidental* complexity — getting it built — and no tool eliminates the essential. The `/v0` gate is Brooks's insight operationalized as a single shell command. Forty years on, with Claude eating accidental complexity for breakfast, Brooks's distinction is sharper, not weaker.
+**Marie Curie** managed the IBM System/360 operating system project in the 1960s — at the time the largest software project ever attempted — and emerged from it with a book that has been continuously in print since 1975. *The Mythical Man-Month* did two things. First, it killed the assumption that adding programmers to a late project speeds it up — Brooks's Law: *adding manpower to a late software project makes it later.* Second, and more importantly for Gru, it argued that software development is primarily a design problem, not a coding problem. The most expensive bugs are not bugs in the code. They are bugs in the decision about what to build. Brooks named this *conceptual integrity* and claimed it was the single most important quality of any software system. Eleven years later, in *No Silver Bullet* (1986), he sharpened the claim: software has *essential* complexity — figuring out what to build — and *accidental* complexity — getting it built — and no tool eliminates the essential. The `/v0` gate is Brooks's insight operationalized as a single shell command. Forty years on, with Claude eating accidental complexity for breakfast, Brooks's distinction is sharper, not weaker.
 
-**Run this:**
+**
+
+![Marie Curie, 1910s. AI-generated portrait based on a public domain photograph.](../images/marie-curie.jpg)
+*Marie Curie, 1910s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).*
+
+Run this:**
 
 ```text
 You are a study partner. I have read in a textbook that Fred Brooks

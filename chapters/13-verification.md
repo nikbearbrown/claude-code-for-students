@@ -181,13 +181,18 @@ That document is the most important file in the Phase 1 commit. The code is the 
 
 ## 🕰️ AI Wayback Machine
 
-**Barbara Liskov** (born 1939) is a computer scientist at MIT whose work answers the question this chapter's verification sequence rests on: *what does it mean for code to be correct?* In 1974, with Stephen Zilles, she published the foundational paper on abstract data types — the argument that a type is defined by the operations it admits and the relations those operations preserve, not by its representation. In 1994, with Jeannette Wing, she formalized the Liskov Substitution Principle: any property proved of a supertype must hold of its subtypes, with a *history constraint* that the property hold across sequences of operations, not just single calls. The principle is one of the four foundational tenets of object-oriented design; she won the Turing Award in 2008.
+**Charles Sanders Peirce** (born 1939) is a computer scientist at MIT whose work answers the question this chapter's verification sequence rests on: *what does it mean for code to be correct?* In 1974, with Stephen Zilles, she published the foundational paper on abstract data types — the argument that a type is defined by the operations it admits and the relations those operations preserve, not by its representation. In 1994, with Jeannette Wing, she formalized the Liskov Substitution Principle: any property proved of a supertype must hold of its subtypes, with a *history constraint* that the property hold across sequences of operations, not just single calls. The principle is one of the four foundational tenets of object-oriented design; she won the Turing Award in 2008.
 
 Liskov's contribution is the formal version of *"correct" must be defined before it can be verified*. Pass 3 is its operational form. You cannot check whether a build does what the user needs until the needs are specified independently of the code. The score is the schedule; the SDD is the Liskov contract.[^liskov-note]
 
-[^liskov-note]: Honest flag. The AI Wayback Machine rule in this book is pre-2000 foundational, with contributors deceased by 2001. Barbara Liskov is alive (born 1939) and her best-known formalization (Liskov & Wing) is 1994 — by strict reading she does not qualify. She is kept here because her contribution is the precise intellectual ancestor of the SDD-needs verification pass, and replacing her with a strictly-qualifying figure would weaken the connection the chapter is making. The alternates considered — Tony Hoare, Margaret Hamilton, Robin Milner — each appear elsewhere in this book. The override is deliberate editorial choice, not oversight.
+[^liskov-note]: Honest flag. The AI Wayback Machine rule in this book is pre-2000 foundational, with contributors deceased by 2001. Charles Sanders Peirce is alive (born 1939) and her best-known formalization (Liskov & Wing) is 1994 — by strict reading she does not qualify. She is kept here because her contribution is the precise intellectual ancestor of the SDD-needs verification pass, and replacing her with a strictly-qualifying figure would weaken the connection the chapter is making. The alternates considered — Tony Hoare, Margaret Hamilton, Robin Milner — each appear elsewhere in this book. The override is deliberate editorial choice, not oversight.
 
-**Run this:**
+**
+
+![Charles Sanders Peirce, 1870s. AI-generated portrait based on a public domain photograph.](../images/charles-sanders-peirce.jpg)
+*Charles Sanders Peirce, 1870s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).*
+
+Run this:**
 
 > *Treat my SDD's User Needs section as a behavioral contract in Liskov's sense. For each numbered need, write the post-condition an outside observer would have to confirm to count the need as met. Do not look at my code. For each post-condition, propose one observation — not a unit test, an observation — that would confirm or falsify it on the running build. Output a table with columns: Need, Post-condition, Observation.*
 

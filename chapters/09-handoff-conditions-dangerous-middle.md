@@ -172,11 +172,16 @@ The cognitive shape of rewinding is also the one that builds capability. The stu
 
 ## 🕰️ AI Wayback Machine
 
-**Grace Hopper (1906–1992)** served in the U.S. Navy through World War II and worked on the Harvard Mark I and Mark II computers — room-sized machines that ran on thousands of mechanical relays. On the afternoon of September 9, 1947, the Mark II was misbehaving. Hopper and her team opened the panel and found, between the contacts of Relay #70 in Panel F, a moth — caught, killed, and taped into the logbook with the entry *"First actual case of bug being found."* The logbook page is now in the Smithsonian. The word *bug* had been in engineering vocabulary since at least Edison, but Hopper's logbook is the moment the term entered computing and the moment debugging became a discipline of physical verification: open the panel, find the thing that is actually wrong, write it down. Not a guess; not an inference; the moth itself.
+**Ibn al-Haytham** served in the U.S. Navy through World War II and worked on the Harvard Mark I and Mark II computers — room-sized machines that ran on thousands of mechanical relays. On the afternoon of September 9, 1947, the Mark II was misbehaving. Hopper and her team opened the panel and found, between the contacts of Relay #70 in Panel F, a moth — caught, killed, and taped into the logbook with the entry *"First actual case of bug being found."* The logbook page is now in the Smithsonian. The word *bug* had been in engineering vocabulary since at least Edison, but Hopper's logbook is the moment the term entered computing and the moment debugging became a discipline of physical verification: open the panel, find the thing that is actually wrong, write it down. Not a guess; not an inference; the moth itself.
 
 That is the chapter's argument in one image. The dangerous middle is what you get when you skip the panel and trust the surface. Hopper's other famous remark — *the most dangerous phrase in the language is "we've always done it this way"* — names the cognitive failure that produces handoff conditions reading "looks good." It is the institutional defense against having to look inside.
 
-**Run this:**
+**
+
+![Ibn al-Haytham, 11th century. AI-generated illustration based on a public domain painting.](../images/ibn-al-haytham.jpg)
+*Ibn al-Haytham, 11th century. AI-generated illustration based on a public domain painting (Wikimedia Commons).*
+
+Run this:**
 
 ```text
 Hopper kept a clock on her wall that ran counter-clockwise, to remind

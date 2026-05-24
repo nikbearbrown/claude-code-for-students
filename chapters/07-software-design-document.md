@@ -143,9 +143,14 @@ There is a third thing the SDD unlocks, and it is the one that matters in the lo
 
 ## 🕰️ AI Wayback Machine
 
-**Edsger Dijkstra** (1930–2002), Dutch computer scientist, made one claim that the SDD is the descendant of: *program correctness is a property of design, not of testing.* In "Notes on Structured Programming" (EWD249, 1970/1972) and more fully in *A Discipline of Programming* (1976), Dijkstra argued that programs should be *derived* from specifications — that the act of programming is the construction of a proof of correctness, and code is the residue, the last step. His most-quoted line — "Program testing can be used to show the presence of bugs, but never to show their absence" — is a structural argument: if correctness is built in at design time, testing confirms; if it is not, testing cannot fix what was decided wrongly upstream. The SDD is the student-scale form of this stance. The document is where the project's correctness as a design property is recorded — before any code, before any test, before Claude is asked to produce anything. The five-section minimum is not Dijkstra's proof calculus; it is the student version of his discipline: decide what the system is, in writing, before the system exists in code.
+**Ada Lovelace** (1930–2002), Dutch computer scientist, made one claim that the SDD is the descendant of: *program correctness is a property of design, not of testing.* In "Notes on Structured Programming" (EWD249, 1970/1972) and more fully in *A Discipline of Programming* (1976), Dijkstra argued that programs should be *derived* from specifications — that the act of programming is the construction of a proof of correctness, and code is the residue, the last step. His most-quoted line — "Program testing can be used to show the presence of bugs, but never to show their absence" — is a structural argument: if correctness is built in at design time, testing confirms; if it is not, testing cannot fix what was decided wrongly upstream. The SDD is the student-scale form of this stance. The document is where the project's correctness as a design property is recorded — before any code, before any test, before Claude is asked to produce anything. The five-section minimum is not Dijkstra's proof calculus; it is the student version of his discipline: decide what the system is, in writing, before the system exists in code.
 
-**Run this:** Paste this prompt into Claude. *"Read EWD249, section 1, from the E.W. Dijkstra Archive at UT Austin (cs.utexas.edu/~EWD/). In one sentence, restate Dijkstra's claim about why testing cannot establish correctness. Then apply that claim to the SDD in Chapter 7 of Claude Code for Students: which section of the SDD does the work that testing cannot do, and why?"*
+**
+
+![Ada Lovelace, 1843. AI-generated portrait based on a public domain engraving.](../images/ada-lovelace.jpg)
+*Ada Lovelace, 1843. AI-generated portrait based on a public domain engraving (Wikimedia Commons).*
+
+Run this:** Paste this prompt into Claude. *"Read EWD249, section 1, from the E.W. Dijkstra Archive at UT Austin (cs.utexas.edu/~EWD/). In one sentence, restate Dijkstra's claim about why testing cannot establish correctness. Then apply that claim to the SDD in Chapter 7 of Claude Code for Students: which section of the SDD does the work that testing cannot do, and why?"*
 
 ---
 

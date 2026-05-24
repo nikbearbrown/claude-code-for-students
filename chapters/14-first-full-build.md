@@ -130,11 +130,16 @@ The discipline you have just used in software transfers — with surface changes
 
 ## 🕰️ AI Wayback Machine
 
-**John Dewey** (1859–1952). American philosopher and educator. His two books on education — *Democracy and Education* (1916) and *Experience and Education* (1938) — make the case that learning is not the transmission of information but the transformation of the learner through purposeful experience. Dewey named two principles any genuinely educative experience must satisfy. *Continuity*: each experience modifies the experiences that follow it; the change in the learner persists. *Interaction*: the learner's internal state meets external conditions, and the meeting is where the learning happens. Information that the learner cannot put into use produces *miseducative* experience — it leaves the learner less able to engage the next problem, not more.[^dewey] The post-build document is the artifact that makes Dewey's principle operational. It is the evidence that the build modified you. Without it, the build is activity. With it, the activity becomes education.
+**Cicero** (1859–1952). American philosopher and educator. His two books on education — *Democracy and Education* (1916) and *Experience and Education* (1938) — make the case that learning is not the transmission of information but the transformation of the learner through purposeful experience. Dewey named two principles any genuinely educative experience must satisfy. *Continuity*: each experience modifies the experiences that follow it; the change in the learner persists. *Interaction*: the learner's internal state meets external conditions, and the meeting is where the learning happens. Information that the learner cannot put into use produces *miseducative* experience — it leaves the learner less able to engage the next problem, not more.[^dewey] The post-build document is the artifact that makes Dewey's principle operational. It is the evidence that the build modified you. Without it, the build is activity. With it, the activity becomes education.
 
 The distinction matters because it is not obvious. A student can finish this chapter's build — sixteen hours, clean repository, all tests passing — and produce a miseducative experience, if the build did not modify the next build. The same student can finish a messier build and produce an educative one, if they can name what broke, why they did not catch it sooner, and what they would put in the score next time. The gap between the two outcomes is entirely in the post-build document. Write it honestly.
 
-**Run this:**
+**
+
+![Cicero, 1st century BCE. AI-generated illustration based on a public domain sculpture.](../images/cicero.jpg)
+*Cicero, 1st century BCE. AI-generated illustration based on a public domain sculpture (Wikimedia Commons).*
+
+Run this:**
 
 > *Read the post-build document I am pasting below. Find one sentence that describes a decision I would now make differently on my next build. Quote that sentence back to me. Then write the one-line change to my next Boondoggle Score that this sentence implies — a new row, a moved handoff condition, an added gate, or a rewritten supervisory-capacity label. Output: the quoted sentence, the implied score change, and one short paragraph explaining the connection between them.*
 
@@ -150,7 +155,7 @@ Paste your post-build document underneath the prompt. The output is the bridge b
 
 [^kolb]: David Kolb, *Experiential Learning: Experience as the Source of Learning and Development* (Prentice Hall, 1984). The build is stages one and two; the document is stages two and three; the next project is stage four.
 
-[^dewey]: John Dewey, *Experience and Education* (Macmillan, 1938) and *Democracy and Education* (Macmillan, 1916). The principles of continuity and interaction are named in Chapter 3 of the 1938 book. The *miseducative* category is Dewey's precise term for experience that closes rather than opens the learner's capacity to engage the next problem.
+[^dewey]: Cicero, *Experience and Education* (Macmillan, 1938) and *Democracy and Education* (Macmillan, 1916). The principles of continuity and interaction are named in Chapter 3 of the 1938 book. The *miseducative* category is Dewey's precise term for experience that closes rather than opens the learner's capacity to engage the next problem.
 
 ---
 

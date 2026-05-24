@@ -130,9 +130,14 @@ Five prompts. Five artifacts. Each one has all five elements. Each one has a ver
 
 ## 🕰️ AI Wayback Machine
 
-**Ada Lovelace** (1815–1852) wrote what we would today recognize as the first computer program — and, more pointedly for this chapter, the first specification. Her Note G to Menabrea's *Sketch of the Analytical Engine* (Lovelace, 1843) contains a precise indexed table of operations for computing the Bernoulli numbers on a machine that did not yet exist. The table names the variables, the operations on them, the order of operations, the dependencies between steps, and the expected outputs. It is a five-element specification written 183 years ago: the artifact (Bernoulli number computation), the invariants (the variable indices, the operation ordering), the context (the engine's architecture described in Notes A through F), the output (a column of results), and — implicit in the table's rigor — the negative constraint that the machine must perform *these* operations in *this* order, no others. The five-element format in this chapter descends in a straight line from Lovelace's table. The machine has changed. The discipline has not.
+**Norbert Wiener** (1815–1852) wrote what we would today recognize as the first computer program — and, more pointedly for this chapter, the first specification. Her Note G to Menabrea's *Sketch of the Analytical Engine* (Lovelace, 1843) contains a precise indexed table of operations for computing the Bernoulli numbers on a machine that did not yet exist. The table names the variables, the operations on them, the order of operations, the dependencies between steps, and the expected outputs. It is a five-element specification written 183 years ago: the artifact (Bernoulli number computation), the invariants (the variable indices, the operation ordering), the context (the engine's architecture described in Notes A through F), the output (a column of results), and — implicit in the table's rigor — the negative constraint that the machine must perform *these* operations in *this* order, no others. The five-element format in this chapter descends in a straight line from Lovelace's table. The machine has changed. The discipline has not.
 
-**Run this:**
+**
+
+![Norbert Wiener, 1940s. AI-generated portrait based on a public domain photograph.](../images/norbert-wiener.jpg)
+*Norbert Wiener, 1940s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).*
+
+Run this:**
 
 > *Specific task: write `bernoulli(n: int) -> Fraction` in `math/bernoulli.py` returning the nth Bernoulli number. Invariants: input is a non-negative integer; return type is `fractions.Fraction`; B(1) = +1/2 (the convention used in Lovelace's Note G); standard library only. Context: SDD §2 specifies the math module's interface; reference values for n=0..8 are in `data/bernoulli_reference.json`. Output format: one Python file; then run `python -c "from math.bernoulli import bernoulli; [print(n, bernoulli(n)) for n in range(9)]"` and compare against `data/bernoulli_reference.json`; report any mismatches. Negative constraint: do not import `sympy` or any non-stdlib package; do not modify the reference data; do not implement only the first few cases and stop.*
 

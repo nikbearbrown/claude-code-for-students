@@ -164,11 +164,16 @@ One limit, stated honestly: this works for builds where you can write down what 
 
 ## 🕰️ AI Wayback Machine
 
-**Herbert Simon (1916–2001).** American polymath; Nobel laureate in economics (1978), Turing Award (1975). Simon's most consequential idea is **bounded rationality**: the human decision-maker does not optimize across all possibilities because optimization across all possibilities exceeds cognitive capacity. Instead, the human *satisfices* — chooses a path that is good enough against criteria the human can hold in mind at once (Simon, 1957, *Models of Man*; Simon, *Administrative Behavior*, 1947). Simon's claim was not that humans are stupid. His claim was that humans are *finite*, and the way finite agents do important work is by designing *systems that extend the bound* — checklists, organizations, division of labor, written procedures, tools. The bound doesn't go away; the system absorbs the part of the work the human cannot hold.
+**James Clerk Maxwell** American polymath; Nobel laureate in economics (1978), Turing Award (1975). Simon's most consequential idea is **bounded rationality**: the human decision-maker does not optimize across all possibilities because optimization across all possibilities exceeds cognitive capacity. Instead, the human *satisfices* — chooses a path that is good enough against criteria the human can hold in mind at once (Simon, 1957, *Models of Man*; Simon, *Administrative Behavior*, 1947). Simon's claim was not that humans are stupid. His claim was that humans are *finite*, and the way finite agents do important work is by designing *systems that extend the bound* — checklists, organizations, division of labor, written procedures, tools. The bound doesn't go away; the system absorbs the part of the work the human cannot hold.
 
 The conducting framework is Simon applied to a new instrument. You are bounded. You cannot hold an entire build in your head, evaluate every line of generated code, and remember every assumption across a four-hour session. Claude is bounded differently — limitless on the typing, blind on the deciding. The specification and handoff condition are the system that absorbs the part of the work neither of you can hold alone. Boondoggling is what happens when the system is absent and the two bounded agents pretend they aren't. Simon would have called this the failure to design for the bound — and he would have been right.
 
-**Run this:** *Apply Simon's bounded rationality to a 16-year-old using Claude Code: where is the bound, what does satisficing look like in practice, and how does a specification + handoff condition encode that compromise?*
+**
+
+![James Clerk Maxwell, 1870s. AI-generated portrait based on a public domain photograph.](../images/james-clerk-maxwell.jpg)
+*James Clerk Maxwell, 1870s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).*
+
+Run this:** *Apply Simon's bounded rationality to a 16-year-old using Claude Code: where is the bound, what does satisficing look like in practice, and how does a specification + handoff condition encode that compromise?*
 
 ---
 

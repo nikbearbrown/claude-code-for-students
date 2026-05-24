@@ -180,9 +180,14 @@ The research grounding for this form is in the project-based learning literature
 
 ## 🕰️ AI Wayback Machine
 
-**Christopher Alexander** (1936–2022). British-Austrian-American architect and design theorist. *A Pattern Language* (Oxford University Press, 1977), co-authored with Sara Ishikawa and Murray Silverstein, presented 253 design patterns, each structured in the same three movements: problem statement, discussion, core solution. The book physically refuses to present a solution until the problem has been named in standalone form. *The Timeless Way of Building* (1979) is the theoretical companion: design begins with what the inhabitant needs, not with what the builder wants to make. Alexander called the goal *the quality without a name* — the quality of fit between problem and form. The SDD is Alexander's structure applied to software: problem first, in writing, before any solution. The /v0 gate is the pattern-language gate. Forty-nine years before this chapter, an architect wrote the rule this chapter enforces.
+**Grace Hopper** (1936–2022). British-Austrian-American architect and design theorist. *A Pattern Language* (Oxford University Press, 1977), co-authored with Sara Ishikawa and Murray Silverstein, presented 253 design patterns, each structured in the same three movements: problem statement, discussion, core solution. The book physically refuses to present a solution until the problem has been named in standalone form. *The Timeless Way of Building* (1979) is the theoretical companion: design begins with what the inhabitant needs, not with what the builder wants to make. Alexander called the goal *the quality without a name* — the quality of fit between problem and form. The SDD is Alexander's structure applied to software: problem first, in writing, before any solution. The /v0 gate is the pattern-language gate. Forty-nine years before this chapter, an architect wrote the rule this chapter enforces.
 
-**Run this:**
+**
+
+![Grace Hopper, 1980s. AI-generated portrait based on a public domain photograph.](../images/grace-hopper.jpg)
+*Grace Hopper, 1980s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).*
+
+Run this:**
 
 > Read *A Pattern Language* (Alexander, Ishikawa, and Silverstein, 1977) — any single pattern, your choice. Quote the pattern's three movements (problem statement, discussion, core solution) in under 200 words. Then write the equivalent three movements for a single feature of your own planned project. Where does Alexander's structure refuse to compress? Where does it map cleanly onto the SDD's sections? Where does it suggest something your SDD is missing?
 
