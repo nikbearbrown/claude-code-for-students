@@ -84,6 +84,35 @@ The operational consequence is that invariants must be re-supplied every prompt,
 
 The seam between project-level context files and per-prompt specifications is where craftsmanship still lives in 2026. A well-written `CLAUDE.md` makes every prompt shorter, because the durable decisions are already in context. A poorly written one lets drift accumulate, because the decisions are technically present but buried under irrelevant prose. Neither replaces the per-prompt specification, and neither makes the five-element format obsolete. They work together.
 
+It is worth being concrete about what belongs in that file, because the same five-element discipline that shapes a prompt also tells you what to write down once. A `CLAUDE.md` is the persistent half of your specification — the part that is true on every turn — and it earns its place by holding exactly the decisions you would otherwise retype into every prompt. Four kinds of thing belong there. *Conventions*: the naming, formatting, and language decisions that hold across the whole project — snake_case identifiers, ISO-8601 dates, Python 3.11 minimum, type hints required. *Build and test commands*: the exact incantations for running and checking the project, so that when a prompt's output format says "run the tests," Claude already knows that means `python -m pytest -q` and not some guess. *Guardrails*: the project-wide negative constraints — the directories Claude must never touch, the dependencies it must never add, the files it must never delete. These are the "do not" rules that are true regardless of the task, lifted out of the per-prompt scope and made permanent. *File pointers*: where the important things live — the SDD at `SDD.md`, the data layer in `data/`, the schema in `models/` — so the model can find context without you naming the path every time.
+
+The file is also hierarchical, and the hierarchy maps cleanly onto the difference between what is true for a project, what is true for part of it, and what is true for you. A `CLAUDE.md` at the project root carries the standing specification for the whole repository. A nested `CLAUDE.md` inside a subdirectory adds rules that apply only within that folder — useful when, say, the `tests/` directory has conventions the rest of the project does not. And a user-level `~/.claude/CLAUDE.md` in your home directory holds *your* preferences across every project you open: how you like explanations phrased, your default to standard-library-first, your habit of asking for the verifier command in every output. Project rules are shared with anyone who clones the repository; user rules are yours alone and follow you between projects. When the same decision could live in either place, the test is ownership: does this belong to the project, or to me?
+
+A few lines of a student project's root `CLAUDE.md` make the shape clear:
+
+```markdown
+# Project: grade-parser
+
+## Conventions
+- Python 3.11+, standard library only unless a dependency is justified in the SDD.
+- snake_case for functions and variables; dataclasses for record types.
+- Dates are ISO-8601 strings; empty CSV cells parse to `None`, never `""`.
+
+## Commands
+- Run tests: `python -m pytest -q`
+- Type-check: `python -m mypy .`
+
+## Guardrails
+- Never modify files in `data/`; the sample inputs are fixtures.
+- Never add a dependency without updating `SDD.md` first.
+
+## Where things are
+- Data model: `models/grade.py`   - Parser: `parsers/grades.py`
+- Spec: `SDD.md` (the file format lives in §1.4)
+```
+
+Notice that every line in that file is a decision that would otherwise have to ride along in each prompt. With it in place, Prompt 2 from the parser sequence below no longer has to say "standard library only" or "empty cells become `None`" — those are already in context, true on every turn. The per-prompt specification then carries only what is specific to *this* task: the artifact, the per-task invariants, the pointers and verifier for this step. That is the division of labor. The `CLAUDE.md` specifies the project; the prompt specifies the move. Both are specifications; they differ only in how long they stay true.
+
 ---
 
 ## The Dangerous Middle

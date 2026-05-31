@@ -67,6 +67,41 @@ The Brutalist framework is operationally three files. They are written before th
 
 **DESIGN.md — the visual constitution.** This is the file the prevailing workflow does not have, and the file that makes Brutalist Brutalist. Every aesthetic decision is here, by name, with a value or with an explicit escalation. Primary color: `#1A1A1A`. Secondary: `#FAFAFA`. Accent: `#E63946` — used only for emphasis, never for chrome. Type scale: 14 / 18 / 24 / 36, monospace for body, sans-serif for headers, EB Garamond for pull-quotes. Line height: 1.45 for body, 1.15 for headers. Margins: 32 / 48 / 64 — escalate before deviating. And the escalation list: Claude must escalate before choosing any color not in this file, any font weight not in this scale, any spacing value outside the listed margins, any animation or transition. DESIGN.md is the contract about what the work **looks like**. The principle is not that the student decides everything in advance — it is that the student decides everything *or names what is escalated*. Ambiguity is forbidden. If the file is silent, Claude does not improvise; Claude asks.
 
+The shape of the file stays the same across wildly different aesthetics; only the values change. That is the point — the file is a contract, not a style. A brutalist build's DESIGN.md is loud and oppositional:
+
+```markdown
+# DESIGN.md — raw
+PALETTE:    #000000 ink · #FFFFFF paper · #FF3B00 alarm (max one per view)
+TYPE:       Helvetica Neue Bold, 16/20/48 only — no italics, no light weights
+SPACING:    8px grid, hard 0 radius, 1px borders, no shadows
+LAYOUT:     visible grid lines, left-aligned, no centering, no max-width
+EXCLUDE:    gradients, rounded corners, drop shadows, hover animations
+```
+
+That produces a page that looks like a printed worksheet: hard edges, exposed structure, a single screaming accent. Swap the values and keep the shape, and you get a clean minimal build:
+
+```markdown
+# DESIGN.md — quiet
+PALETTE:    #2E2E2E text · #FFFFFF bg · #6B7280 muted · #3B82F6 link only
+TYPE:       Inter, 15/17/28, line-height 1.6, weight 400/600 only
+SPACING:    8px base, 12px radius, generous whitespace (min 64px section gaps)
+LAYOUT:     single column, 680px max-width, centered, lots of air
+EXCLUDE:    more than one accent color, all-caps, borders heavier than 1px
+```
+
+That produces the calm reading surface of a well-made documentation site. Change the values once more and you get a playful retro build:
+
+```markdown
+# DESIGN.md — arcade
+PALETTE:    #1A0B2E bg · #FF2E97 hot pink · #00F0FF cyan · #FFE600 coin gold
+TYPE:       "Press Start 2P" headers, VT323 body, chunky 24/32 sizes
+SPACING:    4px pixel grid, 0 radius, 4px solid borders, hard offset shadows
+LAYOUT:     centered cards, scanline overlay, blinking accents allowed here
+EXCLUDE:    subtle gradients, thin type, muted colors, anything "tasteful"
+```
+
+That produces an 8-bit poster — neon on near-black, pixel type, the deliberate kitsch the minimal file forbids. Three files, one schema, three irreconcilable looks. The student is not choosing a Claude preset; the student is writing down a look and binding Claude to it, whatever the look happens to be.
+
 **PROJECT.md — the project state, with the Intent Layer at its center.** This is the file that holds the human. PROJECT.md has the standard project-management fields — current phase, open tasks, blockers, decision log — but it begins with a section labeled **INTENT LAYER** that the student writes in their own words, before any prompt, before Claude sees anything. The Intent Layer answers, in plain English: Who is this for? What is it for? What should the reader / viewer / listener feel? What argument does it make? What does it explicitly refuse to do? Those five questions are non-negotiable. They are not generated. They are not paraphrased from a prompt the student gave Claude. They are written by the human, in the human's voice, before the build starts. The Intent Layer is, by construction, the part that cannot be delegated.
 
 The three files together form what architectural Brutalism calls the clear exhibition of structure. CLAUDE.md is the structural members. DESIGN.md is the surface treatment. PROJECT.md is the program — the human purpose the building serves. None is hidden. None is optional. None can be re-derived from the others. This is what *brut* means in *béton brut*. The decisions show.

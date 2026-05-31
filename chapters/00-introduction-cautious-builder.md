@@ -83,11 +83,7 @@ The cost of opting out is paid in the future, and the payment schedule is not ob
 
 There's a broader shape to this that I find genuinely interesting, and it goes back further than AI.
 
-Norbert Wiener was a mathematician at MIT who, in the 1940s, was watching anti-aircraft gunners try to predict where a plane would be by the time the shell got there. He became convinced that the interesting thing about any tool was not what the tool did, but what happened in the *loop* between the tool and the person using it. He named the study of this loop *cybernetics*, from the Greek for *steersman* — the person on the boat who doesn't row but decides where the boat goes. He wrote, in 1950, that automation would be morally neutral as a technology and morally consequential as a *use*. The question worth asking, he said, is not what the machine can do. The question is what the machine does to the person who uses it.
-
-> Wiener, N. (1950/1954). *The Human Use of Human Beings: Cybernetics and Society.* Da Capo Press.
-
-Wiener died in 1964. He never saw a laptop. He saw the shape of this argument anyway. The shape is: when you put a capable tool in the loop, you have not only changed what gets done. You have changed the loop itself, and therefore you have changed what the person inside the loop becomes. D's loop changed. D changed. Not because he made a bad choice in any obvious sense, but because the structure of his practice changed in a way that had consequences he couldn't see.
+Back in 1950, a mathematician named Norbert Wiener argued that the interesting thing about any tool is not what the tool does, but what happens in the *loop* between the tool and the person using it (Wiener, 1950/1954). The shape is: when you put a capable tool in the loop, you have not only changed what gets done. You have changed the loop itself, and therefore you have changed what the person inside the loop becomes. D's loop changed. D changed. Not because he made a bad choice in any obvious sense, but because the structure of his practice changed in a way that had consequences he couldn't see.
 
 What I am trying to figure out — what this book is trying to figure out — is how to be inside the loop in a way that doesn't give you the treadmill problem. You run. The floor moves backward at exactly your pace. An hour passes. You are exactly where you started. The sweat is real. The distance is zero.
 
