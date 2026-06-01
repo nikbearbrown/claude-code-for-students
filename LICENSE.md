@@ -4,8 +4,12 @@ Copyright © 2026 Nik Bear Brown. All rights reserved.
 
 Published by Bear Brown, LLC.
 
-All rights reserved. No part of this publication may be reproduced, distributed, stored in a retrieval system, or transmitted in any form or by any means without the prior written permission of the publisher, except for brief quotations in critical reviews, classroom discussion, accessibility use, and other noncommercial uses permitted by law.
+All rights reserved.
 
-This license covers the manuscript text, front matter, back matter, exercises, figures, tables, prompts, and supporting educational materials unless a specific file states otherwise.
+No part of this publication may be reproduced, distributed, or transmitted in any form or by any means without the prior written permission of the publisher, except in the case of brief quotations in critical reviews and certain other noncommercial uses permitted by copyright law.
 
-For permissions, course adoption, platform integration, or Medhavy / Medhavi use, contact the publisher listed above.
+This license applies to the text, structure, and book materials for *Claude Code for Students* unless a specific file states otherwise.
+
+ISBN: [INSERT ISBN]
+
+First edition: 2026
