@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2560" width="1600" height="2560" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision">
+  <g id="background"><rect x="0" y="0" width="1600" height="2560" fill="#F6D24A"/></g>
+  <g id="symbol-fragments" transform="rotate(-11, 800, 830)">
+    <polygon points="300,462 382,476 442,1048 342,1077" fill="#191919"/>
+    <polygon points="430,428 512,460 572,957 472,971" fill="#191919"/>
+    <polygon points="560,459 642,512 702,913 602,968" fill="#191919"/>
+    <polygon points="690,350 772,380 832,975 732,1007" fill="#191919"/>
+    <polygon points="820,334 902,373 962,909 862,966" fill="#191919"/>
+    <polygon points="950,503 1032,512 1092,981 992,1017" fill="#E85B3A"/>
+    <polygon points="1080,406 1162,456 1222,968 1122,1018" fill="#191919"/>
+  </g>
+  <g id="title-letterforms">
+    <text x="120" y="1350" font-family="Arial Black, Arial, sans-serif" font-size="250" font-weight="900" letter-spacing="0" fill="#191919" textLength="1300" lengthAdjust="spacingAndGlyphs">CLAUDE</text>
+    <text x="120" y="1608" font-family="Arial Black, Arial, sans-serif" font-size="250" font-weight="900" letter-spacing="0" fill="#E85B3A">CODE</text>
+    <text x="120" y="1866" font-family="Arial Black, Arial, sans-serif" font-size="250" font-weight="900" letter-spacing="0" fill="#191919">FOR</text>
+    <text x="120" y="2124" font-family="Arial Black, Arial, sans-serif" font-size="250" font-weight="900" letter-spacing="0" fill="#191919" textLength="1300" lengthAdjust="spacingAndGlyphs">STUDENTS</text>
+  </g>
+</svg>
